@@ -1,0 +1,4 @@
+.env
+client.json
+uploads/
+node_modules/
