@@ -29,11 +29,23 @@ const PropertyCard = ({ card }) => {
       onClick={() => navigate(`../properties/${card.id}`)}
     >
       {/* Header */}
-      <Box sx={{ p: "6px 14px", backgroundColor: "#000", color: "#fff" }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: "bold", fontSize: "15px", textAlign: "center" }}>
-          {card.title}
-        </Typography>
-      </Box>
+
+<Box sx={{ p: "6px 14px", backgroundColor: "#000", color: "#fff" }}>
+  <Typography
+    variant="subtitle1"
+    sx={{
+      fontWeight: "bold",
+      fontSize: "15px",
+      textAlign: "center",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+    }}
+    dangerouslySetInnerHTML={{ __html: card.title }}
+  />
+</Box>
+
+
 
       {/* Image */}
       <CardMedia

@@ -109,17 +109,7 @@ const PropertyLeftSection = ({propertyData}) => {
         >
           {propertyData.streetaddress}, {propertyData.city}, {propertyData.state} {propertyData.zip}
         </Typography>
-        <Typography
-          variant="h4"
-          sx={{
-            fontSize: "30px",
-            fontWeight: 500,
-            color: "#1d1d1f",
-            marginBottom: "15px",
-          }}
-        >
-          {propertyData.title}
-        </Typography>
+        <Typography variant="h4" sx={{ fontSize: "30px", fontWeight: 500, color: "#1d1d1f", marginBottom: "15px" }} dangerouslySetInnerHTML={{ __html: propertyData.title }} />
       </Box>
 
       {/* Animated Image Gallery */}
