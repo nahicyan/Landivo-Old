@@ -248,7 +248,7 @@ const PropertyDetailsSection = ({ propertyData, expanded, setExpanded, MAX_LINES
       </Card>
 
       {/* Map Section */}
-      {propertyData.landId ? (
+{propertyData.landId === "Available" ? (
   <Card sx={{borderRadius:"20px",p:3,mb:4,background:"#fff",border:"1px solid rgba(0,0,0,0.1)",boxShadow:"0 12px 35px rgba(0,0,0,0.05)",transition:"all 0.3s ease","&:hover":{boxShadow:"0 20px 50px rgba(0,0,0,0.1)"}}}>
     <CardContent sx={{paddingBottom:0}}>
       <Typography variant="h4" gutterBottom sx={{fontSize:"26px",display:"flex",alignItems:"center",gap:"8px",color:"#000",marginBottom:"20px"}}>
@@ -269,6 +269,7 @@ const PropertyDetailsSection = ({ propertyData, expanded, setExpanded, MAX_LINES
     </CardContent>
   </Card>
 )}
+
 
 
 

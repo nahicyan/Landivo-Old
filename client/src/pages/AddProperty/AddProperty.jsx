@@ -243,7 +243,7 @@ const AddProperty = () => {
         <TextField fullWidth label="APN or PIN" name="apnOrPin" value={formData.apnOrPin} onChange={handleChange} sx={textFieldStyle} />
       </Stack>
       <Stack direction={{xs:"column",sm:"row"}} spacing={2} mt={2}>
-      <FormControlWithSelect label="Land ID" name="landId" value={formData.landId} onChange={handleChange} options={["Available","Not Available"]} />
+      <FormControlWithSelect label="Land ID" name="landId" value={formData.landId} onChange={handleChange} options={["Available","Not-Available"]} />
 {formData.landId === "Available" && (
   <TextField
     fullWidth
@@ -271,7 +271,7 @@ const AddProperty = () => {
         <TextField fullWidth label="Asking Price" name="askingPrice" value={formData.askingPrice} onChange={handleChange} sx={textFieldStyle} />
         <TextField fullWidth label="Minimum Price" name="minPrice" value={formData.minPrice} onChange={handleChange} sx={textFieldStyle} />
         <TextField fullWidth label="Discount Price" name="disPrice" value={formData.disPrice} onChange={handleChange} sx={textFieldStyle} />
-        <FormControlWithSelect label="Financing" name="financing" value={formData.financing} onChange={handleChange} options={["Available","Not Available"]} />
+        <FormControlWithSelect label="Financing" name="financing" value={formData.financing} onChange={handleChange} options={["Available","Not-Available"]} />
 
       </Stack>
     </Box>
