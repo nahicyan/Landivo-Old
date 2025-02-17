@@ -372,7 +372,7 @@ export const createResidencyWithMultipleFiles = asyncHandler(async (req, res) =>
         floodplain: floodplain ?? null,
         ltag: ltag ?? null,
         rtag: rtag ?? null,
-        landId: landId === "false",
+        landId: landId == false,
         owner: {
           connect: { email: lowerCaseEmail },
         },

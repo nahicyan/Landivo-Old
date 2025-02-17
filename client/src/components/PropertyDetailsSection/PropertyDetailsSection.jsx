@@ -248,47 +248,29 @@ const PropertyDetailsSection = ({ propertyData, expanded, setExpanded, MAX_LINES
       </Card>
 
       {/* Map Section */}
-      <Card
-        sx={{
-          borderRadius: "20px",
-          p: 3,
-          mb: 4,
-          background: "#fff",
-          border: "1px solid rgba(0, 0, 0, 0.1)",
-          boxShadow: "0 12px 35px rgba(0, 0, 0, 0.05)",
-          transition: "all 0.3s ease",
-          "&:hover": {
-            boxShadow: "0 20px 50px rgba(0, 0, 0, 0.1)",
-          },
-        }}
-      >
-        <CardContent sx={{ paddingBottom: 0 }}>
-          {" "}
-          {/* Remove extra padding from bottom */}
-          <Typography
-            variant="h4"
-            gutterBottom
-            sx={{
-              fontSize: "26px",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px", // Space between icon and text
-              color: "#000",
-              marginBottom: "20px", // Ensure proper spacing between title and map
-            }}
-          >
-            <MapIcon sx={{ fontSize: "28px", color: "#000" }} />{" "}
-            {/* Map icon */}
-            Map
-          </Typography>
-          <Map
-            address={propertyData.streetaddress}
-            city={propertyData.city}
-            state={propertyData.state}
-            sx={{ width: "100%", height: "300px" }} // Ensure Map takes full width and fix height
-          />
-        </CardContent>
-      </Card>
+      {propertyData.landId ? (
+  <Card sx={{borderRadius:"20px",p:3,mb:4,background:"#fff",border:"1px solid rgba(0,0,0,0.1)",boxShadow:"0 12px 35px rgba(0,0,0,0.05)",transition:"all 0.3s ease","&:hover":{boxShadow:"0 20px 50px rgba(0,0,0,0.1)"}}}>
+    <CardContent sx={{paddingBottom:0}}>
+      <Typography variant="h4" gutterBottom sx={{fontSize:"26px",display:"flex",alignItems:"center",gap:"8px",color:"#000",marginBottom:"20px"}}>
+        <MapIcon sx={{fontSize:"28px",color:"#000"}}/> Map
+      </Typography>
+      <Box sx={{position:"relative",width:"100%",paddingTop:"50%"}}>
+        <iframe loading="lazy" frameBorder="0" src={propertyData.landIdLink.replace("/share/","/embed/")} style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",border:0}} />
+      </Box>
+    </CardContent>
+  </Card>
+) : (
+  <Card sx={{borderRadius:"20px",p:3,mb:4,background:"#fff",border:"1px solid rgba(0,0,0,0.1)",boxShadow:"0 12px 35px rgba(0,0,0,0.05)",transition:"all 0.3s ease","&:hover":{boxShadow:"0 20px 50px rgba(0,0,0,0.1)"}}}>
+    <CardContent sx={{paddingBottom:0}}>
+      <Typography variant="h4" gutterBottom sx={{fontSize:"26px",display:"flex",alignItems:"center",gap:"8px",color:"#000",marginBottom:"20px"}}>
+        <MapIcon sx={{fontSize:"28px",color:"#000"}}/> Map
+      </Typography>
+      <Map address={propertyData.streetaddress} city={propertyData.city} state={propertyData.state} sx={{width:"100%",height:"300px"}} />
+    </CardContent>
+  </Card>
+)}
+
+
 
       {/* Disclaimer Section */}
       <Card

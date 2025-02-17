@@ -243,8 +243,27 @@ const AddProperty = () => {
         <TextField fullWidth label="APN or PIN" name="apnOrPin" value={formData.apnOrPin} onChange={handleChange} sx={textFieldStyle} />
       </Stack>
       <Stack direction={{xs:"column",sm:"row"}} spacing={2} mt={2}>
-        <FormControlWithSelect label="Land ID" name="landId" value={formData.landId} onChange={handleChange} options={["Yes","No"]} />
-        {formData.landId==="Yes" && (<TextField fullWidth label="Land ID Link" name="landIdLink" value={formData.landIdLink} onChange={handleChange} sx={textFieldStyle} />)}
+      <FormControlWithSelect
+  label="Land ID"
+  name="landId"
+  value={formData.landId ? "Available" : "Not Available"}
+  onChange={(e) =>
+    setFormData((prev) => ({ ...prev, landId: e.target.value === "Available" }))
+  }
+  options={["Available", "Not Available"]}
+/>
+
+       {formData.landId && (
+  <TextField
+    fullWidth
+    label="Land ID Link"
+    name="landIdLink"
+    value={formData.landIdLink}
+    onChange={handleChange}
+    sx={textFieldStyle}
+  />
+)}
+
       </Stack>
     </Box>
     {/* Property Size & Dimensions */}
@@ -261,7 +280,14 @@ const AddProperty = () => {
         <TextField fullWidth label="Asking Price" name="askingPrice" value={formData.askingPrice} onChange={handleChange} sx={textFieldStyle} />
         <TextField fullWidth label="Minimum Price" name="minPrice" value={formData.minPrice} onChange={handleChange} sx={textFieldStyle} />
         <TextField fullWidth label="Discount Price" name="disPrice" value={formData.disPrice} onChange={handleChange} sx={textFieldStyle} />
-        <FormControlWithSelect label="Financing" name="financing" value={formData.financing} onChange={handleChange} options={["Yes","No"]} />
+        <FormControlWithSelect
+  label="Financing"
+  name="financing"
+  value={formData.financing ? "Yes" : "No"}
+  onChange={e => setFormData(prev => ({ ...prev, financing: e.target.value === "Yes" }))}
+  options={["Yes", "No"]}
+/>
+
       </Stack>
     </Box>
     {/* Utilities, Infrastructure & Environmental Factors */}
