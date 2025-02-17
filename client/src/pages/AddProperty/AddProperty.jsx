@@ -246,14 +246,16 @@ const AddProperty = () => {
       <FormControlWithSelect
   label="Land ID"
   name="landId"
-  value={formData.landId ? "Available" : "Not Available"}
+  value={formData.landId === "true" ? "Available" : "Not Available"}
   onChange={(e) =>
-    setFormData((prev) => ({ ...prev, landId: e.target.value === "Available" }))
+    setFormData((prev) => ({
+      ...prev,
+      landId: e.target.value === "Available" ? "true" : "false",
+    }))
   }
   options={["Available", "Not Available"]}
 />
-
-       {formData.landId && (
+{formData.landId === "true" && (
   <TextField
     fullWidth
     label="Land ID Link"
@@ -283,8 +285,13 @@ const AddProperty = () => {
         <FormControlWithSelect
   label="Financing"
   name="financing"
-  value={formData.financing ? "Yes" : "No"}
-  onChange={e => setFormData(prev => ({ ...prev, financing: e.target.value === "Yes" }))}
+  value={formData.financing === "true" ? "Yes" : "No"}
+  onChange={(e) =>
+    setFormData((prev) => ({
+      ...prev,
+      financing: e.target.value === "Yes" ? "true" : "false",
+    }))
+  }
   options={["Yes", "No"]}
 />
 
