@@ -63,7 +63,7 @@ export const Lands = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
             {/* DFW */}
             <div className="flex flex-col items-center">
-              <h3 className="text-xl font-light mb-2 text-[#4b5b4d]">DFW</h3>
+              <h3 className="text-xl font-light mb-2 text-[#4b5b4d]">Dallas Fort Worth</h3>
               <div className="relative group w-full aspect-w-16 aspect-h-10 
                               rounded-lg shadow-md overflow-hidden 
                               transition-transform transform hover:-translate-y-1 hover:shadow-xl">
@@ -75,7 +75,7 @@ export const Lands = () => {
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center 
                                 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button  onClick={() => navigate("/DFWProperty")}  className="bg-white text-[#4b5b4d] font-semibold py-2 px-4 rounded-lg shadow hover:shadow-lg">
+                  <button  onClick={() => navigate("/DFW")}  className="bg-white text-[#4b5b4d] font-semibold py-2 px-4 rounded-lg shadow hover:shadow-lg">
                     Lands in DFW
                   </button>
                 </div>
@@ -95,7 +95,7 @@ export const Lands = () => {
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center 
                                 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onClick={() => navigate("/AustinProperty")} className="bg-white text-[#4b5b4d] font-semibold py-2 px-4 rounded-lg shadow hover:shadow-lg">
+                  <button onClick={() => navigate("/Austin")} className="bg-white text-[#4b5b4d] font-semibold py-2 px-4 rounded-lg shadow hover:shadow-lg">
                     Lands in Austin
                   </button>
                 </div>
@@ -115,7 +115,7 @@ export const Lands = () => {
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center 
                                 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button className="bg-white text-[#4b5b4d] font-semibold py-2 px-4 rounded-lg shadow hover:shadow-lg">
+                  <button onClick={() => navigate("/Houston")} className="bg-white text-[#4b5b4d] font-semibold py-2 px-4 rounded-lg shadow hover:shadow-lg">
                     Lands in Houston
                   </button>
                 </div>
@@ -133,7 +133,7 @@ export const Lands = () => {
                   alt="San Antonio"
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center 
+                <div onClick={() => navigate("/SanAntonio")} className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center 
                                 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button className="bg-white text-[#4b5b4d] font-semibold py-2 px-4 rounded-lg shadow hover:shadow-lg">
                     Lands in San Antonio
@@ -155,7 +155,7 @@ export const Lands = () => {
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center 
                                 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button className="bg-white text-[#4b5b4d] font-semibold py-2 px-4 rounded-lg shadow hover:shadow-lg">
+                  <button onClick={() => navigate("/OtherLands")} className="bg-white text-[#4b5b4d] font-semibold py-2 px-4 rounded-lg shadow hover:shadow-lg">
                     Other Lands
                   </button>
                 </div>

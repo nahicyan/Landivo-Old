@@ -2,10 +2,10 @@ import React, { useState, useRef } from "react";
 import { PuffLoader } from "react-spinners";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
-import useProperties from "../../components/hooks/useProperties";
-import PropertyCard from "../../components/PropertyCard/PropertyCard";
+import useProperties from "../hooks/useProperties";
+import PropertyCard from "../PropertyCard/PropertyCard";
 
-export default function AustinProperty() {
+export default function OtherLands() {
   const { data, isError, isLoading } = useProperties();
   const [searchQuery, setSearchQuery] = useState("");
   const scrollRef = useRef(null);
@@ -36,8 +36,8 @@ export default function AustinProperty() {
     );
   }
 
-  // Filter properties to only include those in Austin
-  const austinProperties = data.filter((property) => property.area === "Austin");
+  // Filter properties to only include those in Other
+  const OtherProperties = data.filter((property) => property.area === "Other");
 
   // Handlers for horizontal scrolling
   const handleScrollLeft = () => {
@@ -58,14 +58,14 @@ export default function AustinProperty() {
         {/* Title & Subtitle */}
         <div className="mb-10 text-center">
           <h1 className="text-3xl sm:text-4xl font-bold mb-4">
-            {austinProperties.length > 0 ? "Properties in Austin" : "Hot Deals Move Fast!"}
+            {OtherProperties.length > 0 ? "Properties in Other" : "Hot Deals Move Fast!"}
           </h1>
           <p className="text-lg mb-6">
-            {austinProperties.length > 0
-              ? "Browse through properties available in the Austin area."
+            {OtherProperties.length > 0
+              ? "Browse through properties available in the Other area."
               : (
                 <>
-                  Sorry! We Sold Through Everything In Austin! <br />
+                  Sorry! We Sold Through Everything In Other Areas <br />
                   Maybe you would be interested in these properties:
                 </>)}
           </p>
@@ -92,8 +92,8 @@ export default function AustinProperty() {
 
         </div>
 
-        {austinProperties.length > 0 ? (
-          // Display Austin properties in a horizontal slider
+        {OtherProperties.length > 0 ? (
+          // Display Other properties in a horizontal slider
           <div className="relative">
             {/* Left Scroll Button */}
             <button
@@ -109,7 +109,7 @@ export default function AustinProperty() {
               ref={scrollRef}
             >
               <div className="flex space-x-6">
-                {austinProperties.map((card) => (
+                {OtherProperties.map((card) => (
                   <div
                     key={card.id}
                     className="w-72 flex-shrink-0 transition hover:scale-105"
@@ -129,7 +129,7 @@ export default function AustinProperty() {
             </button>
           </div>
         ) : (
-          // Fallback: Display all properties if no Austin properties are available
+          // Fallback: Display all properties if no Other properties are available
           <div className="flex flex-wrap justify-center gap-6">
             {data.map((card) => (
               <div
@@ -141,6 +141,20 @@ export default function AustinProperty() {
             ))}
           </div>
         )}
+        {/* "All Properties" Button */}
+        <div className="mt-10 text-center">
+          <button
+            onClick={() => {
+              // If using react-router, we can navigate programmatically:
+              // navigate("/properties");
+              // Or just use an anchor if you prefer:
+              window.location.href = "/properties";
+            }}
+            className="inline-block bg-black hover:bg-[#FF5C00] text-white font-semibold py-3 px-6 rounded-full shadow transition-colors"
+          >
+            All Properties
+          </button>
+        </div>
       </div>
     </div>
   );

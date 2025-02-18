@@ -1,112 +1,160 @@
-import React from "react";
-import { Box, Button, Typography, IconButton } from "@mui/material";
-import { UploadFile as UploadFileIcon, Delete as DeleteIcon } from "@mui/icons-material";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import React, { useState } from "react";
+import { Box, IconButton, Typography } from "@mui/material";
+import { ArrowBackIosNew, ArrowForwardIos } from "@mui/icons-material";
 
-const ImageUploadPreview = ({ uploadedImages, setUploadedImages }) => {
-  const handleFileChange = (e) => {
-    const files = Array.from(e.target.files);
-    const newImages = files.map((file) => ({
-      id: URL.createObjectURL(file), // Use URL for preview
-      file,
-    }));
-    setUploadedImages((prev) => [...prev, ...newImages]);
+/**
+ * ImageSliderWithThumbnails
+ *
+ * A reusable slider component for displaying a list of images with
+ * a main display area and circular thumbnails beneath.
+ *
+ * @param {Object[]} images - The array of image objects
+ *    Each object should have: { image: string }
+ *
+ */
+const ImageSliderWithThumbnails = ({ images }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handlePrev = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+    );
   };
 
-  const handleDelete = (id) => {
-    setUploadedImages((prev) => prev.filter((img) => img.id !== id));
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+    );
   };
 
-  const onDragEnd = (result) => {
-    if (!result.destination) return;
-    const reorderedImages = Array.from(uploadedImages);
-    const [removed] = reorderedImages.splice(result.source.index, 1);
-    reorderedImages.splice(result.destination.index, 0, removed);
-    setUploadedImages(reorderedImages);
+  const handleThumbnailClick = (index) => {
+    setCurrentIndex(index);
   };
+
+  if (!images || images.length === 0) {
+    return (
+      <Typography variant="body1" color="text.secondary">
+        No images to display.
+      </Typography>
+    );
+  }
 
   return (
-    <Box mt={3}>
-      <Typography variant="h6" gutterBottom>
-        Upload Images
-      </Typography>
-      <Button
-        variant="contained"
-        component="label"
-        startIcon={<UploadFileIcon />}
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: 600,
+        margin: "0 auto",
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      {/* Main Slider Area */}
+      <Box
         sx={{
-          background: "linear-gradient(135deg, #FF8C42, #FF6F00)",
-          color: "#fff",
-          mb: 2,
+          position: "relative",
+          width: "100%",
+          height: 0,
+          paddingBottom: "66.666%", // 3:2 Aspect Ratio
+          overflow: "hidden",
+          borderRadius: 2,
+          boxShadow: 2,
+          marginBottom: 2,
+          backgroundColor: "#f0f0f0",
         }}
       >
-        Select Images
-        <input type="file" hidden multiple onChange={handleFileChange} />
-      </Button>
+        {/* Arrows */}
+        <IconButton
+          aria-label="Previous"
+          onClick={handlePrev}
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: 8,
+            transform: "translateY(-50%)",
+            color: "#fff",
+            backgroundColor: "rgba(0, 0, 0, 0.4)",
+            "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.6)" },
+            zIndex: 2,
+          }}
+        >
+          <ArrowBackIosNew fontSize="small" />
+        </IconButton>
 
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="image-list" direction="horizontal">
-          {(provided) => (
-            <Box
-              display="flex"
-              gap={2}
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-              sx={{
-                overflowX: "auto",
-                p: 1,
-                border: "1px solid #ddd",
-                borderRadius: "8px",
-              }}
-            >
-              {uploadedImages.map((img, index) => (
-                <Draggable key={img.id} draggableId={img.id} index={index}>
-                  {(provided) => (
-                    <Box
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      sx={{
-                        position: "relative",
-                        width: "150px",
-                        height: "150px",
-                        borderRadius: "8px",
-                        overflow: "hidden",
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                      }}
-                    >
-                      <img
-                        src={img.id}
-                        alt="Uploaded Preview"
-                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                      />
-                      <IconButton
-                        size="small"
-                        onClick={() => handleDelete(img.id)}
-                        sx={{
-                          position: "absolute",
-                          top: 5,
-                          right: 5,
-                          backgroundColor: "rgba(0, 0, 0, 0.5)",
-                          color: "#fff",
-                          "&:hover": {
-                            backgroundColor: "rgba(0, 0, 0, 0.7)",
-                          },
-                        }}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Box>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </Box>
-          )}
-        </Droppable>
-      </DragDropContext>
+        <IconButton
+          aria-label="Next"
+          onClick={handleNext}
+          sx={{
+            position: "absolute",
+            top: "50%",
+            right: 8,
+            transform: "translateY(-50%)",
+            color: "#fff",
+            backgroundColor: "rgba(0, 0, 0, 0.4)",
+            "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.6)" },
+            zIndex: 2,
+          }}
+        >
+          <ArrowForwardIos fontSize="small" />
+        </IconButton>
+
+        {/* Main Image */}
+        {images.map((img, index) => (
+          <Box
+            key={index}
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundImage: `url(${img.image})`,
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+              transition: "opacity 0.5s ease",
+              opacity: currentIndex === index ? 1 : 0,
+            }}
+          />
+        ))}
+      </Box>
+
+      {/* Thumbnails */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          gap: 2,
+          flexWrap: "wrap",
+        }}
+      >
+        {images.map((img, index) => (
+          <Box
+            key={index}
+            onClick={() => handleThumbnailClick(index)}
+            sx={{
+              width: 50,
+              height: 50,
+              borderRadius: "50%",
+              cursor: "pointer",
+              overflow: "hidden",
+              border: index === currentIndex ? "2px solid #1976d2" : "2px solid transparent",
+              transition: "border 0.3s ease",
+              backgroundColor: "#f8f8f8",
+              boxShadow: 1,
+              backgroundImage: `url(${img.image})`,
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+              "&:hover": { opacity: 0.8 },
+            }}
+          />
+        ))}
+      </Box>
     </Box>
   );
 };
 
-export default ImageUploadPreview;
+export default ImageSliderWithThumbnails;

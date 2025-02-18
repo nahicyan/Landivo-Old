@@ -12,8 +12,7 @@ const PropertyCard = ({ card }) => {
   return (
     <div
       // Outer container with gradient border and smooth shadow transitions
-      className="group relative w-full max-w-[460px] h-[380px] rounded-xl p-1 bg-gradient-to-r from-white/40 via-white/20 to-white/40 shadow-xl transition-all duration-300 hover:shadow-2xl"
-      onClick={() => navigate(`../properties/${card.id}`)}
+      className="group relative w-full max-w-[460px] h-[380px] rounded-xl p-1 bg-gradient-to-r from-white/40 via-white/20 to-white/40 shadow-xl transition-all duration-300 hover:shadow-2xl cursor-pointer"      onClick={() => navigate(`../properties/${card.id}`)}
     >
       {/* Inner container with the frosted glass effect */}
       <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-xl border border-white/30 overflow-hidden">

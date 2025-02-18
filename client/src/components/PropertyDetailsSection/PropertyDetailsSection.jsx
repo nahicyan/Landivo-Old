@@ -139,35 +139,39 @@ const PropertyDetailsSection = ({
 
       {/* === Map Section === */}
       {propertyData.landId === "Available" ? (
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-4 shadow-md hover:shadow-xl transition-all duration-300">
-          <div className="flex items-center gap-2 mb-4">
-            <MapIcon className="w-6 h-6 text-black" />
-            <h2 className="text-2xl font-bold text-black">Map</h2>
-          </div>
-          <div className="relative w-full h-0 pb-[50%]">
-            <iframe
-              loading="lazy"
-              frameBorder="0"
-              src={propertyData.landIdLink.replace("/share/", "/embed/")}
-              className="absolute top-0 left-0 w-full h-full border-0"
-            />
-          </div>
-        </div>
-      ) : (
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-4 shadow-md hover:shadow-xl transition-all duration-300">
-          <div className="flex items-center gap-2 mb-4">
-            <MapIcon className="w-6 h-6 text-black" />
-            <h2 className="text-2xl font-bold text-black">Map</h2>
-          </div>
-          <div className="w-full h-[300px]">
-            <Map
-              address={propertyData.streetaddress}
-              city={propertyData.city}
-              state={propertyData.state}
-            />
-          </div>
-        </div>
-      )}
+  <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-4 shadow-md hover:shadow-xl transition-all duration-300">
+    <div className="flex items-center gap-2 mb-4">
+      <MapIcon className="w-6 h-6 text-black" />
+      <h2 className="text-2xl font-bold text-black">Map</h2>
+    </div>
+    <div className="relative w-full h-0 pb-[40%]">
+      <iframe
+        loading="lazy"
+        frameBorder="0"
+        src={propertyData.landIdLink.replace("/share/", "/embed/")}
+        className="absolute top-0 left-0 w-full h-full border-0"
+      />
+    </div>
+  </div>
+) : (
+  <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-4 shadow-md hover:shadow-xl transition-all duration-300">
+    <div className="flex items-center gap-2 mb-4">
+      <MapIcon className="w-6 h-6 text-black" />
+      <h2 className="text-2xl font-bold text-black">Map</h2>
+    </div>
+    <div className="relative w-full h-0 pb-[42%]">
+      <div className="absolute top-0 left-0 w-full h-full">
+        <Map
+          address={propertyData.streetaddress}
+          city={propertyData.city}
+          state={propertyData.state}
+        />
+      </div>
+    </div>
+  </div>
+)}
+
+
 
       {/* === Disclaimer Section === */}
       <div className="bg-gray-200 border border-transparent rounded-xl p-6 shadow-md mt-4">

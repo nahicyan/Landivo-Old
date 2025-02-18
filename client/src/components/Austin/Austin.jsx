@@ -2,42 +2,26 @@ import React, { useState, useRef } from "react";
 import { PuffLoader } from "react-spinners";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
-import useProperties from "../../components/hooks/useProperties";
-import PropertyCard from "../../components/PropertyCard/PropertyCard";
+import useProperties from "../hooks/useProperties";
+import PropertyCard from "../PropertyCard/PropertyCard";
 
-export default function Properties() {
+export default function AustinProperty() {
   const { data, isError, isLoading } = useProperties();
   const [searchQuery, setSearchQuery] = useState("");
-  
-  // Ref object for horizontal scrolling in the DFW slider
   const scrollRef = useRef(null);
 
-  // Handle Search
-  const handleSearch = (e) => {
-    e.preventDefault();
-    // Add search logic if desired
-  };
-
-  // Scroll Left for DFW slider
-  const handleScrollLeft = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
-    }
-  };
-
-  // Scroll Right for DFW slider
-  const handleScrollRight = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
-    }
-  };
+    // Handle Search
+    const handleSearch = (e) => {
+        e.preventDefault();
+        // Add search logic if desired
+      };
 
   // Error State
   if (isError) {
     return (
       <div className="flex items-center justify-center h-[60vh]">
         <h2 className="text-red-600 text-xl font-semibold">
-          Error fetching data.
+          Error fetching properties.
         </h2>
       </div>
     );
@@ -52,8 +36,21 @@ export default function Properties() {
     );
   }
 
-  // Filter to only show DFW properties
-  const dfwProperties = data.filter((property) => property.area === "DFW");
+  // Filter properties to only include those in Austin
+  const austinProperties = data.filter((property) => property.area === "Austin");
+
+  // Handlers for horizontal scrolling
+  const handleScrollLeft = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
+    }
+  };
+
+  const handleScrollRight = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
+    }
+  };
 
   return (
     <div className="bg-[#FDF8F2] min-h-screen py-12 text-[#4b5b4d]">
@@ -61,16 +58,20 @@ export default function Properties() {
         {/* Title & Subtitle */}
         <div className="mb-10 text-center">
           <h1 className="text-3xl sm:text-4xl font-bold mb-4">
-            {dfwProperties.length > 0 ? "Properties in DFW" : "Hot Deals Move Fast!"}
+            {austinProperties.length > 0 ? "Properties in Austin" : "Hot Deals Move Fast!"}
           </h1>
           <p className="text-lg mb-6">
-            {dfwProperties.length > 0
-              ? "Browse through properties available in the DFW area."
-              : "Maybe you would be interested in these properties:"}
+            {austinProperties.length > 0
+              ? "Browse through properties available in the Austin area."
+              : (
+                <>
+                  Sorry! We Sold Through Everything In Austin! <br />
+                  Maybe you would be interested in these properties:
+                </>)}
           </p>
-
-          {/* Search Bar */}
-          <form onSubmit={handleSearch} className="relative max-w-2xl mx-auto">
+        
+        {/* Search Bar */}
+        <form onSubmit={handleSearch} className="relative max-w-2xl mx-auto">
             <div className="flex flex-col sm:flex-row items-center justify-center bg-white rounded-full shadow-md p-2 transition hover:shadow-lg">
               <input
                 type="text"
@@ -87,10 +88,12 @@ export default function Properties() {
               </button>
             </div>
           </form>
+
+
         </div>
 
-        {dfwProperties.length > 0 ? (
-          // Display DFW properties in a horizontal slider
+        {austinProperties.length > 0 ? (
+          // Display Austin properties in a horizontal slider
           <div className="relative">
             {/* Left Scroll Button */}
             <button
@@ -100,13 +103,13 @@ export default function Properties() {
               <ChevronLeftIcon className="w-5 h-5" />
             </button>
 
-            {/* Scrollable DFW Row */}
+            {/* Scrollable Row */}
             <div
               className="overflow-x-auto overflow-y-hidden no-scrollbar px-2 py-4"
               ref={scrollRef}
             >
               <div className="flex space-x-6">
-                {dfwProperties.map((card) => (
+                {austinProperties.map((card) => (
                   <div
                     key={card.id}
                     className="w-72 flex-shrink-0 transition hover:scale-105"
@@ -126,7 +129,7 @@ export default function Properties() {
             </button>
           </div>
         ) : (
-          // Fallback: Show all properties if no DFW properties are available
+          // Fallback: Display all properties if no Austin properties are available
           <div className="flex flex-wrap justify-center gap-6">
             {data.map((card) => (
               <div
@@ -138,6 +141,20 @@ export default function Properties() {
             ))}
           </div>
         )}
+        {/* "All Properties" Button */}
+        <div className="mt-10 text-center">
+          <button
+            onClick={() => {
+              // If using react-router, we can navigate programmatically:
+              // navigate("/properties");
+              // Or just use an anchor if you prefer:
+              window.location.href = "/properties";
+            }}
+            className="inline-block bg-black hover:bg-[#FF5C00] text-white font-semibold py-3 px-6 rounded-full shadow transition-colors"
+          >
+            All Properties
+          </button>
+        </div>
       </div>
     </div>
   );
