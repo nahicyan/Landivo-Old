@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../utils/UserContext";
 import PropertyDetailsSection from "../PropertyDetailsSection/PropertyDetailsSection";
-import { Box, Typography, Chip } from "@mui/material";
+import { Box, Typography, Chip, Button } from "@mui/material";
 import AnimatedCards from "../AnimatedCards/AnimatedCards";
 import "react-quill/dist/quill.snow.css";
 import {Card, CardContent } from "@mui/material";
@@ -10,6 +12,9 @@ import FactCard from "../FactCard/FactCard";
 
 const PropertyLeftSection = ({propertyData}) => {
   const [imageCards, setImageCards] = useState([]);
+  const { currentUser } = useContext(UserContext);
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (propertyData?.image) {
       try {
@@ -40,6 +45,25 @@ const PropertyLeftSection = ({propertyData}) => {
   }}
 >
       {/* Sticky Section (Tags, Visitors, Address, Title) */}
+      {currentUser && currentUser.role === "ADMIN" && (
+    <Button
+      variant="contained"
+      size="small"
+      sx={{
+        backgroundColor: "#576756",
+        color: "#ffffff",
+        fontSize: "14px",
+        fontWeight: 600,
+        textTransform: "uppercase",
+        padding: "8px 18px",
+        borderRadius: "50px",
+        "&:hover": { backgroundColor: "#476546" },
+      }}
+      onClick={() => navigate(`/edit-property/${propertyData.id}`)}
+    >
+      Edit Property
+    </Button>
+  )}
       <Box
         sx={{
           position: "sticky",
@@ -173,7 +197,7 @@ const PropertyLeftSection = ({propertyData}) => {
             <Grid item xs={6} sm={3}>
               <FactCard
                 title="Financing"
-                value={propertyData.financing ? "Available" : "Not Available"}
+                value={propertyData.financing}
                 icon={<AttachMoney />}
                 backgroundColor="#66BB6A"
               />

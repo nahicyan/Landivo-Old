@@ -12,6 +12,9 @@ import Property from "./pages/Property/Property"; // Property detail page
 import Offer from "./components/Offer/Offer"; // Offer component
 import AddProperty from "./pages/AddProperty/AddProperty"; // Add Property page
 import { UserProvider } from "./utils/UserContext"; // User context provider
+import EditProperty from "./pages/EditProperty/EditProperty"; // Edit Property page
+import DFWProperty from "./components/DFWProperty/DFWProperty"; // DFW Property page
+import AustinProperty from "./components/AustinProperty/AustinProperty"; // Austin Property page
 
 // Create the React Query client
 const queryClient = new QueryClient();
@@ -32,7 +35,10 @@ function App() {
                     <Route path=":propertyId" element={<Property />} />
                     <Route path=":propertyId/offer" element={<Offer />} />
                   </Route>
+                  <Route path="/DFWProperty" element={<DFWProperty />} />
+                  <Route path="/AustinProperty" element={<AustinProperty />} />
                   <Route path="/add-property" element={<AddProperty />} />
+                  <Route path="/edit-property/:propertyId" element={<EditProperty />} />
                 </Route>
               </Routes>
             </Suspense>
