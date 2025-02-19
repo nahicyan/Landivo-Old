@@ -2,11 +2,9 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import { Box, CircularProgress, Typography } from "@mui/material";
-import PropertyLeftSection from "../../components/PropertyLeftSection/PropertyLeftSection";
-import PropertyRightSection from "../../components/PropertyRightSection/PropertyRightSection";
-import FloatingButtons from "../../components/FloatingButtons/FloatingButtons";
 import { getProperty } from "../../utils/api";
 import { UserContext } from "../../utils/UserContext";
+import PropertyHeader from "../../components/PropertyHeader/PropertyHeader";
 
 const Property = () => {
   const { pathname } = useLocation();
@@ -79,49 +77,11 @@ const Property = () => {
   }
 
   return (
-    <Box
-      sx={{
-        maxWidth: "1900px",
-        margin: "50px auto",
-        padding: "35px",
-        background: "#ffffff",
-        borderRadius: "18px",
-        boxShadow: "0 10px 30px rgba(0, 0, 0, 0.08)",
-        display: "flex",
-        gap: 4,
-      }}
-    >
-      {/* Left Section (Scrollable) */}
-      <Box
-        sx={{
-          flex: 3,
-          overflowY: "auto",
-          height: "80vh",
-          paddingRight: "20px",
-          scrollbarWidth: "none", // Hide scrollbar for Firefox
-          "&::-webkit-scrollbar": {
-            display: "none", // Hide scrollbar for Chrome, Safari, Edge
-          },
-        }}
-        ref={leftSectionRef}
-      >
-        <PropertyLeftSection propertyData={propertyData} />
-      </Box>
+    <div className="bg-[#FDF8F2] min-h-screen p-4 text-[#4b5b4d]">
+      {/* Property Header */}
+      <PropertyHeader propertyData={propertyData} />
+    </div>
 
-      {/* Right Section (Sticky & Scrolls Left Section) */}
-      <Box
-        sx={{
-          flex: 1,
-          position: "sticky",
-          top: "20px",
-          height: "fit-content",
-          overflow: "hidden", // Prevents unwanted scrolling
-        }}
-        ref={rightSectionRef} // Reference for scrolling control
-      >
-        <PropertyRightSection propertyData={propertyData} />
-      </Box>
-    </Box>
   );
 };
 

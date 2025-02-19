@@ -1,8 +1,4 @@
 import React from "react";
-import { Box, Typography, Button, Grid, Card, CardContent } from "@mui/material";
-import { motion } from "framer-motion";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import HouseImage from "../../../public/banner.jpg"; //
 const Hero = () => {
   return (
         <div className="bg-[#FDF8F2]">
