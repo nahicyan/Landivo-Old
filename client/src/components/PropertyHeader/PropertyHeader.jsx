@@ -4,7 +4,7 @@ import PropertyHeaderRight from "../PropertyHeaderRight/PropertyHeaderRight";
 
 export default function PropertyHeader({ propertyData }) {
   return (
-    <header className="flex flex-col lg:flex-row gap-6 w-full bg-[#FDF8F2]">
+    <header className="flex flex-col lg:flex-row gap-6 w-full bg-[#FFF]">
       {/* Left Section */}
       <div className="w-full lg:w-3/4">
         <PropertyHeaderLeft propertyData={propertyData} />

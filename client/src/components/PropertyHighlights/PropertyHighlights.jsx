@@ -33,7 +33,7 @@ export default function QuickFacts({ propertyData }) {
         "
       >
         <CardHeader className="flex flex-col items-center p-2 pb-0">
-          <ArrowsPointingOutIcon  className="w-6 h-6 text-[#3f4f24] mb-1" />
+          <ArrowsPointingOutIcon  className="w-6 h-6 text-[#3f4f24]" />
           <CardTitle className="text-base font-semibold text-[#3f4f24]">
             Size
           </CardTitle>
@@ -65,7 +65,7 @@ export default function QuickFacts({ propertyData }) {
         "
       >
         <CardHeader className="flex flex-col items-center p-2 pb-0">
-          <MapIcon className="w-6 h-6 text-[#3f4f24] mb-1" />
+          <MapIcon className="w-6 h-6 text-[#3f4f24] " />
           <CardTitle className="text-base font-semibold text-[#3f4f24]">
             Zoning
           </CardTitle>
@@ -97,7 +97,7 @@ export default function QuickFacts({ propertyData }) {
         "
       >
         <CardHeader className="flex flex-col items-center p-2 pb-0">
-          <MapPinIcon className="w-6 h-6 text-[#3f4f24] mb-1" />
+          <MapPinIcon className="w-6 h-6 text-[#3f4f24] " />
           <CardTitle className="text-base font-semibold text-[#3f4f24]">
             Area
           </CardTitle>
@@ -129,7 +129,7 @@ export default function QuickFacts({ propertyData }) {
         "
       >
         <CardHeader className="flex flex-col items-center p-2 pb-0">
-          <CurrencyDollarIcon className="w-6 h-6 text-[#3f4f24] mb-1" />
+          <CurrencyDollarIcon className="w-6 h-6 text-[#3f4f24] " />
           <CardTitle className="text-base font-semibold text-[#3f4f24]">
             Financing
           </CardTitle>

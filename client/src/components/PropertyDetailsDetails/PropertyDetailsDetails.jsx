@@ -24,21 +24,16 @@ import {
   UtilityPole,
   MapPinned,
   UmbrellaOff,
-  Calendar,
-  Home,
+  NotebookPen,
   DollarSign,
-  Banknote,
-  Medal,
-  History,
-  School,
-  AlertTriangle,
-  Map,
+  Home,
+  Info,
 } from "lucide-react";
 import PropertyMap from "../PropertyMap/PropertyMap";
 
 export default function PropertyDetailsDetails({ propertyData }) {
   return (
-    <div className="bg-[var(--background)] text-[var(--text)] p-4">
+    <div className="bg-[FFF] text-[var(--text)] p-4">
       {/* Two columns: "Location" & "Property details" */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Left Column: Location */}
@@ -151,7 +146,7 @@ export default function PropertyDetailsDetails({ propertyData }) {
           </AccordionTrigger>
           <AccordionContent>
             <span className="flex items-center gap-2 text-base">
-              <p>For driving directions,</p>
+            {propertyData.direction && (<span>{propertyData.direction}.</span>)}<p>For driving directions,</p>
               <a
                 href={`https://www.google.com/maps/dir/?api=1&destination=${propertyData.latitude},${propertyData.longitude}`}
                 target="_blank"
@@ -173,10 +168,7 @@ export default function PropertyDetailsDetails({ propertyData }) {
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Left Column: Location */}
-              <div>
-                <Table className="w-full text-lg">
+                <Table className="w-[70%] text-lg">
                   <TableBody>
                     <TableRow>
                       <TableCell className="font-medium text-gray-700">
@@ -202,11 +194,14 @@ export default function PropertyDetailsDetails({ propertyData }) {
                       </TableCell>
                       <TableCell>{propertyData.roadCondition}</TableCell>
                     </TableRow>
+                    <TableRow>
+                      <TableCell className="font-medium text-gray-700">
+                        Mobile Home Friendly
+                      </TableCell>
+                      <TableCell>{propertyData.mobileHomeFriendly}</TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
-              </div>
-              <div></div>
-            </div>
           </AccordionContent>
         </AccordionItem>
 
@@ -228,7 +223,7 @@ export default function PropertyDetailsDetails({ propertyData }) {
             </AccordionContent>
           </AccordionItem>
         </Accordion>
-        {propertyData.financing === "Yes" && (
+        {propertyData.financing === "Available" && (
           <AccordionItem
             value="MonthlyPayment"
             className="border-b border-[#c1d7d3]"
@@ -239,7 +234,7 @@ export default function PropertyDetailsDetails({ propertyData }) {
                 <span>Monthly Payment</span>
               </div>
             </AccordionTrigger>
-            <AccordionContent></AccordionContent>
+            <AccordionContent><p>This feature is currently being worked on. Please check back soon.</p></AccordionContent>
           </AccordionItem>
         )}
 
@@ -271,7 +266,7 @@ export default function PropertyDetailsDetails({ propertyData }) {
             </AccordionContent>
           </AccordionItem>
         )}
-
+ {propertyData.floodplain !=="No" && (
         <AccordionItem
           value="Enviromental Risk"
           className="border-b border-[#c1d7d3]"
@@ -282,13 +277,24 @@ export default function PropertyDetailsDetails({ propertyData }) {
               <span>Enviromental Risk</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent></AccordionContent>
-        </AccordionItem>
+          <AccordionContent>
+          <Table className="w-[50%] text-base tracking-tight">
+                  <TableBody>
+                    <TableRow>
+                      <TableCell className="font-medium text-gray-700">
+                        Floodplain
+                      </TableCell>
+                      <TableCell>{propertyData.floodplain}</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+            </AccordionContent>
+        </AccordionItem>)}
         {propertyData.notes && (
           <AccordionItem value="Notes" className="border-b border-[#c1d7d3]">
             <AccordionTrigger className="flex items-center justify-between w-full text-left text-xl font-medium text-gray-800 tracking-tight">
               <div className="flex items-center gap-2">
-                <Home className="w-6 h-6 text-gray-600" />
+                <Info className="w-6 h-6 text-gray-600" />
                 <span>Additional Information</span>
               </div>
             </AccordionTrigger>
@@ -298,9 +304,42 @@ export default function PropertyDetailsDetails({ propertyData }) {
                 dangerouslySetInnerHTML={{ __html: propertyData.notes }}
               />
             </AccordionContent>
-          </AccordionItem>
+          </AccordionItem>  
         )}
+
+<Accordion type="single" collapsible defaultValue="Notes">
+      <AccordionItem value="Notes" className="border-b border-[#c1d7d3]">
+        <AccordionTrigger className="flex items-center justify-between w-full text-left text-xl font-medium text-gray-800 tracking-tight">
+          <div className="flex items-center gap-2">
+            <NotebookPen className="w-6 h-6 text-gray-600" />
+            <span>Buyer Guidelines</span>
+          </div>
+        </AccordionTrigger>
+        <AccordionContent>
+          <div
+            className="text-base w-[70%]"
+
+          >
+
+            <p>Cash OR Hard Money Only.</p>
+            <p>Earnest money deposit varies per property.</p>
+            <p>Buyer pays ALL closing costs.</p>
+            <p>
+              Buyer to pay Administrative Fee Payable to Landers Investment LLC for{" "}
+              <span className="font-semibold">$395 additional/added to the Assignment fee.</span>
+            </p>
+            <p>Agents, please add your commission to the buyer's sales price.</p>
+            <p>Daisy Chainers do not apply—no Option period.</p>
+            <p>Please do your due diligence before making an offer.</p>
+            <p>This Property is being sold AS-IS.</p>
+            <p>Close Date: ASAP</p>
+        </div>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+
       </Accordion>
+      
     </div>
   );
 }

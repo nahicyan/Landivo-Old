@@ -33,7 +33,7 @@ import {
 export default function Offer({ propertyData }) {
   if (!propertyData) {
     return (
-      <div className="min-h-screen bg-[#fdf8f2] text-[#050002] flex items-center justify-center">
+      <div className="min-h-screen bg-[#FFF] text-[#050002] flex items-center justify-center">
         Error: Property data not found.
       </div>
     );
@@ -99,8 +99,8 @@ export default function Offer({ propertyData }) {
 
   // Number Formatting
   return (
-     <div className="min-h-screen bg-[#fdf8f2] text-[#050002] flex items-start justify-center p-4">
-      <Card className="w-full max-w-md border border-[#405025]/20 bg-[#fdf8f2] shadow-lg">
+     <div className="min-h-screen bg-[#FFF] text-[#050002] flex items-start justify-center p-4">
+      <Card className="w-full max-w-md border border-[#405025]/20 bg-[#FFF] shadow-lg">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-[#405025]">
             Make An Offer
@@ -183,7 +183,7 @@ export default function Offer({ propertyData }) {
               >
                 <SelectTrigger className="w-full">
                <SelectValue placeholder="Select Buyer Type" /> </SelectTrigger>
-                <SelectContent className="bg-[#fdf8f2] text-[#050002] border border-[#405025]/20">
+                <SelectContent className="bg-[#FFF] text-[#050002] border border-[#405025]/20">
                   <SelectItem value="CashBuyer">Cash Buyer</SelectItem>
                   <SelectItem value="Builder">Builder</SelectItem>
                   <SelectItem value="Developer">Developer</SelectItem>
@@ -213,7 +213,7 @@ export default function Offer({ propertyData }) {
             {/* Submit Button */}
             <Button
               type="submit"
-              className="w-full bg-[#324c48] text-[#fdf8f2] hover:bg-[#324c48]/90 font-semibold mt-4"
+              className="w-full bg-[#324c48] text-[#FFF] hover:bg-[#324c48]/90 font-semibold mt-4"
             >
               Submit Offer
             </Button>
@@ -223,7 +223,7 @@ export default function Offer({ propertyData }) {
 
       {/* Dialog Notification */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="bg-[#fdf8f2] text-[#050002] border border-[#405025]/30 shadow-lg">
+        <DialogContent className="bg-[#FFF] text-[#050002] border border-[#405025]/30 shadow-lg">
           <DialogHeader>
             <DialogTitle className={dialogType === "success" ? "text-green-600" : "text-red-600"}>
               {dialogType === "success" ? "Success" : "Warning"}
@@ -231,7 +231,7 @@ export default function Offer({ propertyData }) {
             <DialogDescription>{dialogMessage}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button onClick={() => setDialogOpen(false)} className="bg-[#324c48] text-[#fdf8f2]">
+            <Button onClick={() => setDialogOpen(false)} className="bg-[#324c48] text-[#FFF]">
               Okay
             </Button>
           </DialogFooter>

@@ -40,7 +40,7 @@ model Residency {
     subtype             String?
     zoning              String?
     restrictions        String?
-    mobileHomeFriendly  String?
+    mobileHomeFriendly  String?  
     hoaPoa              String?
     hoaDeedDevInfo      String?
     notes               String?

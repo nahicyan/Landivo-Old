@@ -2,6 +2,7 @@ import React from "react";
 import PropertyHighlights from "../PropertyHighlights/PropertyHighlights";
 import PropertyDetailsDescription from "../PropertyDetailsDescription/PropertyDetailsDescription";
 import PropertyDetailsDetails from "../PropertyDetailsDetails/PropertyDetailsDetails"; // <-- Import here
+import PropertyDisclaimer from "../PropertyDisclaimer/PropertyDisclaimer";
 
 export default function PropertyDetailsLeft({ propertyData }) {
   return (
@@ -22,6 +23,11 @@ export default function PropertyDetailsLeft({ propertyData }) {
       <div className="mt-6">
         <PropertyDetailsDetails propertyData={propertyData} />
       </div>
+            {/* Property Details */}
+            <div className="mt-6 bg-[#FFF]">
+          <PropertyDisclaimer propertyData={propertyData} />
+        </div>
+
     </div>
   );
 }

@@ -61,9 +61,8 @@ const Property = () => {
   return (
     <div className="bg-[#FDF8F2] min-h-screen p-4 text-[#4b5b4d] flex justify-center">
       {/* Outer wrapper ensures content is centered */}
-      <div className="max-w-screen-xl w-full">
-        {/* Property Header Sections Inline */}
-        <div className="flex flex-col lg:flex-row gap-6 w-full bg-[#FDF8F2]">
+      <div className="max-w-screen-xl w-full bg-white rounded-lg shadow-md">        {/* Property Header Sections Inline */}
+        <div className="flex flex-col lg:flex-row gap-6 w-full bg-[#FFF]">
           {/* Left Section */}
           <div className="w-full lg:w-3/4">
             <PropertyHeaderLeft propertyData={propertyData} />
@@ -81,14 +80,12 @@ const Property = () => {
         </div>
   
         {/* Property Details */}
-        <div className="mt-6 bg-[#FDF8F2]">
+        <div className="mt-6 bg-[#FFF]">
           <PropertyDetails propertyData={propertyData} />
         </div>
       </div>
     </div>
   );
-  
-  
   
 };
 

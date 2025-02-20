@@ -122,7 +122,7 @@ export default function PropertyCarousel({ propertyData }) {
 
   return (
     <>
-      <Card className="bg-[#FDF8F2] border-0 shadow-none">
+      <Card className="bg-[#FFF] border-0 shadow-none">
         {/* Title */}
         <CardHeader className="p-4">
           <CardTitle className="text-xl font-semibold text-gray-800">
@@ -140,7 +140,7 @@ export default function PropertyCarousel({ propertyData }) {
             {/* Left Arrow (Desktop) */}
             <Button
               variant="ghost"
-              className="absolute left-2 z-10 bg-[#FDF8F2]"
+              className="absolute left-2 z-10 bg-[#FFF]"
               onClick={prevImage}
             >
               <ChevronLeftIcon className="w-5 h-5" />
@@ -165,7 +165,7 @@ export default function PropertyCarousel({ propertyData }) {
             {/* Right Arrow (Desktop) */}
             <Button
               variant="ghost"
-              className="absolute right-2 z-10 bg-[#FDF8F2]"
+              className="absolute right-2 z-10 bg-[#FFF]"
               onClick={nextImage}
             >
               <ChevronRightIcon className="w-5 h-5" />
@@ -180,7 +180,7 @@ export default function PropertyCarousel({ propertyData }) {
                 className="
                 hidden lg:flex
                 absolute top-2 left-1/2 -translate-x-1/2
-                z-10 bg-[#FDF8F2]
+                z-10 bg-[#FFF]
                 "
                 onClick={scrollUp}
             >
@@ -228,7 +228,7 @@ export default function PropertyCarousel({ propertyData }) {
                   className="
                   hidden lg:flex
                   absolute bottom-2 left-1/2 -translate-x-1/2
-                 z-10 bg-[#FDF8F2]
+                 z-10 bg-[#FFF]
                 "
                   onClick={scrollDown}
             >

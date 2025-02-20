@@ -4,7 +4,7 @@ import PropertyDetailsRight from "../PropertyDetailsRight/PropertyDetailsRight";
 
 export default function PropertyDetails({ propertyData }) {
   return (
-    <div className="w-full bg-[#FDF8F2]">
+    <div className="w-full bg-[#FFF]">
       <div className="max-w-screen-xl mx-auto px-4 py-6 flex flex-col lg:flex-row gap-2">
         
         {/* Left Section: Slightly more than 2/3 of container */}

@@ -57,14 +57,14 @@ export default function PropertyDetailsDescription({ propertyData }) {
 
           {/* Fading gradient overlay if content is clamped */}
           {!showFull && isOverflowing && (
-            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[var(--background)] to-transparent" />
+            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#FFF] to-transparent" />
           )}
         </div>
 
         {/* Show more / Show less button if text is longer than 4 lines */}
         {isOverflowing && (
           <Button
-            className="bg-[#324c48] text-[#fdf8f2] hover:bg-[#324c48]/90 mt-4"
+            className="bg-[#324c48] text-[#FFF] hover:bg-[#324c48]/90 mt-4"
             onClick={toggleShowFull}
           >
             {showFull ? "Show less" : "Show more"}
