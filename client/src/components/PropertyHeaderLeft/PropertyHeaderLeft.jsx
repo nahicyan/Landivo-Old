@@ -13,7 +13,7 @@ export default function PropertyHeaderLeft({ propertyData }) {
             <CardDescription className="text-lg text-gray-500 subpixel-antialiased font-thin">
               {propertyData.county} County{" "}
               <span className="mx-1 text-gray-400">·</span>
-              {propertyData.city},{propertyData.state} {propertyData.zip}
+              {" "}{propertyData.city},{" "}{propertyData.state}{" "}{propertyData.zip}
             </CardDescription>
 
             {/* Second Line: Title (Rich Text) */}

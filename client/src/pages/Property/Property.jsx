@@ -4,7 +4,10 @@ import { useLocation } from "react-router-dom";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { getProperty } from "../../utils/api";
 import { UserContext } from "../../utils/UserContext";
-import PropertyHeader from "../../components/PropertyHeader/PropertyHeader";
+import PropertyDetails from "../../components/PropertyDetails/PropertyDetails";
+import PropertyCarousel from "../../components/PropertyCarousel/PropertyCarousel";
+import PropertyHeaderLeft from "../../components/PropertyHeaderLeft/PropertyHeaderLeft";
+import PropertyHeaderRight from "../../components/PropertyHeaderRight/PropertyHeaderRight";
 
 const Property = () => {
   const { pathname } = useLocation();
@@ -28,27 +31,6 @@ const Property = () => {
       setPropertyData(data);
     }
   }, [data]);
-
-  // **Fix: Scroll the left section when scrolling on the right**
-  useEffect(() => {
-    const handleScrollRight = (event) => {
-      if (leftSectionRef.current) {
-        event.preventDefault(); // Stop the default scroll on right section
-        leftSectionRef.current.scrollTop += event.deltaY; // Scroll left section
-      }
-    };
-
-    const rightSection = rightSectionRef.current;
-    if (rightSection) {
-      rightSection.addEventListener("wheel", handleScrollRight, { passive: false });
-    }
-
-    return () => {
-      if (rightSection) {
-        rightSection.removeEventListener("wheel", handleScrollRight);
-      }
-    };
-  }, []);
 
   if (isLoading) {
     return (
@@ -77,12 +59,37 @@ const Property = () => {
   }
 
   return (
-    <div className="bg-[#FDF8F2] min-h-screen p-4 text-[#4b5b4d]">
-      {/* Property Header */}
-      <PropertyHeader propertyData={propertyData} />
+    <div className="bg-[#FDF8F2] min-h-screen p-4 text-[#4b5b4d] flex justify-center">
+      {/* Outer wrapper ensures content is centered */}
+      <div className="max-w-screen-xl w-full">
+        {/* Property Header Sections Inline */}
+        <div className="flex flex-col lg:flex-row gap-6 w-full bg-[#FDF8F2]">
+          {/* Left Section */}
+          <div className="w-full lg:w-3/4">
+            <PropertyHeaderLeft propertyData={propertyData} />
+          </div>
+  
+          {/* Right Section */}
+          <div className="w-full lg:w-1/4">
+            <PropertyHeaderRight propertyData={propertyData} />
+          </div>
+        </div>
+  
+        {/* Property Carousel */}
+        <div className="mt-6">
+          <PropertyCarousel propertyData={propertyData} />
+        </div>
+  
+        {/* Property Details */}
+        <div className="mt-6 bg-[#FDF8F2]">
+          <PropertyDetails propertyData={propertyData} />
+        </div>
+      </div>
     </div>
-
   );
+  
+  
+  
 };
 
 export default Property;
