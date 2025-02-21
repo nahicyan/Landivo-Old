@@ -61,24 +61,29 @@ const Property = () => {
   return (
     <div className="bg-[#FDF8F2] min-h-screen p-4 text-[#4b5b4d] flex justify-center">
       {/* Outer wrapper ensures content is centered */}
-      <div className="max-w-screen-xl w-full bg-white rounded-lg shadow-md">        {/* Property Header Sections Inline */}
+      <div className="max-w-screen-xl w-full bg-white rounded-lg shadow-md">
+        {/* Property Header Sections Inline */}
         <div className="flex flex-col lg:flex-row gap-6 w-full bg-[#FFF]">
           {/* Left Section */}
           <div className="w-full lg:w-3/4">
-            <PropertyHeaderLeft propertyData={propertyData} />
+            <div className="sticky top-0 z-10 bg-[#FFF]">
+              <PropertyHeaderLeft propertyData={propertyData} />
+            </div>
           </div>
-  
+
           {/* Right Section */}
           <div className="w-full lg:w-1/4">
-            <PropertyHeaderRight propertyData={propertyData} />
+            <div className="sticky top-0 z-10 bg-[#FFF]">
+              <PropertyHeaderRight propertyData={propertyData} />
+            </div>
           </div>
         </div>
-  
+
         {/* Property Carousel */}
         <div className="mt-6">
           <PropertyCarousel propertyData={propertyData} />
         </div>
-  
+
         {/* Property Details */}
         <div className="mt-6 bg-[#FFF]">
           <PropertyDetails propertyData={propertyData} />
@@ -86,7 +91,6 @@ const Property = () => {
       </div>
     </div>
   );
-  
 };
 
 export default Property;

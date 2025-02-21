@@ -5,9 +5,9 @@ import Footer from "../Footer/Footer";
 
 export default function Layout() {
   return (
-    <div className="bg-[#FDF8F2] text-[#333] min-h-screen overflow-x-hidden flex flex-col">
+    <div className="bg-[#FDF8F2] text-[#333] min-h-screen flex flex-col">
       {/* Sticky Header with same background */}
-      <header className="sticky top-0 z-50 bg-[#FDF8F2]">
+      <header className="sticky top-0 z-50 w-full bg-[#FDF8F2]">
         <Header />
       </header>
 

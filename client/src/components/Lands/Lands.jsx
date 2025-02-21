@@ -33,7 +33,7 @@ export const Lands = () => {
   if (isLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height="60vh">
-        <PuffLoader size={80} color="#4066FF" />
+        <PuffLoader size={80} color="#D4A017" />
       </Box>
     );
   }
@@ -51,10 +51,10 @@ export const Lands = () => {
         <div className="max-w-screen-xl mx-auto px-4">
           {/* Section Title */}
           <div className="mb-8 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-2 text-[#4b5b4d]">
+            <h2 className="text-3xl md:text-4xl font-bold mb-2 text-[#3f4f24]">
               Find The Best Land In Your Area
             </h2>
-            <p className="text-sm md:text-base text-[#4b5b4d]/80">
+            <p className="text-sm md:text-base text-[#324c48]">
               Browse By Area
             </p>
           </div>
@@ -63,7 +63,7 @@ export const Lands = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
             {/* DFW */}
             <div className="flex flex-col items-center">
-              <h3 className="text-xl font-light mb-2 text-[#4b5b4d]">Dallas Fort Worth</h3>
+              <h3 className="text-xl font-light mb-2 text-[#324c48]">Dallas Fort Worth</h3>
               <div className="relative group w-full aspect-w-16 aspect-h-10 
                               rounded-lg shadow-md overflow-hidden 
                               transition-transform transform hover:-translate-y-1 hover:shadow-xl">
@@ -75,7 +75,7 @@ export const Lands = () => {
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center 
                                 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button  onClick={() => navigate("/DFW")}  className="bg-white text-[#4b5b4d] font-semibold py-2 px-4 rounded-lg shadow hover:shadow-lg">
+                  <button onClick={() => navigate("/DFW")} className="bg-white text-[#324c48] font-semibold py-2 px-4 rounded-lg shadow hover:shadow-lg">
                     Lands in DFW
                   </button>
                 </div>
@@ -84,7 +84,7 @@ export const Lands = () => {
 
             {/* Austin */}
             <div className="flex flex-col items-center">
-              <h3 className="text-xl font-light mb-2 text-[#4b5b4d]">Austin</h3>
+              <h3 className="text-xl font-light mb-2 text-[#324c48]">Austin</h3>
               <div className="relative group w-full aspect-w-16 aspect-h-10 
                               rounded-lg shadow-md overflow-hidden 
                               transition-transform transform hover:-translate-y-1 hover:shadow-xl">
@@ -95,7 +95,7 @@ export const Lands = () => {
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center 
                                 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onClick={() => navigate("/Austin")} className="bg-white text-[#4b5b4d] font-semibold py-2 px-4 rounded-lg shadow hover:shadow-lg">
+                  <button onClick={() => navigate("/Austin")} className="bg-white text-[#324c48] font-semibold py-2 px-4 rounded-lg shadow hover:shadow-lg">
                     Lands in Austin
                   </button>
                 </div>
@@ -104,7 +104,7 @@ export const Lands = () => {
 
             {/* Houston */}
             <div className="flex flex-col items-center">
-              <h3 className="text-xl font-light mb-2 text-[#4b5b4d]">Houston</h3>
+              <h3 className="text-xl font-light mb-2 text-[#324c48]">Houston</h3>
               <div className="relative group w-full aspect-w-16 aspect-h-10 
                               rounded-lg shadow-md overflow-hidden 
                               transition-transform transform hover:-translate-y-1 hover:shadow-xl">
@@ -115,7 +115,7 @@ export const Lands = () => {
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center 
                                 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onClick={() => navigate("/Houston")} className="bg-white text-[#4b5b4d] font-semibold py-2 px-4 rounded-lg shadow hover:shadow-lg">
+                  <button onClick={() => navigate("/Houston")} className="bg-white text-[#324c48] font-semibold py-2 px-4 rounded-lg shadow hover:shadow-lg">
                     Lands in Houston
                   </button>
                 </div>
@@ -124,7 +124,7 @@ export const Lands = () => {
 
             {/* San Antonio */}
             <div className="flex flex-col items-center">
-              <h3 className="text-xl font-light mb-2 text-[#4b5b4d]">San Antonio</h3>
+              <h3 className="text-xl font-light mb-2 text-[#324c48]">San Antonio</h3>
               <div className="relative group w-full aspect-w-16 aspect-h-10 
                               rounded-lg shadow-md overflow-hidden 
                               transition-transform transform hover:-translate-y-1 hover:shadow-xl">
@@ -135,7 +135,7 @@ export const Lands = () => {
                 />
                 <div onClick={() => navigate("/SanAntonio")} className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center 
                                 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button className="bg-white text-[#4b5b4d] font-semibold py-2 px-4 rounded-lg shadow hover:shadow-lg">
+                  <button className="bg-white text-[#324c48] font-semibold py-2 px-4 rounded-lg shadow hover:shadow-lg">
                     Lands in San Antonio
                   </button>
                 </div>
@@ -144,7 +144,7 @@ export const Lands = () => {
 
             {/* Others */}
             <div className="flex flex-col items-center">
-              <h3 className="text-xl font-light mb-2 text-[#4b5b4d]">Others</h3>
+              <h3 className="text-xl font-light mb-2 text-[#324c48]">Others</h3>
               <div className="relative group w-full aspect-w-16 aspect-h-10 
                               rounded-lg shadow-md overflow-hidden 
                               transition-transform transform hover:-translate-y-1 hover:shadow-xl">
@@ -155,7 +155,7 @@ export const Lands = () => {
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center 
                                 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onClick={() => navigate("/OtherLands")} className="bg-white text-[#4b5b4d] font-semibold py-2 px-4 rounded-lg shadow hover:shadow-lg">
+                  <button onClick={() => navigate("/OtherLands")} className="bg-white text-[#324c48] font-semibold py-2 px-4 rounded-lg shadow hover:shadow-lg">
                     Other Lands
                   </button>
                 </div>
@@ -176,12 +176,12 @@ export const Lands = () => {
         <div className="max-w-screen-xl mx-auto px-4">
           {/* Title & Subtext */}
           <div className="text-center mb-8">
-            <h2 className="text-4xl font-bold mb-2 text-[#4b5b4d]">
+            <h2 className="text-4xl font-bold mb-2 text-[#3f4f24]">
               Featured Properties
             </h2>
             {/* Decorative line under the heading */}
-            <div className="mx-auto w-20 h-1 bg-[#576756] mb-2"></div>
-            <p className="text-[#4b5b4d]/80">
+            <div className="mx-auto w-20 h-1 bg-[#D4A017] mb-2"></div>
+            <p className="text-[#324c48]/80">
               Discover our top picks for this week
             </p>
           </div>
@@ -197,8 +197,8 @@ export const Lands = () => {
           <div className="mt-8 flex justify-end">
             <a
               href="/properties"
-              className="inline-block bg-[#576756] text-white font-semibold py-2 px-6 rounded-md shadow 
-                         hover:bg-[#4b5b4d] transition-colors"
+              className="inline-block bg-[#324c48] text-white font-semibold py-2 px-6 rounded-md shadow 
+                         hover:bg-[#3f4f24] transition-colors"
             >
               Browse All Properties
             </a>

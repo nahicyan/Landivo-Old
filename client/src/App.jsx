@@ -18,6 +18,8 @@ import Austin from "./components/Austin/Austin"; // Austin Property page
 import Houston from "./components/Houston/Houston"; // Houston Property page
 import SanAntonio from "./components/SanAntonio/SanAntonio"; // San Antonio Property page
 import OtherLands from "./components/OtherLands/OtherLands"; // Other Lands Property page
+import Financing from "./components/Finance/Finance";
+import AboutUs from "./components/AboutUs/AboutUs";
 // Create the React Query client
 const queryClient = new QueryClient();
 
@@ -37,6 +39,8 @@ function App() {
                     <Route path=":propertyId" element={<Property />} />
                     <Route path=":propertyId/offer" element={<Offer />} />
                   </Route>
+                  <Route path="/financing" element={<Financing />} />
+                  <Route path="/about-us" element={<AboutUs />} />
                   <Route path="/DFW" element={<DFW/>} />
                   <Route path="/Austin" element={<Austin/>} />
                   <Route path="/Houston" element={<Houston/>} />
