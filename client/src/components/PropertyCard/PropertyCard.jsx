@@ -1,69 +1,77 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Card, CardContent } from "@/components/ui/card";
 import { formatPrice } from "../../utils/format";
 
-const serverURL = import.meta.env.VITE_SERVER_URL;
-
-const PropertyCard = ({ card }) => {
+export default function SlickPropertyCard({ card }) {
   const navigate = useNavigate();
-  const images = card.image ? JSON.parse(card.image) : [];
-  const firstImage = images.length > 0 ? `${serverURL}/${images[0]}` : "/default-image.jpg";
+
+  // Parse images
+  const images = card?.image ? JSON.parse(card.image) : [];
+  const firstImage =
+    images.length > 0
+      ? `${import.meta.env.VITE_SERVER_URL}/${images[0]}`
+      : "/default-image.jpg";
 
   return (
-    <div
-      // Outer container with gradient border and smooth shadow transitions
-      className="group relative w-full max-w-[460px] h-[380px] rounded-xl p-1 bg-gradient-to-r from-white/40 via-white/20 to-white/40 shadow-xl transition-all duration-300 hover:shadow-2xl cursor-pointer"      onClick={() => navigate(`../properties/${card.id}`)}
+    <Card
+      onClick={() => navigate(`../properties/${card.id}`)}
+      className="
+        w-[350px]
+        rounded-2xl
+        overflow-hidden
+        shadow-lg
+        hover:shadow-2xl
+        transition-all
+        cursor-pointer
+        bg-white
+        backdrop-blur-lg
+        border border-gray-200
+      "
     >
-      {/* Inner container with the frosted glass effect */}
-      <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-xl border border-white/30 overflow-hidden">
-        
-        {/* Thinner Top Header */}
-        <div className="py-1 px-3 bg-[#4b5b4d] text-white text-center">
-          <h3
-            className="text-sm font-medium truncate"
-            dangerouslySetInnerHTML={{ __html: card.title }}
-          />
-        </div>
+      {/* Top Image Section */}
+      <div className="relative">
+        <img
+          src={firstImage}
+          alt="Property"
+          className="w-full h-56 object-cover rounded-t-2xl"
+        />
 
-        {/* Image Section */}
-        <div className="relative h-[55%] overflow-hidden">
-          <img
-            src={firstImage}
-            alt="Property"
-            className="w-full h-full object-cover brightness-90 transition-transform duration-300 transform group-hover:scale-105"
-          />
-        </div>
+        {/* Left Tag */}
+        {card.ltag && (
+          <span className="absolute top-3 left-3 bg-[#d03c0b] text-white text-xs px-3 py-1 rounded-full shadow-md">
+            {card.ltag}
+          </span>
+        )}
 
-        {/* Thinner Bottom Info Section */}
-        <div className="p-2">
-          <div className="flex justify-between mb-1">
-            <h4 className="text-base font-medium text-[#4b5b4d]">${formatPrice(card.askingPrice)}</h4>
-            <p className="text-sm font-medium text-[#4b5b4d]">{card.acre} Acres</p>
-          </div>
-          <div className="flex justify-between text-[#4b5b4d] text-sm font-medium">
-            <p>
-              <strong>{card.city}</strong>, {card.state} {card.zip}
-            </p>
-            <p className="text-[#4b5b4d]">{card.county} County</p>
-          </div>
-
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2 mt-2">
-            {card.ltag && (
-              <span className="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide text-white bg-blue-600 shadow-md transition-transform duration-200 transform group-hover:scale-105">
-                {card.ltag}
-              </span>
-            )}
-            {card.rtag && (
-              <span className="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide text-white bg-pink-600 shadow-md transition-transform duration-200 transform group-hover:scale-105">
-                {card.rtag}
-              </span>
-            )}
-          </div>
-        </div>
+        {/* Right Tag */}
+        {card.rtag && (
+          <span className="absolute top-3 right-3 bg-[#3c5d58] text-white text-xs px-3 py-1 rounded-full shadow-md">
+            {card.rtag}
+          </span>
+        )}
       </div>
-    </div>
-  );
-};
 
-export default PropertyCard;
+      {/* Content Section (Compact) */}
+      <CardContent className="p-3">
+        {/* Price and Acre */}
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-gray-600 text-base font-normal">
+            {card.acre} Acres
+          </span>
+          <span className="text-[#517b75] text-lg font-semibold">
+            ${formatPrice(card.askingPrice)}
+          </span>
+        </div>
+
+        {/* Address */}
+        <p className="text-base font-semibold text-gray-800">
+          {card.streetaddress || "123 Main St Apt #1"}
+        </p>
+        <p className="text-xs text-gray-500">
+          {card.city}, {card.state} {card.zip}
+        </p>
+      </CardContent>
+    </Card>
+  );
+}

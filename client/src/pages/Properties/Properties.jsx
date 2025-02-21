@@ -128,15 +128,14 @@ export default function Properties() {
                   ref={(el) => (scrollRefs.current[area] = el)}
                 >
                   <div className="flex space-x-6">
-                  {areaProperties.map((card) => (
-  <div
-    key={card.id}
-    className="w-72 flex-shrink-0 my-2 md:my-4 transition hover:scale-105"
-  >
-    <PropertyCard card={card} />
-  </div>
-))}
-
+                    {areaProperties.map((card) => (
+                      <div
+                        key={card.id}
+                        className="w-72 flex-shrink-0 my-2 md:my-4 transition hover:scale-105"
+                      >
+                        <PropertyCard card={card} />
+                      </div>
+                    ))}
                   </div>
                 </div>
 

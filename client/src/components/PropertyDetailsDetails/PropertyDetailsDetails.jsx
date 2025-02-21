@@ -146,7 +146,8 @@ export default function PropertyDetailsDetails({ propertyData }) {
           </AccordionTrigger>
           <AccordionContent>
             <span className="flex items-center gap-2 text-base">
-            {propertyData.direction && (<span>{propertyData.direction}.</span>)}<p>For driving directions,</p>
+              {propertyData.direction && <span>{propertyData.direction}.</span>}
+              <p>For driving directions,</p>
               <a
                 href={`https://www.google.com/maps/dir/?api=1&destination=${propertyData.latitude},${propertyData.longitude}`}
                 target="_blank"
@@ -168,40 +169,40 @@ export default function PropertyDetailsDetails({ propertyData }) {
             </div>
           </AccordionTrigger>
           <AccordionContent>
-                <Table className="w-[70%] text-lg">
-                  <TableBody>
-                    <TableRow>
-                      <TableCell className="font-medium text-gray-700">
-                        Water
-                      </TableCell>
-                      <TableCell>{propertyData.water}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell className="font-medium text-gray-700">
-                        Sewer
-                      </TableCell>
-                      <TableCell>{propertyData.sewer}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell className="font-medium text-gray-700">
-                        Electricity
-                      </TableCell>
-                      <TableCell>{propertyData.electric}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell className="font-medium text-gray-700">
-                        Road Condition
-                      </TableCell>
-                      <TableCell>{propertyData.roadCondition}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell className="font-medium text-gray-700">
-                        Mobile Home Friendly
-                      </TableCell>
-                      <TableCell>{propertyData.mobileHomeFriendly}</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
+            <Table className="w-[70%] text-lg">
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-medium text-gray-700">
+                    Water
+                  </TableCell>
+                  <TableCell>{propertyData.water}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium text-gray-700">
+                    Sewer
+                  </TableCell>
+                  <TableCell>{propertyData.sewer}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium text-gray-700">
+                    Electricity
+                  </TableCell>
+                  <TableCell>{propertyData.electric}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium text-gray-700">
+                    Road Condition
+                  </TableCell>
+                  <TableCell>{propertyData.roadCondition}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium text-gray-700">
+                    Mobile Home Friendly
+                  </TableCell>
+                  <TableCell>{propertyData.mobileHomeFriendly}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </AccordionContent>
         </AccordionItem>
 
@@ -234,7 +235,12 @@ export default function PropertyDetailsDetails({ propertyData }) {
                 <span>Monthly Payment</span>
               </div>
             </AccordionTrigger>
-            <AccordionContent><p>This feature is currently being worked on. Please check back soon.</p></AccordionContent>
+            <AccordionContent>
+              <p>
+                This feature is currently being worked on. Please check back
+                soon.
+              </p>
+            </AccordionContent>
           </AccordionItem>
         )}
 
@@ -247,49 +253,50 @@ export default function PropertyDetailsDetails({ propertyData }) {
               </div>
             </AccordionTrigger>
             <AccordionContent>
-            <Table className="w-full text-base tracking-tight">
-                  <TableBody>
-                    <TableRow>
-                      <TableCell className="font-medium text-gray-700">
-                        HOA
-                      </TableCell>
-                      <TableCell>{propertyData.hoaPoa}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell className="font-medium text-gray-700">
+              <Table className="w-full text-base tracking-tight">
+                <TableBody>
+                  <TableRow>
+                    <TableCell className="font-medium text-gray-700">
+                      HOA
+                    </TableCell>
+                    <TableCell>{propertyData.hoaPoa}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-medium text-gray-700">
                       HOA Information
-                      </TableCell>
-                      <TableCell>{propertyData.hoaDeedDevInfo}</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
+                    </TableCell>
+                    <TableCell>{propertyData.hoaDeedDevInfo}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </AccordionContent>
           </AccordionItem>
         )}
- {propertyData.floodplain !=="No" && (
-        <AccordionItem
-          value="Enviromental Risk"
-          className="border-b border-[#c1d7d3]"
-        >
-          <AccordionTrigger className="flex items-center justify-between w-full text-left text-xl font-medium text-gray-800 tracking-tight">
-            <div className="flex items-center gap-2">
-              <UmbrellaOff className="w-6 h-6 text-gray-600" />
-              <span>Enviromental Risk</span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent>
-          <Table className="w-[50%] text-base tracking-tight">
-                  <TableBody>
-                    <TableRow>
-                      <TableCell className="font-medium text-gray-700">
-                        Floodplain
-                      </TableCell>
-                      <TableCell>{propertyData.floodplain}</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
+        {propertyData.floodplain !== "No" && (
+          <AccordionItem
+            value="Enviromental Risk"
+            className="border-b border-[#c1d7d3]"
+          >
+            <AccordionTrigger className="flex items-center justify-between w-full text-left text-xl font-medium text-gray-800 tracking-tight">
+              <div className="flex items-center gap-2">
+                <UmbrellaOff className="w-6 h-6 text-gray-600" />
+                <span>Enviromental Risk</span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              <Table className="w-[50%] text-base tracking-tight">
+                <TableBody>
+                  <TableRow>
+                    <TableCell className="font-medium text-gray-700">
+                      Floodplain
+                    </TableCell>
+                    <TableCell>{propertyData.floodplain}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </AccordionContent>
-        </AccordionItem>)}
+          </AccordionItem>
+        )}
         {propertyData.notes && (
           <AccordionItem value="Notes" className="border-b border-[#c1d7d3]">
             <AccordionTrigger className="flex items-center justify-between w-full text-left text-xl font-medium text-gray-800 tracking-tight">
@@ -304,42 +311,38 @@ export default function PropertyDetailsDetails({ propertyData }) {
                 dangerouslySetInnerHTML={{ __html: propertyData.notes }}
               />
             </AccordionContent>
-          </AccordionItem>  
+          </AccordionItem>
         )}
 
-<Accordion type="single" collapsible defaultValue="Notes">
-      <AccordionItem value="Notes" className="border-b border-[#c1d7d3]">
-        <AccordionTrigger className="flex items-center justify-between w-full text-left text-xl font-medium text-gray-800 tracking-tight">
-          <div className="flex items-center gap-2">
-            <NotebookPen className="w-6 h-6 text-gray-600" />
-            <span>Buyer Guidelines</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent>
-          <div
-            className="text-base w-[70%]"
-
-          >
-
-            <p>Cash OR Hard Money Only.</p>
-            <p>Earnest money deposit varies per property.</p>
-            <p>Buyer pays ALL closing costs.</p>
-            <p>
-              Buyer to pay Administrative Fee Payable to Landers Investment LLC for{" "}
-              <span className="font-semibold">$395 additional/added to the Assignment fee.</span>
-            </p>
-            <p>Agents, please add your commission to the buyer's sales price.</p>
-            <p>Daisy Chainers do not apply—no Option period.</p>
-            <p>Please do your due diligence before making an offer.</p>
-            <p>This Property is being sold AS-IS.</p>
-            <p>Close Date: ASAP</p>
-        </div>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
-
+        <Accordion type="single" collapsible defaultValue="Notes">
+          <AccordionItem value="Notes" className="border-b border-[#c1d7d3]">
+            <AccordionTrigger className="flex items-center justify-between w-full text-left text-xl font-medium text-gray-800 tracking-tight">
+              <div className="flex items-center gap-2">
+                <NotebookPen className="w-6 h-6 text-gray-600" />
+                <span>Buyer Guidelines</span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="text-base w-[75%]">
+                <p>Cash OR Hard Money Only.</p>
+                <p>Earnest money deposit varies per property.</p>
+                <p>Buyer pays ALL closing costs.</p>
+                <p>
+                  Buyer to pay Administrative Fee Payable to Landers Investment
+                  LLC for <p>$395 additional/added to the Assignment fee.</p>
+                </p>
+                <p>
+                  Agents, please add your commission to the buyer's sales price.
+                </p>
+                <p>Daisy Chainers do not apply—no Option period.</p>
+                <p>Please do your due diligence before making an offer.</p>
+                <p>This Property is being sold AS-IS.</p>
+                <p>Close Date: ASAP</p>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </Accordion>
-      
     </div>
   );
 }
