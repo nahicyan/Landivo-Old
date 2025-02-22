@@ -7,7 +7,7 @@ export default function PropertyMap({ propertyData }) {
     propertyData.latitude && propertyData.longitude
       ? `https://www.google.com/maps?q=${propertyData.latitude},${propertyData.longitude}&output=embed`
       : `https://www.google.com/maps?q=${encodeURIComponent(
-          `${propertyData.streetaddress}, ${propertyData.city}, ${propertyData.state}`
+          `${propertyData.streetAddress}, ${propertyData.city}, ${propertyData.state}`
         )}&output=embed`;
 
   return (

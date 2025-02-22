@@ -7,6 +7,7 @@ import { useContext } from "react"; // New import
 import { UserContext } from "../../utils/UserContext"; // New import for UserContext
 import ImageUploadPreview from "../../components/ImageUploadPreview/ImageUploadPreview"; // Import the ImageUploadPreview componen
 import RichTextEditor from "../../components/RichTextEditor/RichTextEditor";
+import { createResidencyWithFiles } from "@/utils/api";
 
 const serverURL = import.meta.env.VITE_SERVER_URL;
 
@@ -15,7 +16,7 @@ const AddProperty = () => {
   const { currentUser } = useContext(UserContext);
 
   const [formData, setFormData] = useState({
-    ownerid: "",
+    ownerId: "",
     userEmail: "",
     area: "",
     title: "",
@@ -30,7 +31,7 @@ const AddProperty = () => {
     hoaDeedDevInfo: "",
     notes: "",
     apnOrPin: "",
-    streetaddress: "",
+    streetAddress: "",
     city: "",
     county: "",
     state: "",
@@ -41,7 +42,7 @@ const AddProperty = () => {
     landIdLink: "",
     sqft: "",
     acre: "",
-    image: "",
+    imageUrls: "",
     askingPrice: "",
     minPrice: "",
     disPrice: "",
@@ -120,35 +121,44 @@ const AddProperty = () => {
       e.preventDefault();
       try {
         const multipartForm = new FormData();
-        // List of fields that are stored with formatting (commas)
         const numericFields = ["sqft", "askingPrice", "minPrice", "disPrice", "acre"];
-        
+    
+        // Append all fields except "imageUrls"
         for (let key in formData) {
+          if (key === "imageUrls") continue;
           let value = formData[key];
-          // If this is a numeric field and value is a string, remove commas
           if (numericFields.includes(key) && typeof value === "string") {
             value = value.replace(/,/g, "");
           }
           multipartForm.append(key, value);
         }
-        
-        uploadedImages.forEach((image) => multipartForm.append("images", image.file));
     
-        await axios.post(
-          `${serverURL}/api/residency/createWithFile`,
-          multipartForm,
-          { headers: { "Content-Type": "multipart/form-data" } }
+        // Process existing images (if any) from formData.imageUrls.
+        let existingImages = [];
+        if (formData.imageUrls && formData.imageUrls.trim() !== "") {
+          try {
+            existingImages = JSON.parse(formData.imageUrls);
+            if (!Array.isArray(existingImages)) existingImages = [];
+          } catch (err) {
+            existingImages = [];
+          }
+        }
+        console.log("Image URL checking: ", JSON.stringify(existingImages));
+        multipartForm.append("imageUrls", JSON.stringify(existingImages));
+    
+        // Append newly uploaded files directly from the file objects.
+        uploadedImages.forEach((file) =>
+          multipartForm.append("images", file)
         );
     
-        alert("Property Added Successfully!");
-        navigate("/properties");
+        await createResidencyWithFiles(multipartForm);
+    
+        console.log("<<<< Property Added Successfully >>>>");
       } catch (error) {
         console.error("Error creating property:", error);
         alert("Failed to create property");
       }
     };
-    
-
   
   return (<Box component="form" onSubmit={handleSubmit} sx={{display:"flex",flexDirection:"column",gap:4,background:"#fff",borderRadius:"20px",boxShadow:"0 12px 24px rgba(0, 0, 0, 0.1)",border:"1px solid rgba(200, 200, 200, 0.6)",maxWidth:"1080px",width:"95%",mx:"auto",p:3}}>
     <Typography variant="h3" gutterBottom sx={{color:"#2d2d2d",fontWeight:700}}>Add New Property</Typography>
@@ -163,7 +173,7 @@ const AddProperty = () => {
     <Box sx={sectionStyle}>
       <Typography variant="h5" gutterBottom sx={sectionTitleStyle}>System Information</Typography>
         <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-          <TextField fullWidth label="Owner ID" name="ownerid" value={formData.ownerid} onChange={handleChange} sx={textFieldStyle} />
+          <TextField fullWidth label="Owner ID" name="ownerId" value={formData.ownerId} onChange={handleChange} sx={textFieldStyle} />
           <FormControlWithSelect label="Status" name="status" value={formData.status} onChange={handleChange} options={["Available","Pending","Sold","Not Available","Testing"]} />
           <FormControlWithSelect label="Area" name="area" value={formData.area} onChange={handleChange} options={["DFW","Austin","Houston", "San Antonio","Other"]} />
         </Stack>
@@ -231,7 +241,7 @@ const AddProperty = () => {
     {/* Location & Identification */}
     <Box sx={sectionStyle}><Typography variant="h5" gutterBottom sx={sectionTitleStyle}>Location & Identification</Typography>
       <Stack direction={{xs:"column",sm:"row"}} spacing={2}>
-        <TextField fullWidth label="Street Address" name="streetaddress" value={formData.streetaddress} onChange={handleChange} sx={textFieldStyle} />
+        <TextField fullWidth label="Street Address" name="streetAddress" value={formData.streetAddress} onChange={handleChange} sx={textFieldStyle} />
         <TextField fullWidth label="City" name="city" value={formData.city} onChange={handleChange} sx={textFieldStyle} />
         <TextField fullWidth label="County" name="county" value={formData.county} onChange={handleChange} sx={textFieldStyle} />
         <TextField fullWidth label="State" name="state" value={formData.state} onChange={handleChange} sx={textFieldStyle} />
@@ -293,8 +303,12 @@ const AddProperty = () => {
         <TextField fullWidth label="Left Tag" name="ltag" value={formData.ltag} onChange={handleChange} sx={textFieldStyle} />
         <TextField fullWidth label="Right Tag" name="rtag" value={formData.rtag} onChange={handleChange} sx={textFieldStyle} />
       </Stack>
-      {/* <Typography variant="subtitle1" mt={3}>Upload Images</Typography> */}
-      <ImageUploadPreview uploadedImages={uploadedImages} setUploadedImages={setUploadedImages} />
+      <ImageUploadPreview
+        existingImages={[]}               // No pre-existing images when adding a property.
+        newImages={uploadedImages}         // New images stored in state.
+        onExistingChange={() => {}}        // No-op since there are no existing images.
+        onNewChange={setUploadedImages}    // Update new images state.
+      />
     </Box>
     {/* Submit Button */}
     <Box textAlign="center" mt={4}>

@@ -47,7 +47,7 @@ export default function PropertyDetailsDetails({ propertyData }) {
                 <TableCell className="font-medium text-gray-700">
                   Street Address
                 </TableCell>
-                <TableCell>{propertyData.streetaddress}</TableCell>
+                <TableCell>{propertyData.streetAddress}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium text-gray-700">

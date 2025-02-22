@@ -2,8 +2,8 @@ import React, { useState, useRef } from "react";
 import { PuffLoader } from "react-spinners";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
-import useProperties from "../hooks/useProperties";
-import PropertyCard from "../PropertyCard/PropertyCard";
+import useProperties from "@/components/hooks/useProperties";
+import PropertyCard from "@/components/PropertyCard/PropertyCard";
 
 export default function SanAntonioProperty() {
   const { data, isError, isLoading } = useProperties();

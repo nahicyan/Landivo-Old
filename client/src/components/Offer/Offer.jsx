@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../utils/api";
+import { parsePhoneNumber } from "libphonenumber-js";
 
 // ShadCN UI components
 import {
@@ -55,8 +56,26 @@ export default function Offer({ propertyData }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Basic required field check
     if (!offerPrice || !email || !firstName || !lastName || !phone) {
       setDialogMessage("All fields are required.");
+      setDialogType("warning");
+      setDialogOpen(true);
+      return;
+    }
+
+    // === Phone Validation with libphonenumber-js ===
+    try {
+      const phoneNumber = parsePhoneNumber(phone, "US"); // "US" or your default country code
+      if (!phoneNumber?.isValid()) {
+        setDialogMessage("Invalid phone number. Please enter a valid number.");
+        setDialogType("warning");
+        setDialogOpen(true);
+        return;
+      }
+    } catch (error) {
+      // parsePhoneNumber can throw if the format is totally off
+      setDialogMessage("Invalid phone number. Please enter a valid number.");
       setDialogType("warning");
       setDialogOpen(true);
       return;
@@ -78,7 +97,7 @@ export default function Offer({ propertyData }) {
       // If offer is below minPrice, show a warning and do not redirect
       if (parseFloat(offerPrice) < propertyData?.minPrice) {
         setDialogMessage(
-        `At this time we cannot accept any offers below $${propertyData?.minPrice.toLocaleString()}. Consider offering a higher price.`
+          `At this time we cannot accept any offers below $${propertyData?.minPrice.toLocaleString()}. Consider offering a higher price.`
         );
         setDialogType("warning");
         setDialogOpen(true);
@@ -90,23 +109,23 @@ export default function Offer({ propertyData }) {
       setDialogType("success");
       setDialogOpen(true);
     } catch (error) {
-      setDialogMessage("You've already offered this or higher amount. Please adjust your offer to continue!");
+      setDialogMessage(
+        "You've already offered this or higher amount. Please adjust your offer to continue!"
+      );
       setDialogType("warning");
       setDialogOpen(true);
     }
   };
 
-
-  // Number Formatting
   return (
-     <div className="min-h-screen bg-[#FFF] text-[#050002] flex items-start justify-center p-4">
-      <Card className="w-full max-w-md border border-[#405025]/20 bg-[#FFF] shadow-lg">
+    <div className="bg-white text-[#050002] p-4">
+    <Card className="w-full max-w-md border border-[#405025]/20 bg-white shadow-lg mx-auto">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-[#405025]">
             Make An Offer
           </CardTitle>
           <CardDescription className="text-[#324d49]">
-            For {propertyData.streetaddress || "This Property"}
+            For {propertyData.streetAddress || "This Property"}
           </CardDescription>
         </CardHeader>
 
@@ -182,7 +201,8 @@ export default function Offer({ propertyData }) {
                 onValueChange={(val) => setBuyerType(val)}
               >
                 <SelectTrigger className="w-full">
-               <SelectValue placeholder="Select Buyer Type" /> </SelectTrigger>
+                  <SelectValue placeholder="Select Buyer Type" />
+                </SelectTrigger>
                 <SelectContent className="bg-[#FFF] text-[#050002] border border-[#405025]/20">
                   <SelectItem value="CashBuyer">Cash Buyer</SelectItem>
                   <SelectItem value="Builder">Builder</SelectItem>
@@ -225,13 +245,20 @@ export default function Offer({ propertyData }) {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="bg-[#FFF] text-[#050002] border border-[#405025]/30 shadow-lg">
           <DialogHeader>
-            <DialogTitle className={dialogType === "success" ? "text-green-600" : "text-red-600"}>
+            <DialogTitle
+              className={
+                dialogType === "success" ? "text-green-600" : "text-red-600"
+              }
+            >
               {dialogType === "success" ? "Success" : "Warning"}
             </DialogTitle>
             <DialogDescription>{dialogMessage}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button onClick={() => setDialogOpen(false)} className="bg-[#324c48] text-[#FFF]">
+            <Button
+              onClick={() => setDialogOpen(false)}
+              className="bg-[#324c48] text-[#FFF]"
+            >
               Okay
             </Button>
           </DialogFooter>

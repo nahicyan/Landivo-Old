@@ -2,16 +2,20 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatPrice } from "../../utils/format";
+const serverURL = import.meta.env.VITE_SERVER_URL;
 
 export default function SlickPropertyCard({ card }) {
   const navigate = useNavigate();
 
-  // Parse images
-  const images = card?.image ? JSON.parse(card.image) : [];
+
+  // If card.imageUrls is already an array, use it; otherwise try to parse it
+  const images = card.imageUrls
+    ? Array.isArray(card.imageUrls)
+      ? card.imageUrls
+      : JSON.parse(card.imageUrls)
+    : [];
   const firstImage =
-    images.length > 0
-      ? `${import.meta.env.VITE_SERVER_URL}/${images[0]}`
-      : "/default-image.jpg";
+    images.length > 0 ? `${serverURL}/${images[0]}` : "/default-image.jpg";
 
   return (
     <Card
@@ -66,7 +70,7 @@ export default function SlickPropertyCard({ card }) {
 
         {/* Address */}
         <p className="text-base font-semibold text-gray-800">
-          {card.streetaddress || "123 Main St Apt #1"}
+          {card.streetAddress || "123 Main St Apt #1"}
         </p>
         <p className="text-xs text-gray-500">
           {card.city}, {card.state} {card.zip}

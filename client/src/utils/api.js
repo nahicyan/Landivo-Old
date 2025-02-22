@@ -44,9 +44,9 @@ export const loginUser = async (loginData) => {
 // Logout function to end session
 export const logoutUser = async () => {
   try {
-    const response = await axios.get('http://z:8200/auth/logout', {
-      withCredentials: true,
-    });
+    // Use the 'api' instance which is configured with baseURL "http://localhost:8200/api"
+    // Adjust the endpoint path if needed (e.g., if logout route is at /auth/logout)
+    const response = await api.get('/auth/logout');
     console.log("Logout successful:", response.data);
     return response.data;
   } catch (error) {
@@ -114,3 +114,16 @@ export const getPropertyOffers = async (propertyId) => {
     handleRequestError(error, "Failed to fetch property offers");
   }
 };
+
+// In your api.js file
+export const createResidencyWithFiles = async (formData) => {
+  try {
+    const response = await api.post('/residency/createWithFile', formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+  } catch (error) {
+    handleRequestError(error, "Failed to create property with files");
+  }
+};
+

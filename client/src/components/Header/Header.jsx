@@ -19,11 +19,12 @@ import {
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { Menu, X } from "lucide-react";
 
-export default function Header() {
+const Header = () => {
   const navigate = useNavigate();
   const { currentUser, setCurrentUser } = useContext(UserContext);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
     const checkUserSession = async () => {
@@ -49,14 +50,20 @@ export default function Header() {
     }
   };
 
+  // Updated logout logic using try/catch/finally
   const handleLogout = async () => {
     try {
       await logoutUser();
-      setCurrentUser(null);
-      navigate("/");
     } catch (error) {
       console.error("Logout failed:", error);
+    } finally {
+      setCurrentUser(null);
+      navigate("/");
     }
+  };
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
   };
 
   return (
@@ -74,7 +81,7 @@ export default function Header() {
             </Link>
           </div>
 
-          {/* Mobile Menu */}
+          {/* Mobile Menu Button */}
           <div className="lg:hidden">
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
@@ -155,10 +162,10 @@ export default function Header() {
             {/* Login / User Dropdown */}
             {!currentUser ? (
               <Button
-                asChild
+                onClick={() => setShowLoginModal(true)}
                 className="bg-[#3f4f24] text-white hover:bg-[#2c3b18]"
               >
-                <Link to="/login">Login / Sign Up</Link>
+                Login / Sign Up
               </Button>
             ) : (
               <DropdownMenu>
@@ -169,7 +176,7 @@ export default function Header() {
                   >
                     {`Welcome, ${currentUser.name}`}
                     <svg
-                      className="w-5 h-5 ml-2"
+                      className="w-5 h-5 ml-2 -mr-1"
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 20 20"
                       fill="currentColor"
@@ -188,18 +195,10 @@ export default function Header() {
                 >
                   <DropdownMenuItem asChild>
                     <Link
-                      to="/add-property"
+                      to="/admin"
                       className="text-[#324c48] hover:text-[#D4A017] cursor-pointer"
                     >
-                      Add Property
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link
-                      to="/offers"
-                      className="text-[#324c48] hover:text-[#D4A017] cursor-pointer"
-                    >
-                      Offers
+                      Dashboard
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem
@@ -215,6 +214,39 @@ export default function Header() {
         </nav>
       </div>
 
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <nav className="lg:hidden bg-[#FDF8F2] border-t border-gray-200 shadow-md py-4">
+          <div className="flex flex-col space-y-2 px-6">
+            {["Properties", "Sell", "Financing", "About Us", "Support"].map((item) => (
+              <Link
+                key={item}
+                to={`/${item.toLowerCase().replace(/\s/g, "-")}`}
+                className="py-2 text-base font-medium text-[#333] hover:text-[#576756]"
+              >
+                {item}
+              </Link>
+            ))}
+
+            {!currentUser ? (
+              <Button
+                onClick={() => setShowLoginModal(true)}
+                className="w-full px-5 py-3 text-base font-semibold text-white bg-[#576756] rounded-md hover:bg-[#001530] transition"
+              >
+                Login / Sign Up
+              </Button>
+            ) : (
+              <Button
+                onClick={handleLogout}
+                className="w-full px-5 py-3 text-base font-semibold text-white bg-[#2C5F2D] rounded-md hover:bg-[#244a20] transition"
+              >
+                Logout
+              </Button>
+            )}
+          </div>
+        </nav>
+      )}
+
       {showLoginModal && (
         <LoginModal
           onSubmit={handleLoginData}
@@ -223,4 +255,6 @@ export default function Header() {
       )}
     </header>
   );
-}
+};
+
+export default Header;

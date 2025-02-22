@@ -2,10 +2,10 @@ import React, { useState, useRef } from "react";
 import { PuffLoader } from "react-spinners";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
-import useProperties from "../hooks/useProperties";
-import PropertyCard from "../PropertyCard/PropertyCard";
+import useProperties from "@/components/hooks/useProperties";
+import PropertyCard from "@/components/PropertyCard/PropertyCard";
 
-export default function OtherLands() {
+export default function HoustonProperty() {
   const { data, isError, isLoading } = useProperties();
   const [searchQuery, setSearchQuery] = useState("");
   const scrollRef = useRef(null);
@@ -36,8 +36,8 @@ export default function OtherLands() {
     );
   }
 
-  // Filter properties to only include those in Other
-  const OtherProperties = data.filter((property) => property.area === "Other");
+  // Filter properties to only include those in Houston
+  const HoustonProperties = data.filter((property) => property.area === "Houston");
 
   // Handlers for horizontal scrolling
   const handleScrollLeft = () => {
@@ -58,14 +58,14 @@ export default function OtherLands() {
         {/* Title & Subtitle */}
         <div className="mb-10 text-center">
           <h1 className="text-3xl sm:text-4xl font-bold mb-4">
-            {OtherProperties.length > 0 ? "Properties in Other" : "Hot Deals Move Fast!"}
+            {HoustonProperties.length > 0 ? "Properties in Houston" : "Hot Deals Move Fast!"}
           </h1>
           <p className="text-lg mb-6">
-            {OtherProperties.length > 0
-              ? "Browse through properties available in the Other area."
+            {HoustonProperties.length > 0
+              ? "Browse through properties available in the Houston area."
               : (
                 <>
-                  Sorry! We Sold Through Everything In Other Areas <br />
+                  Sorry! We Sold Through Everything In Houston! <br />
                   Maybe you would be interested in these properties:
                 </>)}
           </p>
@@ -92,8 +92,8 @@ export default function OtherLands() {
 
         </div>
 
-        {OtherProperties.length > 0 ? (
-          // Display Other properties in a horizontal slider
+        {HoustonProperties.length > 0 ? (
+          // Display Houston properties in a horizontal slider
           <div className="relative">
             {/* Left Scroll Button */}
             <button
@@ -109,7 +109,7 @@ export default function OtherLands() {
               ref={scrollRef}
             >
               <div className="flex space-x-6">
-                {OtherProperties.map((card) => (
+                {HoustonProperties.map((card) => (
                   <div
                     key={card.id}
                     className="w-72 flex-shrink-0 transition hover:scale-105"
@@ -129,7 +129,7 @@ export default function OtherLands() {
             </button>
           </div>
         ) : (
-          // Fallback: Display all properties if no Other properties are available
+          // Fallback: Display all properties if no Houston properties are available
           <div className="flex flex-wrap justify-center gap-6">
             {data.map((card) => (
               <div
