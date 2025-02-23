@@ -1,25 +1,47 @@
-import React, { useState, useRef } from "react";
+"use client";
+
+import React, { useState, useRef, useEffect } from "react";
 import { PuffLoader } from "react-spinners";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import useProperties from "../../components/hooks/useProperties";
 import PropertyCard from "../../components/PropertyCard/PropertyCard";
+import Search from "@/components/Search/Search";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableHeader,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+
+const serverURL = import.meta.env.VITE_SERVER_URL;
 
 export default function Properties() {
   const { data, isError, isLoading } = useProperties();
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  // Update searchQuery from URL parameters on mount and when they change
+  useEffect(() => {
+    const searchFromUrl = searchParams.get("search") || "";
+    setSearchQuery(searchFromUrl);
+  }, [searchParams]);
 
   // Ref object to hold references to each horizontal scroll container
   const scrollRefs = useRef({});
 
   // Define the locations you want separate sections for
   const areas = ["DFW", "Austin", "Houston", "San Antonio", "Others"];
-
-  // Handle Search
-  const handleSearch = (e) => {
-    e.preventDefault();
-    // Add logic to handle search query (filter data) if desired
-  };
 
   // Scroll Left
   const handleScrollLeft = (area) => {
@@ -57,12 +79,28 @@ export default function Properties() {
     );
   }
 
-  // Main Layout
+  // Filter properties using OR logic across multiple fields
+  const filteredData = data.filter((property) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      property.title?.toLowerCase().includes(query) ||
+      property.streetAddress?.toLowerCase().includes(query) ||
+      property.state?.toLowerCase().includes(query) ||
+      property.zip?.toLowerCase().includes(query) ||
+      property.area?.toLowerCase().includes(query) ||
+      property.apnOrPin?.toLowerCase().includes(query) ||
+      property.ltag?.toLowerCase().includes(query) ||
+      property.rtag?.toLowerCase().includes(query) ||
+      property.city?.toLowerCase().includes(query) ||
+      property.county?.toLowerCase().includes(query)
+    );
+  });
+
   return (
     <div className="bg-[#FDF8F2] min-h-screen py-12 text-[#4b5b4d]">
       {/* Hero Section */}
       <div className="max-w-screen-xl mx-auto px-4">
-        {/* Title & Subtitle */}
+        {/* Title, Subtitle & Search */}
         <div className="mb-10 text-center">
           <h1 className="text-3xl sm:text-4xl font-bold mb-4">
             Find Your Dream Property
@@ -71,25 +109,7 @@ export default function Properties() {
             Browse through a wide selection of properties with detailed filters
             to help you find the perfect fit.
           </p>
-
-          {/* Search Bar */}
-          <form onSubmit={handleSearch} className="relative max-w-2xl mx-auto">
-            <div className="flex flex-col sm:flex-row items-center justify-center bg-white rounded-full shadow-md p-2 transition hover:shadow-lg">
-              <input
-                type="text"
-                placeholder="Search by location, price, and more..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="flex-grow px-4 py-2 text-gray-700 rounded-full focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="bg-black hover:bg-[#FF5C00] text-white px-5 py-2 rounded-full mt-2 sm:mt-0 sm:ml-2 transition-colors"
-              >
-                <MagnifyingGlassIcon className="w-5 h-5 inline-block" />
-              </button>
-            </div>
-          </form>
+          <Search query={searchQuery} setQuery={setSearchQuery} />
         </div>
 
         {/* Small Separating Line */}
@@ -98,7 +118,7 @@ export default function Properties() {
         {/* Location Sections */}
         {areas.map((area) => {
           // Filter properties for the current area
-          const areaProperties = data.filter(
+          const areaProperties = filteredData.filter(
             (property) => property.area === area
           );
           // Skip section if no properties for that area
@@ -113,11 +133,10 @@ export default function Properties() {
 
               {/* Horizontal Slider Container */}
               <div className="relative">
-                {/* Left Button (placed on the side) */}
+                {/* Left Button */}
                 <button
                   onClick={() => handleScrollLeft(area)}
-                  className="absolute -left-6 top-1/2 -translate-y-1/2 z-10 bg-white border 
-                             rounded-full p-2 shadow-md hover:shadow-lg"
+                  className="absolute -left-6 top-1/2 -translate-y-1/2 z-10 bg-white border rounded-full p-2 shadow-md hover:shadow-lg"
                 >
                   <ChevronLeftIcon className="w-5 h-5" />
                 </button>
@@ -139,11 +158,10 @@ export default function Properties() {
                   </div>
                 </div>
 
-                {/* Right Button (placed on the side) */}
+                {/* Right Button */}
                 <button
                   onClick={() => handleScrollRight(area)}
-                  className="absolute -right-6 top-1/2 -translate-y-1/2 z-10 bg-white border 
-                             rounded-full p-2 shadow-md hover:shadow-lg"
+                  className="absolute -right-6 top-1/2 -translate-y-1/2 z-10 bg-white border rounded-full p-2 shadow-md hover:shadow-lg"
                 >
                   <ChevronRightIcon className="w-5 h-5" />
                 </button>
@@ -151,6 +169,13 @@ export default function Properties() {
             </div>
           );
         })}
+
+        {/* No matching properties */}
+        {filteredData.length === 0 && (
+          <p className="text-center text-gray-600 py-4">
+            No properties found.
+          </p>
+        )}
       </div>
     </div>
   );

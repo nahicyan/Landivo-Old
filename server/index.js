@@ -13,7 +13,7 @@ import { buyerRoute } from "./routes/buyerRoute.js";
 import { sessionLogger, ensureAuthenticated } from "./middlewares/sessionMiddleware.js";
 
 const app = express();
-const PORT = process.env.PORT || 8400;
+const PORT = process.env.PORT || 8200;
 
 // 1) Create __dirname equivalent in ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -27,10 +27,13 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: clientConfig.redirect_uris, // Allow all redirect URIs in the list
-    credentials: true, // Allow credentials (cookies)
+    origin: ["http://landivo.com"], 
+    credentials: true,
+    methods: "GET,POST,PUT,DELETE,OPTIONS",
+    allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization",
   })
 );
+
 
 
 app.use(
