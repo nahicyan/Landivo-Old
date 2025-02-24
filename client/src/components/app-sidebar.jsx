@@ -76,7 +76,10 @@ const data = {
       url: "#",
       icon: Users, // Changed to Users icon
       items: [
-        { title: "Create A New User", url: "#" },
+        {
+          title: "Create A New User",
+          url: "https://landivo.com/CreateUservbtwP44jbX0FKKYUdHBGGCcYqenvNlYdH1Sj7K1dSD3kRo1Pib5VXQWb59a7CkQZ4DiQuu5r1t9I0uXVUbYjvvj4E1djRIkXRh40Uvbz2jSz6PZKguOjGhi7avF1b",
+        },
         { title: "Manage Users", url: "#" },
       ],
     },
