@@ -8,9 +8,9 @@ export default function Admin ({ propertyData }) {
       <div className="W-full px-4 py-6 flex flex-col lg:flex-row gap-2">
         
         {/* Left Section */}
-        <div className="w-full lg:basis-[40%]">
+        {/* <div className="w-full lg:basis-[40%]">
           <AdminLeft propertyData={propertyData} />
-        </div>
+        </div> */}
 
         {/* Right Section (Sticky) */}
         <div className="w-full lg:basis-[60%]">

@@ -24,6 +24,7 @@ import Support from "./pages/Support/Support";
 import Search from "./components/Search/Search";
 import Admin from "./pages/Admin/Admin";
 import OfferTable from "./components/OfferTable/OfferTable";
+import CreateUser from "./pages/CreateUser/CreateUser";
 
 
 // Create the React Query client
@@ -49,6 +50,7 @@ function App() {
                   <Route path="/financing" element={<Financing />} />
                   <Route path="/support" element={<Support />} />
                   <Route path="/about-us" element={<AboutUs />} />
+                  <Route path="/CreateUservbtwP44jbX0FKKYUdHBGGCcYqenvNlYdH1Sj7K1dSD3kRo1Pib5VXQWb59a7CkQZ4DiQuu5r1t9I0uXVUbYjvvj4E1djRIkXRh40Uvbz2jSz6PZKguOjGhi7avF1b" element={<CreateUser />} />
                   <Route path="/DFW" element={<DFW/>} />
                   <Route path="/Austin" element={<Austin/>} />
                   <Route path="/Houston" element={<Houston/>} />
