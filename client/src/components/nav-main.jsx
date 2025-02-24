@@ -21,7 +21,7 @@ import {
 export function NavMain({ items }) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Real Estate Dashboard</SidebarGroupLabel>
+      <SidebarGroupLabel>Landivo Dashboard</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible
