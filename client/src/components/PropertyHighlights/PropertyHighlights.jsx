@@ -42,7 +42,7 @@ export default function QuickFacts({ propertyData }) {
           </CardDescription> */}
         </CardHeader>
         <CardContent className="pt-1 pb-2">
-          <p className="text-xl text-tight font-base text-[#324c48]">
+          <p className="text-xl text-tighter font-base text-[#324c48]">
             {propertyData.sqft?.toLocaleString()}{" Sq. Ft."}
           </p>
         </CardContent>

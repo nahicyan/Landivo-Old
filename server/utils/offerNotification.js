@@ -46,38 +46,71 @@ export const sendOfferNotification = async (subject, body) => {
 };
 
 /**
- * 4. Pretty Email Templates with HTML Table
+ * 4. Pretty Email Templates with Themed HTML Table
+ * 
+ * Note: Most email clients do not support Tailwind CSS classes.
+ *       Inline CSS is used here to ensure consistent rendering.
  */
+
+const tableStyle = "border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;";
+const thStyle = "background-color: #324c48; color: #fff; padding: 8px; border: 1px solid #ccc;";
+const tdStyle = "padding: 8px; border: 1px solid #ccc;";
 
 /**
  * Template for New Offer
  * 
- * @param {Object} property 
- * @param {Object} buyer 
+ * @param {Object} property - Contains title, streetAddress, city, state, zip, ownerId, id, askingPrice.
+ * @param {Object} buyer - Contains firstName, lastName, email, phone, buyerType.
  * @param {Number} offeredPrice 
  */
 export const newOfferTemplate = (property, buyer, offeredPrice) => `
-  <h2>New Offer Submitted for ${property.address}!</h2>
+  <h2 style="font-family: Arial, sans-serif;">New Offer Submitted for ${property.streetAddress}, ${property.city}, ${property.state} ${property.zip}!</h2>
   
-  <h3>Property Details:</h3>
-  <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%;">
-    <tr><th>Property Name</th><td>${property.title}</td></tr>
-    <tr><th>Property Address</th><td>${property.address}</td></tr>
-     <tr><th>Owner ID</th><td>${property.ownerId}</td></tr>
-    <tr><th>Property ID</th><td>${property.id}</td></tr>
-    <tr><th>Asking Price</th><td>$${property.askingPrice}</td></tr>
-    <tr><th>Offered Price</th><td>$${offeredPrice}</td></tr>
+  <h3 style="font-family: Arial, sans-serif;">Property Details:</h3>
+  <table style="${tableStyle}">
+    <tr>
+      <th style="${thStyle}">Property Name</th>
+      <td style="${tdStyle}">${property.title}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Property Address</th>
+      <td style="${tdStyle}">${property.streetAddress}, ${property.city}, ${property.state} ${property.zip}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Owner ID</th>
+      <td style="${tdStyle}">${property.ownerId}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Asking Price</th>
+      <td style="${tdStyle}">$${property.askingPrice.toLocaleString()}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Offered Price</th>
+      <td style="${tdStyle}">$${offeredPrice.toLocaleString()}</td>
+    </tr>
   </table>
 
-  <h3>Buyer Details:</h3>
-  <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%;">
-    <tr><th>Name</th><td>${buyer.firstName} ${buyer.lastName}</td></tr>
-    <tr><th>Email</th><td>${buyer.email}</td></tr>
-    <tr><th>Phone</th><td>${buyer.phone}</td></tr>
-    <tr><th>Buyer Type</th><td>${buyer.buyerType}</td></tr>
+  <h3 style="font-family: Arial, sans-serif;">Buyer Details:</h3>
+  <table style="${tableStyle}">
+    <tr>
+      <th style="${thStyle}">Name</th>
+      <td style="${tdStyle}">${buyer.firstName} ${buyer.lastName}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Email</th>
+      <td style="${tdStyle}">${buyer.email}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Phone</th>
+      <td style="${tdStyle}">${buyer.phone}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Buyer Type</th>
+      <td style="${tdStyle}">${buyer.buyerType}</td>
+    </tr>
   </table>
 
-  <p style="margin-top: 20px;">Submitted On: <strong>${new Date().toLocaleString()}</strong></p>
+  <p style="margin-top: 20px; font-family: Arial, sans-serif;">Submitted On: <strong>${new Date().toLocaleString()}</strong></p>
 `;
 
 /**
@@ -88,27 +121,57 @@ export const newOfferTemplate = (property, buyer, offeredPrice) => `
  * @param {Number} offeredPrice 
  */
 export const updatedOfferTemplate = (property, buyer, offeredPrice) => `
-  <h2>Offer Updated for ${property.address}!</h2>
+  <h2 style="font-family: Arial, sans-serif;">Offer Updated for ${property.streetAddress}, ${property.city}, ${property.state} ${property.zip}!</h2>
   
-  <h3>Property Details:</h3>
-  <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%;">
-    <tr><th>Property Name</th><td>${property.title}</td></tr>
-    <tr><th>Property Address</th><td>${property.address}</td></tr>
-     <tr><th>Owner ID</th><td>${property.ownerId}</td></tr>
-    <tr><th>Property ID</th><td>${property.id}</td></tr>
-    <tr><th>Asking Price</th><td>$${property.askingPrice}</td></tr>
-    <tr><th>New Offered Price</th><td>$${offeredPrice}</td></tr>
+  <h3 style="font-family: Arial, sans-serif;">Property Details:</h3>
+  <table style="${tableStyle}">
+    <tr>
+      <th style="${thStyle}">Property Name</th>
+      <td style="${tdStyle}">${property.title}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Property Address</th>
+      <td style="${tdStyle}">${property.streetAddress}, ${property.city}, ${property.state} ${property.zip}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Owner ID</th>
+      <td style="${tdStyle}">${property.ownerId}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Property ID</th>
+      <td style="${tdStyle}">${property.id}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Asking Price</th>
+      <td style="${tdStyle}">$${Number(property.askingPrice).toLocaleString()}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">New Offered Price</th>
+      <td style="${tdStyle}"$${Number(offeredPrice).toLocaleString()}</td>
+    </tr>
   </table>
 
-  <h3>Buyer Details:</h3>
-  <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%;">
-    <tr><th>Name</th><td>${buyer.firstName} ${buyer.lastName}</td></tr>
-    <tr><th>Email</th><td>${buyer.email}</td></tr>
-    <tr><th>Phone</th><td>${buyer.phone}</td></tr>
-    <tr><th>Buyer Type</th><td>${buyer.buyerType}</td></tr>
+  <h3 style="font-family: Arial, sans-serif;">Buyer Details:</h3>
+  <table style="${tableStyle}">
+    <tr>
+      <th style="${thStyle}">Name</th>
+      <td style="${tdStyle}">${buyer.firstName} ${buyer.lastName}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Email</th>
+      <td style="${tdStyle}">${buyer.email}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Phone</th>
+      <td style="${tdStyle}">${buyer.phone}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Buyer Type</th>
+      <td style="${tdStyle}">${buyer.buyerType}</td>
+    </tr>
   </table>
 
-  <p style="margin-top: 20px;">Updated On: <strong>${new Date().toLocaleString()}</strong></p>
+  <p style="margin-top: 20px; font-family: Arial, sans-serif;">Updated On: <strong>${new Date().toLocaleString()}</strong></p>
 `;
 
 /**
@@ -119,26 +182,59 @@ export const updatedOfferTemplate = (property, buyer, offeredPrice) => `
  * @param {Number} offeredPrice 
  */
 export const lowOfferTemplate = (property, buyer, offeredPrice) => `
-  <h2>Low Offer Alert for ${property.address}!</h2>
+  <h2 style="font-family: Arial, sans-serif;">Low Offer Alert for ${property.streetAddress}, ${property.city}, ${property.state} ${property.zip}!</h2>
   
-  <h3>Property Details:</h3>
-  <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%;">
-    <tr><th>Property Name</th><td>${property.title}</td></tr>
-    <tr><th>Property Address</th><td>${property.address}</td></tr>
-     <tr><th>Owner ID</th><td>${property.ownerId}</td></tr>
-    <tr><th>Property ID</th><td>${property.id}</td></tr>
-    <tr><th>Asking Price</th><td>$${property.askingPrice}</td></tr>
-    <tr><th>Offered Price</th><td>$${offeredPrice}</td></tr>
-    <tr><th>Minimum Price</th><td>$${property.minPrice}</td></tr>
+  <h3 style="font-family: Arial, sans-serif;">Property Details:</h3>
+  <table style="${tableStyle}">
+    <tr>
+      <th style="${thStyle}">Property Name</th>
+      <td style="${tdStyle}">${property.title}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Property Address</th>
+      <td style="${tdStyle}">${property.streetAddress}, ${property.city}, ${property.state} ${property.zip}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Owner ID</th>
+      <td style="${tdStyle}">${property.ownerId}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Property ID</th>
+      <td style="${tdStyle}">${property.id}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Asking Price</th>
+      <td style="${tdStyle}">$${property.askingPrice}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Offered Price</th>
+      <td style="${tdStyle}">$${offeredPrice}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Minimum Price</th>
+      <td style="${tdStyle}">$${property.minPrice}</td>
+    </tr>
   </table>
 
-  <h3>Buyer Details:</h3>
-  <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%;">
-    <tr><th>Name</th><td>${buyer.firstName} ${buyer.lastName}</td></tr>
-    <tr><th>Email</th><td>${buyer.email}</td></tr>
-    <tr><th>Phone</th><td>${buyer.phone}</td></tr>
-    <tr><th>Buyer Type</th><td>${buyer.buyerType}</td></tr>
+  <h3 style="font-family: Arial, sans-serif;">Buyer Details:</h3>
+  <table style="${tableStyle}">
+    <tr>
+      <th style="${thStyle}">Name</th>
+      <td style="${tdStyle}">${buyer.firstName} ${buyer.lastName}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Email</th>
+      <td style="${tdStyle}">${buyer.email}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Phone</th>
+      <td style="${tdStyle}">${buyer.phone}</td>
+    </tr>
+    <tr>
+      <th style="${thStyle}">Buyer Type</th>
+      <td style="${tdStyle}">${buyer.buyerType}</td>
+    </tr>
   </table>
 
-  <p style="margin-top: 20px;">Submitted On: <strong>${new Date().toLocaleString()}</strong></p>
+  <p style="margin-top: 20px; font-family: Arial, sans-serif;">Submitted On: <strong>${new Date().toLocaleString()}</strong></p>
 `;

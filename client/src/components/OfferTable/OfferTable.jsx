@@ -92,8 +92,11 @@ export default function OfferTable() {
                   <TableCell>{offer.buyer.email}</TableCell>
                   <TableCell>{offer.buyer.phone || "N/A"}</TableCell>
                   <TableCell className="text-green-600 font-semibold">
-                    ${offer.amount ? offer.amount.toLocaleString() : "N/A"}
-                  </TableCell>{" "}
+                    {typeof offer.offeredPrice === "number"
+                      ? `$${offer.offeredPrice.toLocaleString("en-US")}`
+                      : "N/A"}
+                  </TableCell>
+
                   <TableCell>
                     {format(new Date(offer.timestamp), "PPpp")}
                   </TableCell>

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../utils/api";
@@ -53,17 +55,36 @@ export default function Offer({ propertyData }) {
   const [dialogMessage, setDialogMessage] = useState("");
   const [dialogType, setDialogType] = useState("success"); // "success" or "warning"
 
+  // Format the offer price as the user types
+  const handleOfferPriceChange = (e) => {
+    let value = e.target.value;
+    // Remove commas from the value
+    value = value.replace(/,/g, "");
+    if (value === "") {
+      setOfferPrice("");
+      return;
+    }
+    const floatValue = parseFloat(value);
+    if (!isNaN(floatValue)) {
+      // Format number with commas
+      setOfferPrice(floatValue.toLocaleString("en-US"));
+    } else {
+      // If not a valid number, keep the raw value
+      setOfferPrice(value);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Basic required field check
-    if (!offerPrice || !email || !firstName || !lastName || !phone) {
+    if (!offerPrice || !email || !firstName || !lastName || !phone || !buyerType) {
       setDialogMessage("All fields are required.");
       setDialogType("warning");
       setDialogOpen(true);
       return;
     }
-
+    
     // === Phone Validation with libphonenumber-js ===
     try {
       const phoneNumber = parsePhoneNumber(phone, "US"); // "US" or your default country code
@@ -74,19 +95,21 @@ export default function Offer({ propertyData }) {
         return;
       }
     } catch (error) {
-      // parsePhoneNumber can throw if the format is totally off
       setDialogMessage("Invalid phone number. Please enter a valid number.");
       setDialogType("warning");
       setDialogOpen(true);
       return;
     }
 
+    // Remove commas before converting to float
+    const parsedOfferPrice = parseFloat(offerPrice.replace(/,/g, ""));
+
     const offerData = {
       email,
       phone,
       buyerType,
       propertyId: propertyData?.id,
-      offeredPrice: parseFloat(offerPrice),
+      offeredPrice: parsedOfferPrice,
       firstName,
       lastName,
     };
@@ -95,7 +118,7 @@ export default function Offer({ propertyData }) {
       await api.post("/buyer/makeOffer", offerData);
 
       // If offer is below minPrice, show a warning and do not redirect
-      if (parseFloat(offerPrice) < propertyData?.minPrice) {
+      if (parsedOfferPrice < propertyData?.minPrice) {
         setDialogMessage(
           `At this time we cannot accept any offers below $${propertyData?.minPrice.toLocaleString()}. Consider offering a higher price.`
         );
@@ -104,13 +127,13 @@ export default function Offer({ propertyData }) {
         return;
       }
 
-      // If valid offer, show success and navigate back
+      // If valid offer, show success and (optionally) navigate back
       setDialogMessage("Offer submitted successfully!");
       setDialogType("success");
       setDialogOpen(true);
     } catch (error) {
       setDialogMessage(
-        "You've already offered this or higher amount. Please adjust your offer to continue!"
+        "You've already offered this or a higher amount. Please adjust your offer to continue!"
       );
       setDialogType("warning");
       setDialogOpen(true);
@@ -119,7 +142,7 @@ export default function Offer({ propertyData }) {
 
   return (
     <div className="bg-white text-[#050002] p-4">
-    <Card className="w-full max-w-md border border-[#405025]/20 bg-white shadow-lg mx-auto">
+      <Card className="w-full max-w-md border border-[#405025]/20 bg-white shadow-lg mx-auto">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-[#405025]">
             Make An Offer
@@ -199,6 +222,7 @@ export default function Offer({ propertyData }) {
               <Select
                 value={buyerType}
                 onValueChange={(val) => setBuyerType(val)}
+                required
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select Buyer Type" />
@@ -221,11 +245,10 @@ export default function Offer({ propertyData }) {
               </Label>
               <Input
                 id="offerPrice"
-                type="number"
+                type="text" // Changed to text to allow comma formatting
                 placeholder="500,000"
-                min="1"
                 value={offerPrice}
-                onChange={(e) => setOfferPrice(e.target.value)}
+                onChange={handleOfferPriceChange}
                 required
               />
             </div>
@@ -246,9 +269,7 @@ export default function Offer({ propertyData }) {
         <DialogContent className="bg-[#FFF] text-[#050002] border border-[#405025]/30 shadow-lg">
           <DialogHeader>
             <DialogTitle
-              className={
-                dialogType === "success" ? "text-green-600" : "text-red-600"
-              }
+              className={dialogType === "success" ? "text-green-600" : "text-red-600"}
             >
               {dialogType === "success" ? "Success" : "Warning"}
             </DialogTitle>
@@ -256,7 +277,12 @@ export default function Offer({ propertyData }) {
           </DialogHeader>
           <DialogFooter>
             <Button
-              onClick={() => setDialogOpen(false)}
+              onClick={() => {
+                setDialogOpen(false);
+                if (dialogType === "success") {
+                  navigate("/properties");
+                }
+              }}
               className="bg-[#324c48] text-[#FFF]"
             >
               Okay
