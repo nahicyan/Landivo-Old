@@ -1,30 +1,32 @@
-import * as React from "react"
-import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react"
+"use client";
 
-import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
-import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
+import * as React from "react";
+import {
+  Home,
+  Megaphone,
+  Users,
+  User,
+  Building,
+  Briefcase,
+  AlertOctagon,
+  Settings2,
+  Server,
+  Code,
+} from "lucide-react";
+
+import { NavMain } from "@/components/nav-main";
+import { NavProjects } from "@/components/nav-projects";
+import { NavUser } from "@/components/nav-user";
+import { TeamSwitcher } from "@/components/team-switcher";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
-// This is sample data.
+// Sample data with updated icons
 const data = {
   user: {
     name: "Nathan",
@@ -34,131 +36,71 @@ const data = {
   teams: [
     {
       name: "Acme Inc",
-      logo: GalleryVerticalEnd,
+      logo: Building, // Changed to Building icon
       plan: "Enterprise",
     },
     {
       name: "Acme Corp.",
-      logo: AudioWaveform,
+      logo: Briefcase, // Changed to Briefcase icon
       plan: "Startup",
     },
     {
       name: "Evil Corp.",
-      logo: Command,
+      logo: AlertOctagon, // Changed to AlertOctagon icon
       plan: "Free",
     },
   ],
   navMain: [
     {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
+      title: "Properties",
+      url: "/admin",
+      icon: Home, // Changed to Home icon
       isActive: true,
       items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
+        { title: "Add Property", url: "/add-property" },
+        { title: "Starred", url: "#" },
+        { title: "Settings", url: "#" },
       ],
     },
     {
-      title: "Models",
+      title: "Campaigns",
       url: "#",
-      icon: Bot,
+      icon: Megaphone, // Changed to Megaphone icon
       items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
+        { title: "Manage Campaigns", url: "#" },
+        { title: "Email Templates", url: "#" },
       ],
     },
     {
-      title: "Documentation",
+      title: "Users",
       url: "#",
-      icon: BookOpen,
+      icon: Users, // Changed to Users icon
       items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
+        { title: "Create A New User", url: "#" },
+        { title: "Manage Users", url: "#" },
       ],
     },
     {
-      title: "Settings",
+      title: "Buyers",
       url: "#",
-      icon: Settings2,
+      icon: User, // Changed to User icon
       items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
+        { title: "VIP Buyer's List", url: "#" },
+        { title: "Property Alert List", url: "#" },
+        { title: "Manage Buyers", url: "#" },
       ],
     },
   ],
   projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
+    { name: "Settings", url: "#", icon: Settings2 },
+    { name: "SMTP Settings", url: "#", icon: Server }, // Changed to Server icon
+    { name: "API & Connection", url: "#", icon: Code }, // Changed to Code icon
   ],
-}
+};
 
-export function AppSidebar({
-  ...props
-}) {
+export function AppSidebar({ ...props }) {
   return (
-    (<Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
@@ -170,6 +112,6 @@ export function AppSidebar({
         <NavUser user={data.user} />
       </SidebarFooter>
       <SidebarRail />
-    </Sidebar>)
+    </Sidebar>
   );
 }
