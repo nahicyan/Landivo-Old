@@ -1,7 +1,7 @@
-import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
 
-dotenv.config();  // Load environment variables from .env file
+dotenv.config(); // Load environment variables from .env file
 
 // 1. Configure SMTP Transport
 const transporter = nodemailer.createTransport({
@@ -25,14 +25,14 @@ transporter.verify((error, success) => {
 
 /**
  * 3. Generic Email Sending Function
- * 
+ *
  * @param {String} subject - Email subject
  * @param {String} body - Email body (HTML formatted)
  */
 export const sendOfferNotification = async (subject, body) => {
   try {
     const mailOptions = {
-      from: `"Landivo Notifications" <${process.env.SMTP_USER}>`,
+      from: `"Landivo Alerts" <${process.env.SMTP_USER}>`,
       to: process.env.SMTP_TO,
       subject: subject,
       html: body,
@@ -47,30 +47,36 @@ export const sendOfferNotification = async (subject, body) => {
 
 /**
  * 4. Pretty Email Templates with Themed HTML Table
- * 
+ *
  * Note: Most email clients do not support Tailwind CSS classes.
  *       Inline CSS is used here to ensure consistent rendering.
  */
 
-const tableStyle = "border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;";
-const thStyle = "background-color: #324c48; color: #fff; padding: 8px; border: 1px solid #ccc;";
+const tableStyle =
+  "border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;";
+const thStyle =
+  "background-color: #324c48; color: #fff; padding: 8px; border: 1px solid #ccc;";
 const tdStyle = "padding: 8px; border: 1px solid #ccc;";
 
 /**
  * Template for New Offer
- * 
+ *
  * @param {Object} property - Contains title, streetAddress, city, state, zip, ownerId, id, askingPrice.
  * @param {Object} buyer - Contains firstName, lastName, email, phone, buyerType.
- * @param {Number} offeredPrice 
+ * @param {Number} offeredPrice
  */
 export const newOfferTemplate = (property, buyer, offeredPrice) => `
-  <h2 style="font-family: Arial, sans-serif;">New Offer Submitted for ${property.streetAddress}, ${property.city}, ${property.state} ${property.zip}!</h2>
+  <h2 style="font-family: Arial, sans-serif;">New Offer Submitted for ${
+    property.streetAddress
+  }, ${property.city}, ${property.state} ${property.zip}!</h2>
   
   <h3 style="font-family: Arial, sans-serif;">Property Details:</h3>
   <table style="${tableStyle}">
     <tr>
       <th style="${thStyle}">Property Address</th>
-      <td style="${tdStyle}">${property.streetAddress}, ${property.city}, ${property.state} ${property.zip}</td>
+      <td style="${tdStyle}">${property.streetAddress}, ${property.city}, ${
+  property.state
+} ${property.zip}</td>
     </tr>
     <tr>
       <th style="${thStyle}">Owner ID</th>
@@ -111,19 +117,23 @@ export const newOfferTemplate = (property, buyer, offeredPrice) => `
 
 /**
  * Template for Updated Offer
- * 
- * @param {Object} property 
- * @param {Object} buyer 
- * @param {Number} offeredPrice 
+ *
+ * @param {Object} property
+ * @param {Object} buyer
+ * @param {Number} offeredPrice
  */
 export const updatedOfferTemplate = (property, buyer, offeredPrice) => `
-  <h2 style="font-family: Arial, sans-serif;">Offer Updated for ${property.streetAddress}, ${property.city}, ${property.state} ${property.zip}!</h2>
+  <h2 style="font-family: Arial, sans-serif;">Offer Updated for ${
+    property.streetAddress
+  }, ${property.city}, ${property.state} ${property.zip}!</h2>
   
   <h3 style="font-family: Arial, sans-serif;">Property Details:</h3>
   <table style="${tableStyle}">
     <tr>
       <th style="${thStyle}">Property Address</th>
-      <td style="${tdStyle}">${property.streetAddress}, ${property.city}, ${property.state} ${property.zip}</td>
+      <td style="${tdStyle}">${property.streetAddress}, ${property.city}, ${
+  property.state
+} ${property.zip}</td>
     </tr>
     <tr>
       <th style="${thStyle}">Owner ID</th>
@@ -135,7 +145,9 @@ export const updatedOfferTemplate = (property, buyer, offeredPrice) => `
     </tr>
     <tr>
       <th style="${thStyle}">Asking Price</th>
-      <td style="${tdStyle}">$${Number(property.askingPrice).toLocaleString()}</td>
+      <td style="${tdStyle}">$${Number(
+  property.askingPrice
+).toLocaleString()}</td>
     </tr>
     <tr>
       <th style="${thStyle}">New Offered Price</th>
@@ -168,19 +180,23 @@ export const updatedOfferTemplate = (property, buyer, offeredPrice) => `
 
 /**
  * Template for Low Offer Warning
- * 
- * @param {Object} property 
- * @param {Object} buyer 
- * @param {Number} offeredPrice 
+ *
+ * @param {Object} property
+ * @param {Object} buyer
+ * @param {Number} offeredPrice
  */
 export const lowOfferTemplate = (property, buyer, offeredPrice) => `
-  <h2 style="font-family: Arial, sans-serif;">Low Offer Alert for ${property.streetAddress}, ${property.city}, ${property.state} ${property.zip}!</h2>
+  <h2 style="font-family: Arial, sans-serif;">Low Offer Alert for ${
+    property.streetAddress
+  }, ${property.city}, ${property.state} ${property.zip}!</h2>
   
   <h3 style="font-family: Arial, sans-serif;">Property Details:</h3>
   <table style="${tableStyle}">
     <tr>
       <th style="${thStyle}">Property Address</th>
-      <td style="${tdStyle}">${property.streetAddress}, ${property.city}, ${property.state} ${property.zip}</td>
+      <td style="${tdStyle}">${property.streetAddress}, ${property.city}, ${
+  property.state
+} ${property.zip}</td>
     </tr>
     <tr>
       <th style="${thStyle}">Owner ID</th>
