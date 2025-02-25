@@ -32,7 +32,7 @@ transporter.verify((error, success) => {
 export const sendOfferNotification = async (subject, body) => {
   try {
     const mailOptions = {
-      from: `"HomeHive Notifications" <${process.env.SMTP_USER}>`,
+      from: `"Landivo Notifications" <${process.env.SMTP_USER}>`,
       to: process.env.SMTP_TO,
       subject: subject,
       html: body,
@@ -68,10 +68,6 @@ export const newOfferTemplate = (property, buyer, offeredPrice) => `
   
   <h3 style="font-family: Arial, sans-serif;">Property Details:</h3>
   <table style="${tableStyle}">
-    <tr>
-      <th style="${thStyle}">Property Name</th>
-      <td style="${tdStyle}">${property.title}</td>
-    </tr>
     <tr>
       <th style="${thStyle}">Property Address</th>
       <td style="${tdStyle}">${property.streetAddress}, ${property.city}, ${property.state} ${property.zip}</td>
@@ -125,10 +121,6 @@ export const updatedOfferTemplate = (property, buyer, offeredPrice) => `
   
   <h3 style="font-family: Arial, sans-serif;">Property Details:</h3>
   <table style="${tableStyle}">
-    <tr>
-      <th style="${thStyle}">Property Name</th>
-      <td style="${tdStyle}">${property.title}</td>
-    </tr>
     <tr>
       <th style="${thStyle}">Property Address</th>
       <td style="${tdStyle}">${property.streetAddress}, ${property.city}, ${property.state} ${property.zip}</td>
@@ -186,10 +178,6 @@ export const lowOfferTemplate = (property, buyer, offeredPrice) => `
   
   <h3 style="font-family: Arial, sans-serif;">Property Details:</h3>
   <table style="${tableStyle}">
-    <tr>
-      <th style="${thStyle}">Property Name</th>
-      <td style="${tdStyle}">${property.title}</td>
-    </tr>
     <tr>
       <th style="${thStyle}">Property Address</th>
       <td style="${tdStyle}">${property.streetAddress}, ${property.city}, ${property.state} ${property.zip}</td>

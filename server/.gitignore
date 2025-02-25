@@ -1,4 +1,6 @@
 client.json
-uploads/
+package-lock.json
+uploads/*
+!uploads/
 node_modules/
 .env
