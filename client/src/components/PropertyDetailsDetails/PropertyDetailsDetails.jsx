@@ -33,7 +33,7 @@ import PropertyMap from "../PropertyMap/PropertyMap";
 
 export default function PropertyDetailsDetails({ propertyData }) {
   return (
-    <div className="bg-[FFF] text-[var(--text)] p-4">
+    <div className="bg-[FFF] text-[var(--text)]">
       {/* Two columns: "Location" & "Property details" */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Left Column: Location */}

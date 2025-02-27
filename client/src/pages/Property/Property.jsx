@@ -5,9 +5,7 @@ import { Box, CircularProgress, Typography } from "@mui/material";
 import { getProperty } from "../../utils/api";
 import { UserContext } from "../../utils/UserContext";
 import PropertyDetails from "../../components/PropertyDetails/PropertyDetails";
-import PropertyCarousel from "../../components/PropertyCarousel/PropertyCarousel";
 import PropertyHeaderLeft from "../../components/PropertyHeaderLeft/PropertyHeaderLeft";
-import PropertyHeaderRight from "../../components/PropertyHeaderRight/PropertyHeaderRight";
 
 const Property = () => {
   const { pathname } = useLocation();
@@ -63,29 +61,22 @@ const Property = () => {
       {/* Outer wrapper ensures content is centered */}
       <div className="max-w-screen-xl w-full bg-white rounded-lg shadow-md">
         {/* Property Header Sections Inline */}
-        <div className="flex flex-col lg:flex-row gap-6 w-full bg-[#FFF]">
+        <div className="flex flex-col lg:flex-row w-full bg-[#FFF]">
           {/* Left Section */}
-          <div className="w-full lg:w-3/4">
-            <div className="sticky top-0 z-10 bg-[#FFF]">
+          <div className="w-full px-4">
+            <div className="bg-[#FFF]">
               <PropertyHeaderLeft propertyData={propertyData} />
-            </div>
-          </div>
-
-          {/* Right Section */}
-          <div className="w-full lg:w-1/4">
-            <div className="sticky top-0 z-10 bg-[#FFF]">
-              <PropertyHeaderRight propertyData={propertyData} />
             </div>
           </div>
         </div>
 
         {/* Property Carousel */}
-        <div className="mt-6">
+{/*         <div className="mt-6">
           <PropertyCarousel propertyData={propertyData} />
         </div>
-
+ */}
         {/* Property Details */}
-        <div className="mt-6 bg-[#FFF]">
+        <div className="bg-[#FFF]">
           <PropertyDetails propertyData={propertyData} />
         </div>
       </div>

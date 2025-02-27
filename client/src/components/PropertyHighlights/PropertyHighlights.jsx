@@ -15,7 +15,11 @@ import {
 
 export default function QuickFacts({ propertyData }) {
   return (
-    <div className="flex flex-wrap gap-4 bg-transparent">
+    <>
+    <h2 className="text-xl font-semibold text-gray-800 mb-6">
+    Property Highlights
+  </h2>
+    <div className="flex flex-wrap gap-4 bg-transparent mb-8">
       {/* Card 1: Sq Ft */}
       <Card
         className="
@@ -43,7 +47,7 @@ export default function QuickFacts({ propertyData }) {
         </CardHeader>
         <CardContent className="pt-1 pb-2">
           <p className="text-xl text-tighter font-base text-[#324c48]">
-            {propertyData.sqft?.toLocaleString()}{" Sq. Ft."}
+            {propertyData.sqft?.toLocaleString()}{" sq ft"}
           </p>
         </CardContent>
       </Card>
@@ -146,5 +150,6 @@ export default function QuickFacts({ propertyData }) {
         </CardContent>
       </Card>
     </div>
+    </>
   );
 }

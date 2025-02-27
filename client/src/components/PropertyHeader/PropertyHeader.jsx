@@ -4,16 +4,16 @@ import PropertyHeaderRight from "../PropertyHeaderRight/PropertyHeaderRight";
 
 export default function PropertyHeader({ propertyData }) {
   return (
-    <header className="flex flex-col lg:flex-row gap-6 w-full bg-[#FFF]">
+    <header className="flex flex-col lg:flex-row w-full bg-[#FFF]">
       {/* Left Section */}
-      <div className="w-full lg:w-3/4">
+      {/* <div>
         <PropertyHeaderLeft propertyData={propertyData} />
-      </div>
+      </div> */}
 
       {/* Right Section */}
-      <div className="w-full lg:w-1/4">
+{/*       <div className="w-full lg:w-1/4">
         <PropertyHeaderRight propertyData={propertyData} />
-      </div>
+      </div> */}
     </header>
   );
 }

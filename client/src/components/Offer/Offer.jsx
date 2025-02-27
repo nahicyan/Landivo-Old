@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../utils/api";
 import { parsePhoneNumber } from "libphonenumber-js";
+import ContactCard from "@/components/ContactCard/ContactCard";
+
 
 // ShadCN UI components
 import {
@@ -141,7 +143,7 @@ export default function Offer({ propertyData }) {
   };
 
   return (
-    <div className="bg-white text-[#050002] p-4">
+    <div className="bg-white text-[#050002]">
       <Card className="w-full max-w-md border border-[#405025]/20 bg-white shadow-lg mx-auto">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-[#405025]">
@@ -261,6 +263,9 @@ export default function Offer({ propertyData }) {
               Submit Offer
             </Button>
           </form>
+          <div className="py-6">
+      <ContactCard />
+    </div>
         </CardContent>
       </Card>
 

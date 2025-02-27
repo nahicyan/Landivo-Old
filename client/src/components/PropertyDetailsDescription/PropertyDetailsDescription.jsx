@@ -31,13 +31,13 @@ export default function PropertyDetailsDescription({ propertyData }) {
   return (
     <Card className="bg-transparent border-0 shadow-none text-[var(--text)]">
       {/* Title */}
-      <CardHeader className="p-4">
+      <CardHeader className="pt-4 pr-4 pb-4 pl-0">
         <CardTitle className="text-xl font-semibold text-gray-800">
           Property Description
         </CardTitle>
       </CardHeader>
 
-      <div className="relative p-4">
+      <div className="relative pt-4 pr-4 pb-4 pl-0">
         {/* Hidden element to measure total lines */}
         <div
           ref={hiddenRef}

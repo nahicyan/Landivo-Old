@@ -1,12 +1,8 @@
+"use client";
+
 import React, { useContext } from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { UserContext } from "../../utils/UserContext"; // Import user context
+import { Card } from "@/components/ui/card";
+import { UserContext } from "../../utils/UserContext";
 
 // Function to assign status colors
 function getStatusClasses(status) {
@@ -26,119 +22,86 @@ function getStatusClasses(status) {
 }
 
 export default function PropertyHeaderRight({ propertyData }) {
-  const { currentUser } = useContext(UserContext); // Check if user is logged in
-  const { status, disPrice, askingPrice, acre } = propertyData || {};
+  const { currentUser } = useContext(UserContext);
+  const {
+    status,
+    disPrice,
+    askingPrice,
+    acre,
+    streetAddress,
+    city,
+    state,
+    zip,
+  } = propertyData || {};
+
   const { circle, text } = getStatusClasses(status);
 
+  // If user is logged in and discount price is available, we display the discount
+  const mainPrice = currentUser && disPrice ? disPrice : askingPrice;
+
   return (
-    <div className="w-full flex flex-col items-start text-left lg:items-end lg:text-right">
-      <Card className="border-0 bg-transparent shadow-none">
-        <CardHeader className="px-4 py-1">
-          {/* === Status, Discount Price & Login Button (Same Line) === */}
-          <div className="flex items-center gap-3 flex-wrap">
-            {/* Status Indicator */}
-            <div className="flex items-center gap-2">
-              <span
-                className={`w-2 h-2 rounded-full animate-pulse-slow ${circle}`}
-              />
-              <CardDescription className={`text-lg capitalize ${text}`}>
-                {status || "Unknown Status"}
-              </CardDescription>
-
-              {/* If logged in and there is a discount, show crossed-out askingPrice here */}
-              {currentUser && disPrice && (
-                <span className="text-gray-500 line-through text-xl">
-                  ${askingPrice?.toLocaleString()}
-                </span>
-              )}
-            </div>
-
-            {/* Discount Price & Login Button (Only show if NOT logged in) */}
-            {!currentUser && disPrice && (
-              <div className="relative flex items-center  mx-2">
-                {/* Ghost Button positioned directly on top of the blurred price */}
-                <button
-                  variant="ghost"
-                  className="
-        absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-        text-base z-10 bg-transparent text-gray-1000 font-semibold
-        hover:px-2 hover:py-1 rounded-md 
-        hover:bg-gray-200 transition-colors
-        cursor-pointer 
-        whitespace-nowrap tracking-tight
-      "
-                  onClick={() => {
-                    // Handle login modal or redirect
-                  }}
-                >
-                  Login For Discount
-                </button>
-
-                {/* Blurred Discount Price (behind the button) */}
-                <span className="filter blur-[2px] text-3xl text-gray-400 font-thin">
-                  ${disPrice.toLocaleString()}
-                </span>
-              </div>
-            )}
-          </div>
-
-          {/* === Main Price & Acres (With Strike-Through Logic) === */}
-          <CardTitle className="text-2xl text-gray-800 font-bold">
-            {/* If user is logged in, show askingPrice as crossed-out & replace it with disPrice */}
-            {currentUser && disPrice ? (
-              <>
-                <span className="ml-2 text-2xl font-semibold text-gray-800">
-                  ${disPrice?.toLocaleString()}
-                </span>
-              </>
-            ) : (
-              <>${askingPrice?.toLocaleString()}</>
-            )}
-            <span className="ml-2 text-2x1 font-normal text-gray-700  ml-6">
-              {acre} Acres
-            </span>
-          </CardTitle>
-        </CardHeader>
-      </Card>
-
-      {/* === Action Buttons === */}
-      <div className="flex items-center gap-3 px-4 py-2">
-        <Button
-          className="
-      bg-[#324c48]
-      text-white
-      w-32
-      py-2
-      text-base
-      font-semibold
-      uppercase
-      rounded-full
-      shadow-md
-      hover:shadow-lg
-      transition-shadow
-    "
-        >
-          Call
-        </Button>
-
-        <Button
-          className="
-      bg-[#324c48]
-      text-white
-      w-32
-      py-2
-      text-base
-      font-semibold
-      uppercase
-      rounded-full
-      shadow-md
-      hover:shadow-lg
-      transition-shadow
-    "
-        >
-          Message
-        </Button>
+    <Card className="border-0 bg-transparent shadow-none p-0 mb-10">
+      {/* Top Row: Status */}
+      <div className="flex items-center gap-2 my-6">
+        <span className={`w-3 h-3 rounded-full animate-pulse-slow ${circle}`} />
+        <span className={`text-lg capitalize ${text}`}>
+          {status || "Unknown Status"}
+        </span>
       </div>
-    </div>
+
+      {/* Price Row (All prices aligned in one line) */}
+
+      <div className="flex items-center text-3xl font-bold text-gray-900 whitespace-nowrap mb-4">
+        {/* Main Price */}
+        {mainPrice ? `$${mainPrice.toLocaleString()}` : "$0"}
+
+        {/* Blurred Discount Price (Only if user is NOT logged in) */}
+        {!currentUser && disPrice && (
+          <span className="relative ml-4 inline-flex items-center">
+            {/* Overlay Button (Triggers Login) */}
+            <button
+              className="
+          absolute inset-0 z-10 bg-transparent text-sm font-semibold
+          hover:bg-gray-200 transition-colors px-2 py-1 rounded-md
+          flex items-center justify-center w-full h-full whitespace-nowrap
+        "
+              onClick={() => {
+                // Handle login or redirect
+              }}
+            >
+              Login For Discount
+            </button>
+
+            {/* Blurred Discount Price (Behind the button) */}
+            <span className="filter blur-[2px] text-3xl text-gray-400 font-thin ml-2">
+              ${disPrice.toLocaleString()}
+            </span>
+          </span>
+        )}
+
+        {/* Crossed Out Original Price (Only for logged-in users with a discount) */}
+        {currentUser && disPrice && (
+          <span className="text-gray-500 line-through text-xl ml-3">
+            ${askingPrice?.toLocaleString()}
+          </span>
+        )}
+      </div>
+
+      {/* Acre Row */}
+      {acre && (
+        <div
+          className="text-2xl font-nnormal text-gray-500 mb-4"
+        >
+          {acre} Acre Lot
+        </div>
+      )}
+
+      {/* Address Row */}
+      {(streetAddress || city || state || zip) && (
+        <div className="text-lg text-gray-700 mt-1 whitespace-nowrap">
+          {streetAddress}, {city}, {state} {zip}
+        </div>
+      )}
+    </Card>
   );
 }
