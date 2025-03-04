@@ -57,7 +57,7 @@ export default function PropertyHeaderRight({ propertyData }) {
 
         {/* Blurred Discount Price (Only if user is NOT logged in) */}
         {!currentUser && disPrice && (
-          <span className="relative ml-4 inline-flex items-center">
+          <span className="relative ml-6 inline-flex items-center">
             {/* Overlay Button (Triggers Login) */}
             <button
               className="

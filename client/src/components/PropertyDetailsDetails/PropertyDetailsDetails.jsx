@@ -101,12 +101,6 @@ export default function PropertyDetailsDetails({ propertyData }) {
             <TableBody>
               <TableRow>
                 <TableCell className="font-medium text-gray-700">
-                  Parcel
-                </TableCell>
-                <TableCell>{propertyData.apnOrPin}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-medium text-gray-700">
                   Size
                 </TableCell>
                 <TableCell>{propertyData.sqft?.toLocaleString()}</TableCell>
@@ -125,9 +119,15 @@ export default function PropertyDetailsDetails({ propertyData }) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium text-gray-700">
-                  Restrictions
+                  Parcel
                 </TableCell>
-                <TableCell>{propertyData.restrictions}</TableCell>
+                <TableCell>{propertyData.apnOrPin}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium text-gray-700">
+                  Legal Description
+                </TableCell>
+                <TableCell>{propertyData.legalDescription}</TableCell>
               </TableRow>
               {/* Add more property fields as needed */}
             </TableBody>
@@ -265,7 +265,7 @@ export default function PropertyDetailsDetails({ propertyData }) {
                     <TableCell className="font-medium text-gray-700">
                       HOA Information
                     </TableCell>
-                    <TableCell>{propertyData.hoaDeedDevInfo}</TableCell>
+                    <TableCell>{propertyData.hoaFee}</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
@@ -324,20 +324,22 @@ export default function PropertyDetailsDetails({ propertyData }) {
             </AccordionTrigger>
             <AccordionContent>
               <div className="text-base w-[75%]">
-                <p>Cash OR Hard Money Only.</p>
-                <p>Earnest money deposit varies per property.</p>
-                <p>Buyer pays ALL closing costs.</p>
+                <p> Buyer pays ALL closing costs.</p>
+                <p> Cash OR Hard Money Only.</p>
                 <p>
-                  Buyer to pay Administrative Fee Payable to Landers Investment
-                  LLC for <p>$395 additional/added to the Assignment fee.</p>
+                  {" "}
+                  A $395 transaction fee applies to each contract and is payable
+                  by the buyer.
                 </p>
+                <p> This Property is being sold AS-IS.</p>
+                <p> No Daisy Chaining – No Option Period.</p>
+                <p> Due diligence required before submitting an offer.</p>
                 <p>
+                  {" "}
                   Agents, please add your commission to the buyer's sales price.
                 </p>
-                <p>Daisy Chainers do not apply—no Option period.</p>
-                <p>Please do your due diligence before making an offer.</p>
-                <p>This Property is being sold AS-IS.</p>
-                <p>Close Date: ASAP</p>
+                <p> Earnest money deposit varies per property.</p>
+                <p> Closing ASAP.</p>
               </div>
             </AccordionContent>
           </AccordionItem>

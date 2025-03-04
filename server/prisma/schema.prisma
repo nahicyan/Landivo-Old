@@ -32,18 +32,20 @@ model Residency {
     userEmail           String
 
     // Property Details
-    ownerId             Int
+    ownerId             Int?
     title               String
-    description         String?
-    direction           String?
+    description         String
+    legalDescription    String 
+    direction           String
     type                String?
-    subtype             String?
     zoning              String?
     restrictions        String?
     mobileHomeFriendly  String?
     hoaPoa              String?
-    hoaDeedDevInfo      String?
-    notes               String?
+    hoaFee              Float// 
+    hoaPaymentTerms     String //
+    survey              String //
+    notes               String
 
     // Address and Location
     apnOrPin            String   @unique                      // APN/PIN must be unique
@@ -68,6 +70,10 @@ model Residency {
     disPrice            Float?
     financing           String
     status              String?
+    downPayment         Float  //
+    monthlyPayment      Float  //
+    terms               String  // 
+    interestRate        Float  //
 
     // Utilities and Infrastructure
     water               String?

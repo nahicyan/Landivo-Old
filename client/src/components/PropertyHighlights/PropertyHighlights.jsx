@@ -103,7 +103,7 @@ export default function QuickFacts({ propertyData }) {
         <CardHeader className="flex flex-col items-center p-2 pb-0">
           <MapPinIcon className="w-6 h-6 text-[#3f4f24] " />
           <CardTitle className="text-base font-semibold text-[#3f4f24]">
-            Area
+            Survey
           </CardTitle>
           {/* <CardDescription className="text-sm text-[#324c48]">
             Located In
@@ -111,7 +111,7 @@ export default function QuickFacts({ propertyData }) {
         </CardHeader>
         <CardContent className="pt-1 pb-2">
           <p className="text-xl text-tight font-base text-[#324c48]">
-            {propertyData.area?.toLocaleString() ?? "N/A"}
+            {propertyData.survey?.toLocaleString() ?? "Not Available"}
           </p>
         </CardContent>
       </Card>
@@ -143,9 +143,7 @@ export default function QuickFacts({ propertyData }) {
         </CardHeader>
         <CardContent className="pt-1 pb-2">
           <p className="text-xl text-tight font-base text-[#324c48]">
-            {propertyData.monthlyPayment
-              ? `$${propertyData.monthlyPayment.toLocaleString()}`
-              : "Not Available"}
+          {propertyData.financing?.toLocaleString() ?? "Not Available"}
           </p>
         </CardContent>
       </Card>

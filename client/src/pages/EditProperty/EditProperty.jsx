@@ -30,12 +30,12 @@ const [dialogMessage, setDialogMessage] = useState("");
     description: "",
     direction: "",
     type: "",
-    subtype: "",
+    legalDescription: "",
     zoning: "",
     restrictions: "",
     mobileHomeFriendly: "",
     hoaPoa: "",
-    hoaDeedDevInfo: "",
+    hoaFee: "",
     notes: "",
     apnOrPin: "",
     streetAddress: "",
@@ -293,7 +293,7 @@ const [dialogMessage, setDialogMessage] = useState("");
         </Typography>
         <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
           <TextField fullWidth label="Type" name="type" value="Land" disabled sx={textFieldStyle} />
-          <FormControlWithSelect label="Subtype" name="subtype" value={formData.subtype} onChange={handleChange} options={["Residential", "Agricultural", "Commercial", "Industrial", "Recreational", "Timberland", "Waterfront", "Vacant/Undeveloped", "Specialty"]} />
+          <FormControlWithSelect label="Subtype" name="legalDescription" value={formData.legalDescription} onChange={handleChange} options={["Residential", "Agricultural", "Commercial", "Industrial", "Recreational", "Timberland", "Waterfront", "Vacant/Undeveloped", "Specialty"]} />
           <FormControlWithSelect label="Zoning" name="zoning" value={formData.zoning} onChange={handleChange} options={["Residential", "Commercial", "Industrial", "Agricultural", "Mixed-Use", "Institutional", "Recreational", "Conservation"]} />
           <FormControlWithSelect label="Restrictions" name="restrictions" value={formData.restrictions} onChange={handleChange} options={["No Known Restriction(s)", "Zoning", "Deed", "Environmental", "Easement", "Setback"]} />
         </Stack>
@@ -304,7 +304,7 @@ const [dialogMessage, setDialogMessage] = useState("");
         </Stack>
         {formData.hoaPoa === "Yes" && (
           <Box mt={2}>
-            <TextField fullWidth label="HOA / Deed / Development Info" name="hoaDeedDevInfo" value={formData.hoaDeedDevInfo} onChange={handleChange} sx={textFieldStyle} />
+            <TextField fullWidth label="HOA / Deed / Development Info" name="hoaFee" value={formData.hoaFee} onChange={handleChange} sx={textFieldStyle} />
           </Box>
         )}
       </Box>

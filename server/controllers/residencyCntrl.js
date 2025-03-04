@@ -13,12 +13,14 @@ import fs from "fs";
       description,
       direction,
       type,
-      subtype,
+      legalDescription,
       zoning,
       restrictions,
       mobileHomeFriendly,
+      hoaPaymentTerms,
       hoaPoa,
-      hoaDeedDevInfo,
+      survey,
+      hoaFee,
       notes,
   
       // Address and Location
@@ -41,7 +43,10 @@ import fs from "fs";
       disPrice,
       financing,
       status,
-  
+      downPayment,
+      monthlyPayment,
+      terms,
+      interestRate,
       // Utilities and Infrastructure
       water,
       sewer,
@@ -104,13 +109,15 @@ import fs from "fs";
           description: description ?? null,
           direction: direction ?? null,
           type: type ?? null,
-          subtype: subtype ?? null,
+          legalDescription: legalDescription ?? null,
           zoning: zoning ?? null,
           restrictions: restrictions ?? null,
           mobileHomeFriendly: mobileHomeFriendly ?? null,
           hoaPoa: hoaPoa ?? null,
-          hoaDeedDevInfo: hoaDeedDevInfo ?? null,
+          hoaFee: hoaFee ?? null,
+          hoaPaymentTerms: hoaPaymentTerms ?? null,
           notes: notes ?? null,
+          survey: survey ?? null,
   
           // Address and Location
           streetAddress,
@@ -132,6 +139,10 @@ import fs from "fs";
           disPrice: disPrice ?? null,
           financing: financing ?? "Not-Available",
           status: status ?? "Available",
+          downPayment: downPayment ?? null,
+          monthlyPayment: monthlyPayment?? null,
+          terms: terms?? null,
+          interestRate: interestRate?? null,
   
           // Utilities and Infrastructure
           water: water ?? null,
@@ -215,6 +226,11 @@ export const updateResidency = asyncHandler(async (req, res) => {
     if (restOfData.minPrice) restOfData.minPrice = parseFloat(restOfData.minPrice);
     if (restOfData.disPrice) restOfData.disPrice = parseFloat(restOfData.disPrice);
     if (restOfData.acre) restOfData.acre = parseFloat(restOfData.acre);
+    if (restOfData.downPayment) restOfData.downPayment = parseFloat(restOfData.downPayment);
+    if (restOfData.monthlyPayemnt) restOfData.monthlyPayemnt = parseFloat(restOfData.monthlyPayemnt);
+    if (restOfData.interestRate) restOfData.interestRate = parseFloat(restOfData.interestRate);
+    if (restOfData.hoaFee) restOfData.hoaFee = parseFloat(restOfData.hoaFee);
+
 
     // Process the "imageUrls" field (expected as JSON-stringified array)
     let finalExistingImages = [];
@@ -347,12 +363,14 @@ export const createResidencyWithMultipleFiles = asyncHandler(async (req, res) =>
       description,
       direction,
       type,
-      subtype,
+      legalDescription,
       zoning,
       restrictions,
       mobileHomeFriendly,
       hoaPoa,
-      hoaDeedDevInfo,
+      hoaFee,
+      hoaPaymentTerms,
+      survey,
       notes,
       streetAddress,
       city,
@@ -366,6 +384,10 @@ export const createResidencyWithMultipleFiles = asyncHandler(async (req, res) =>
       sqft,
       acre,
       disPrice,
+      downPayment,
+      monthlyPayment,
+      terms,
+      interestRate,
       financing,
       status,
       water,
@@ -400,12 +422,14 @@ export const createResidencyWithMultipleFiles = asyncHandler(async (req, res) =>
         description: description ?? null,
         direction: direction ?? null,
         type: type ?? null,
-        subtype: subtype ?? null,
+        legalDescription: legalDescription ?? null,
         zoning: zoning ?? null,
         restrictions: restrictions ?? null,
         mobileHomeFriendly: mobileHomeFriendly ?? null,
         hoaPoa: hoaPoa ?? null,
-        hoaDeedDevInfo: hoaDeedDevInfo ?? null,
+        hoaFee: hoaFee ? parseFloat(hoaFee) : null,
+        hoaPaymentTerms: hoaPaymentTerms ?? null,
+        survey: survey?? null,
         notes: notes ?? null,
         streetAddress,
         city,
@@ -421,6 +445,10 @@ export const createResidencyWithMultipleFiles = asyncHandler(async (req, res) =>
         // Store the combined array directly
         imageUrls: allImageUrls.length > 0 ? allImageUrls : null,
         disPrice: disPrice ? parseFloat(disPrice) : null,
+        downPayment: downPayment ? parseFloat(downPayment) : null,
+        monthlyPayment: monthlyPayment? parseFloat(monthlyPayment) : null,
+        terms: terms?? null,
+        interestRate: interestRate? parseFloat(interestRate) : null,
         financing: financing ?? "Not-Available",
         status: status ?? "Available",
         water: water ?? null,

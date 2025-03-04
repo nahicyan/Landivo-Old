@@ -1,28 +1,7 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+"use client";
+
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  textFieldStyle,
-  sectionStyle,
-  sectionTitleStyle,
-  submitButtonStyle,
-  FormControlWithSelect,
-} from "../formStyles";
-import {
-  Box,
-  TextField,
-  Typography,
-  FormControl,
-  Button,
-  Stack,
-  Select,
-  InputLabel,
-  MenuItem,
-} from "@mui/material";
-import { useContext } from "react"; // New import
-import { UserContext } from "../../utils/UserContext"; // New import for UserContext
-import ImageUploadPreview from "../../components/ImageUploadPreview/ImageUploadPreview"; // Import the ImageUploadPreview componen
-import RichTextEditor from "../../components/RichTextEditor/RichTextEditor";
 import { createResidencyWithFiles } from "@/utils/api";
 import {
   Dialog,
@@ -32,17 +11,36 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { UserContext } from "../../utils/UserContext";
 
-const serverURL = import.meta.env.VITE_SERVER_URL;
+// Import your subcomponents
+import SystemInfo from "@/components/AddProperty/SystemInfo";
+import ListingDetails from "@/components/AddProperty/ListingDetails";
+import Classification from "@/components/AddProperty/Classification";
+import Location from "@/components/AddProperty/Location";
+import Dimension from "@/components/AddProperty/Dimension";
+import Pricing from "@/components/AddProperty/Pricing";
+import Financing from "@/components/AddProperty/Financing";
+import Utilities from "@/components/AddProperty/Utilities";
+import MediaTags from "@/components/AddProperty/MediaTags";
 
-const AddProperty = () => {
+// OPTIONAL: A small icon for completed steps (from Lucide)
+import { Check } from "lucide-react";
+
+export default function AddProperty() {
   const navigate = useNavigate();
   const { currentUser } = useContext(UserContext);
 
+  // Current step index
+  const [step, setStep] = useState(0);
+
+  // Dialog state for alert after submission
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMessage, setDialogMessage] = useState("");
   const [dialogType, setDialogType] = useState("success"); // "success" or "warning"
 
+  // Form data state
   const [formData, setFormData] = useState({
     ownerId: "",
     userEmail: "",
@@ -51,12 +49,14 @@ const AddProperty = () => {
     description: "",
     direction: "",
     type: "",
-    subtype: "",
+    legalDescription: "",
     zoning: "",
     restrictions: "",
     mobileHomeFriendly: "",
     hoaPoa: "",
-    hoaDeedDevInfo: "",
+    hoaFee: "",
+    hoaPaymentTerms: "",
+    survey: "",
     notes: "",
     apnOrPin: "",
     streetAddress: "",
@@ -74,7 +74,11 @@ const AddProperty = () => {
     askingPrice: "",
     minPrice: "",
     disPrice: "",
+    downPayment: "",
+    monthlyPayment: "",
+    terms: "",
     financing: "",
+    interestRate: "",
     status: "",
     water: "",
     sewer: "",
@@ -84,28 +88,38 @@ const AddProperty = () => {
     ltag: "",
     rtag: "",
   });
+  
 
+  // If you need to store images in the parent:
+  const [uploadedImages, setUploadedImages] = useState([]);
+
+  // Auto-set user email
   useEffect(() => {
     if (currentUser?.email) {
-      setFormData((prev) => ({
-        ...prev,
-        userEmail: currentUser.email,
-      }));
+      setFormData((prev) => ({ ...prev, userEmail: currentUser.email }));
     }
   }, [currentUser]);
 
-  const [uploadedImages, setUploadedImages] = useState([]);
-
+  // Numeric fields formatting, etc.
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => {
       const updated = { ...prev };
-      if (["sqft", "askingPrice", "minPrice", "disPrice"].includes(name)) {
-        // Remove commas from the input
-        const valueWithoutCommas = value.replace(/,/g, "");
-        const numberVal = parseFloat(valueWithoutCommas);
+      const numericFields = [
+        "sqft",
+        "askingPrice",
+        "minPrice",
+        "disPrice",
+        "acre",
+        "hoaFee",
+        "downPayment",
+        "monthlyPayment",
+        "interestRate",
+      ];
+      if (numericFields.includes(name)) {
+        const noCommas = value.replace(/,/g, "");
+        const numberVal = parseFloat(noCommas);
         if (!isNaN(numberVal)) {
-          // Format the number as it's typed
           updated[name] = numberVal.toLocaleString("en-US");
           if (name === "sqft") {
             updated.acre = (numberVal / 43560).toLocaleString("en-US", {
@@ -124,44 +138,58 @@ const AddProperty = () => {
     });
   };
 
-  const handleQuillChange = (value) => {
-    setFormData((prev) => ({
-      ...prev,
-      description: value,
-    }));
-  };
+  
+      // Multi-step form steps (title + component)
+  const steps = [
+    { title: "System Info", component: <SystemInfo /> },
+    { title: "Listing Details", component: <ListingDetails /> },
+    { title: "Classification", component: <Classification /> },
+    { title: "Location", component: <Location formData={formData} handleChange={handleChange} /> },
+    { title: "Dimensions", component: <Dimension /> },
+    { title: "Pricing", component: <Pricing /> },
+    { title: "Financing", component: <Financing /> },
+    { title: "Utilities", component: <Utilities /> },
+    { title: "Media & Tags", component: <MediaTags /> },
+  ];
+  // The final step index is steps.length - 1
+  // But if you only want 7 steps total, remove some from the array or set totalSteps = 7
 
-  // Separate handlers for RichTextEditor fields
-  const handleTitleChange = (value) =>
-    setFormData((prev) => ({ ...prev, title: value }));
-  const handleDescriptionChange = (value) =>
-    setFormData((prev) => ({ ...prev, description: value }));
-  const handleNotesChange = (value) =>
-    setFormData((prev) => ({ ...prev, notes: value }));
 
+  // For RichTextEditor fields
+  const handleTitleChange = (val) =>
+    setFormData((prev) => ({ ...prev, title: val }));
+  const handleDescriptionChange = (val) =>
+    setFormData((prev) => ({ ...prev, description: val }));
+  const handleNotesChange = (val) =>
+    setFormData((prev) => ({ ...prev, notes: val }));
+
+  // Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const multipartForm = new FormData();
       const numericFields = [
         "sqft",
         "askingPrice",
         "minPrice",
         "disPrice",
         "acre",
+        "hoaFee",
+        "downPayment",
+        "monthlyPayment",
+        "interestRate",
       ];
 
-      // Append all fields except "imageUrls"
+      const multipartForm = new FormData();
       for (let key in formData) {
-        if (key === "imageUrls") continue;
-        let value = formData[key];
-        if (numericFields.includes(key) && typeof value === "string") {
-          value = value.replace(/,/g, "");
+        if (key === "imageUrls") continue; // skip
+        let val = formData[key];
+        if (numericFields.includes(key) && typeof val === "string") {
+          val = val.replace(/,/g, "");
         }
-        multipartForm.append(key, value);
+        multipartForm.append(key, val);
       }
 
-      // Process existing images (if any) from formData.imageUrls.
+      // If existing images
       let existingImages = [];
       if (formData.imageUrls && formData.imageUrls.trim() !== "") {
         try {
@@ -171,579 +199,154 @@ const AddProperty = () => {
           existingImages = [];
         }
       }
-      console.log("Image URL checking: ", JSON.stringify(existingImages));
       multipartForm.append("imageUrls", JSON.stringify(existingImages));
 
-      // Append newly uploaded files directly from the file objects.
+      // Append newly uploaded files
       uploadedImages.forEach((file) => multipartForm.append("images", file));
 
       await createResidencyWithFiles(multipartForm);
 
-      // Show success alert
       setDialogMessage("Property added successfully!");
       setDialogType("success");
       setDialogOpen(true);
     } catch (error) {
       console.error("Error creating property:", error);
-      alert("Failed to create property");
+      setDialogMessage("Failed to create property");
+      setDialogType("warning");
+      setDialogOpen(true);
     }
   };
 
-  return (
-    <Box
-      component="form"
-      onSubmit={handleSubmit}
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 4,
-        background: "#fff",
-        borderRadius: "20px",
-        boxShadow: "0 12px 24px rgba(0, 0, 0, 0.1)",
-        border: "1px solid rgba(200, 200, 200, 0.6)",
-        maxWidth: "1080px",
-        width: "95%",
-        mx: "auto",
-        p: 3,
-      }}
-    >
-      <Typography
-        variant="h3"
-        gutterBottom
-        sx={{ color: "#2d2d2d", fontWeight: 700 }}
-      >
-        Add New Property
-      </Typography>
-      {/* Display the User Email */}
-      <Box
-        sx={{
-          background: "#f0f0f0",
-          padding: 2,
-          borderRadius: "12px",
-          border: "1px solid rgba(200,200,200,0.6)",
-        }}
-      >
-        <Typography variant="body1" sx={{ fontWeight: 600, color: "#333" }}>
-          You are uploading as:{" "}
-          {currentUser ? (
-            <Typography
-              component="span"
-              sx={{ fontWeight: 700, color: "#000" }}
-            >
-              {currentUser.email}
-            </Typography>
-          ) : (
-            <Typography component="span" sx={{ color: "red" }}>
-              Not logged in
-            </Typography>
-          )}
-        </Typography>
-      </Box>
-      {/* System Information */}
-      <Box sx={sectionStyle}>
-        <Typography variant="h5" gutterBottom sx={sectionTitleStyle}>
-          System Information
-        </Typography>
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-          <TextField
-            fullWidth
-            label="Owner ID"
-            name="ownerId"
-            value={formData.ownerId}
-            onChange={handleChange}
-            sx={textFieldStyle}
-          />
-          <FormControlWithSelect
-            label="Status"
-            name="status"
-            value={formData.status}
-            onChange={handleChange}
-            options={[
-              "Available",
-              "Pending",
-              "Sold",
-              "Not Available",
-              "Testing",
-            ]}
-          />
-          <FormControlWithSelect
-            label="Area"
-            name="area"
-            value={formData.area}
-            onChange={handleChange}
-            options={["DFW", "Austin", "Houston", "San Antonio", "Other"]}
-          />
-        </Stack>
-      </Box>
-      {/* Listing Details */}
-      <Box sx={sectionStyle}>
-        <Typography variant="h5" gutterBottom sx={sectionTitleStyle}>
-          Listing Details
-        </Typography>
-        <Stack spacing={3}>
-          {/* Title Field */}
-          <Box sx={{ my: 4 }}>
-            <Typography variant="subtitle1" sx={{ mb: 1 }}>
-              Title
-            </Typography>
-            <RichTextEditor
-              value={formData.title}
-              onChange={handleTitleChange}
-              placeholder="Enter property title..."
-            />
-          </Box>
-          {/* Description Field */}
-          <Box sx={{ my: 4 }}>
-            <Typography variant="subtitle1" sx={{ mb: 1 }}>
-              Description
-            </Typography>
-            <RichTextEditor
-              value={formData.description}
-              onChange={handleDescriptionChange}
-              placeholder="Enter property description with emojis..."
-            />
-          </Box>
-          {/* Notes Field */}
-          <Box sx={{ my: 4 }}>
-            <Typography variant="subtitle1" sx={{ mb: 1 }}>
-              Notes
-            </Typography>
-            <RichTextEditor
-              value={formData.notes}
-              onChange={handleNotesChange}
-              placeholder="Enter any additional notes..."
-            />
-          </Box>
-        </Stack>
-      </Box>
+  // Steps navigation
+  const nextStep = () =>
+    setStep((prev) => Math.min(prev + 1, steps.length - 1));
+  const prevStep = () => setStep((prev) => Math.max(prev - 1, 0));
 
-      {/* Property Classification & Features */}
-      <Box sx={sectionStyle}>
-        <Typography variant="h5" gutterBottom sx={sectionTitleStyle}>
-          Property Classification & Features
-        </Typography>
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-          <TextField
-            fullWidth
-            label="Type"
-            name="type"
-            value="Land"
-            disabled
-            sx={textFieldStyle}
-          />
-          <FormControlWithSelect
-            label="Subtype"
-            name="subtype"
-            value={formData.subtype}
-            onChange={handleChange}
-            options={[
-              "Residential",
-              "Agricultural",
-              "Commercial",
-              "Industrial",
-              "Recreational",
-              "Timberland",
-              "Waterfront",
-              "Vacant/Undeveloped",
-              "Specialty",
-            ]}
-          />
-          <FormControlWithSelect
-            label="Zoning"
-            name="zoning"
-            value={formData.zoning}
-            onChange={handleChange}
-            options={[
-              "Residential",
-              "Commercial",
-              "Industrial",
-              "Agricultural",
-              "Mixed-Use",
-              "Institutional",
-              "Recreational",
-              "Conservation",
-            ]}
-          />
-          <FormControlWithSelect
-            label="Restrictions"
-            name="restrictions"
-            value={formData.restrictions}
-            onChange={handleChange}
-            options={[
-              "No Known Restriction(s)",
-              "Zoning",
-              "Deed",
-              "Environmental",
-              "Easement",
-              "Setback",
-            ]}
-          />
-        </Stack>
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={2} mt={2}>
-          <TextField
-            fullWidth
-            label="Direction"
-            name="direction"
-            value={formData.direction}
-            onChange={handleChange}
-            sx={textFieldStyle}
-          />
-          <FormControlWithSelect
-            label="Mobile Home Friendly"
-            name="mobileHomeFriendly"
-            value={formData.mobileHomeFriendly}
-            onChange={handleChange}
-            options={["Yes", "No", "Verify"]}
-          />
-          <FormControlWithSelect
-            label="HOA / POA"
-            name="hoaPoa"
-            value={formData.hoaPoa}
-            onChange={handleChange}
-            options={["Yes", "No"]}
-          />
-        </Stack>
-        {formData.hoaPoa === "Yes" && (
-          <Box mt={2}>
-            <TextField
-              fullWidth
-              label="HOA / Deed / Development Info"
-              name="hoaDeedDevInfo"
-              value={formData.hoaDeedDevInfo}
-              onChange={handleChange}
-              sx={textFieldStyle}
-            />
-          </Box>
-        )}
-      </Box>
-      {/* Location & Identification */}
-      <Box sx={sectionStyle}>
-        <Typography variant="h5" gutterBottom sx={sectionTitleStyle}>
-          Location & Identification
-        </Typography>
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-          <TextField
-            fullWidth
-            label="Street Address"
-            name="streetAddress"
-            value={formData.streetAddress}
-            onChange={handleChange}
-            sx={textFieldStyle}
-          />
-          <TextField
-            fullWidth
-            label="City"
-            name="city"
-            value={formData.city}
-            onChange={handleChange}
-            sx={textFieldStyle}
-          />
-          <TextField
-            fullWidth
-            label="County"
-            name="county"
-            value={formData.county}
-            onChange={handleChange}
-            sx={textFieldStyle}
-          />
-          <TextField
-            fullWidth
-            label="State"
-            name="state"
-            value={formData.state}
-            onChange={handleChange}
-            sx={textFieldStyle}
-          />
-        </Stack>
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={2} mt={2}>
-          <TextField
-            fullWidth
-            label="ZIP"
-            name="zip"
-            value={formData.zip}
-            onChange={handleChange}
-            sx={textFieldStyle}
-          />
-          <TextField
-            fullWidth
-            label="Latitude"
-            name="latitude"
-            value={formData.latitude}
-            onChange={handleChange}
-            sx={textFieldStyle}
-          />
-          <TextField
-            fullWidth
-            label="Longitude"
-            name="longitude"
-            value={formData.longitude}
-            onChange={handleChange}
-            sx={textFieldStyle}
-          />
-          <TextField
-            fullWidth
-            label="APN or PIN"
-            name="apnOrPin"
-            value={formData.apnOrPin}
-            onChange={handleChange}
-            sx={textFieldStyle}
-          />
-        </Stack>
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={2} mt={2}>
-          <FormControlWithSelect
-            label="Land ID"
-            name="landId"
-            value={formData.landId}
-            onChange={handleChange}
-            options={["Available", "Not-Available"]}
-          />
-          {formData.landId === "Available" && (
-            <TextField
-              fullWidth
-              label="Land ID Link"
-              name="landIdLink"
-              value={formData.landIdLink}
-              onChange={handleChange}
-              sx={textFieldStyle}
-            />
-          )}
-        </Stack>
-      </Box>
-      {/* Property Size & Dimensions */}
-      <Box sx={sectionStyle}>
-        <Typography variant="h5" gutterBottom sx={sectionTitleStyle}>
-          Property Size & Dimensions
-        </Typography>
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-          <TextField
-            fullWidth
-            label="Square Footage (sqft)"
-            name="sqft"
-            value={formData.sqft}
-            onChange={handleChange}
-            sx={textFieldStyle}
-          />
-          <TextField
-            fullWidth
-            label="Acre"
-            name="acre"
-            value={formData.acre}
-            sx={textFieldStyle}
-            disabled
-          />
-        </Stack>
-      </Box>
-      {/* Pricing & Financial Information */}
-      <Box sx={sectionStyle}>
-        <Typography variant="h5" gutterBottom sx={sectionTitleStyle}>
-          Pricing & Financial Information
-        </Typography>
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-          <TextField
-            fullWidth
-            label="Asking Price"
-            name="askingPrice"
-            value={formData.askingPrice}
-            onChange={handleChange}
-            sx={textFieldStyle}
-          />
-          <TextField
-            fullWidth
-            label="Minimum Price"
-            name="minPrice"
-            value={formData.minPrice}
-            onChange={handleChange}
-            sx={textFieldStyle}
-          />
-          <TextField
-            fullWidth
-            label="Discount Price"
-            name="disPrice"
-            value={formData.disPrice}
-            onChange={handleChange}
-            sx={textFieldStyle}
-          />
-          <FormControlWithSelect
-            label="Financing"
-            name="financing"
-            value={formData.financing}
-            onChange={handleChange}
-            options={["Available", "Not-Available"]}
-          />
-        </Stack>
-      </Box>
-      {/* Utilities, Infrastructure & Environmental Factors */}
-      <Box sx={sectionStyle}>
-        <Typography variant="h5" gutterBottom sx={sectionTitleStyle}>
-          Utilities, Infrastructure & Environmental Factors
-        </Typography>
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-          <FormControlWithSelect
-            label="Water"
-            name="water"
-            value={formData.water}
-            onChange={handleChange}
-            options={[
-              "Available",
-              "Unavailable",
-              "Well Needed",
-              "Unknown",
-              "Active Well",
-            ]}
-          />
-          <FormControlWithSelect
-            label="Sewer"
-            name="sewer"
-            value={formData.sewer}
-            onChange={handleChange}
-            options={[
-              "Available",
-              "Unavailable",
-              "Septic Needed",
-              "Unknown",
-              "Active Septic",
-            ]}
-          />
-          <FormControlWithSelect
-            label="Electric"
-            name="electric"
-            value={formData.electric}
-            onChange={handleChange}
-            options={["Available", "Unavailable", "Unknown", "On Property"]}
-          />
-          <FormControlWithSelect
-            label="Road Condition"
-            name="roadCondition"
-            value={formData.roadCondition}
-            onChange={handleChange}
-            options={["Paved Road", "Dirt Road", "No Access", "Gravel"]}
-          />
-        </Stack>
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={2} mt={2}>
-          <FormControlWithSelect
-            label="Floodplain"
-            name="floodplain"
-            value={formData.floodplain}
-            onChange={handleChange}
-            options={[
-              "Yes",
-              "No",
-              "100-Year Floodplain",
-              "100-Year Floodway",
-              "Coastal-100 Year Floodplain",
-              "Coastal 100 Year Floodway",
-              "100-Year Partial Floodplain",
-              "500 Year-Floodplain",
-              "Wetlands",
-            ]}
-          />
-        </Stack>
-      </Box>
-      {/* Media & Tags */}
-      <Box sx={sectionStyle}>
-        <Typography variant="h5" gutterBottom sx={sectionTitleStyle}>
-          Media & Tags
-        </Typography>
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-          <TextField
-            fullWidth
-            label="Left Tag"
-            name="ltag"
-            value={formData.ltag}
-            onChange={handleChange}
-            sx={textFieldStyle}
-          />
-          <TextField
-            fullWidth
-            label="Right Tag"
-            name="rtag"
-            value={formData.rtag}
-            onChange={handleChange}
-            sx={textFieldStyle}
-          />
-        </Stack>
-        <ImageUploadPreview
-          existingImages={[]} // No pre-existing images when adding a property.
-          newImages={uploadedImages} // New images stored in state.
-          onExistingChange={() => {}} // No-op since there are no existing images.
-          onNewChange={setUploadedImages} // Update new images state.
-        />
-      </Box>
-      {/* Submit Button */}
-      <Box textAlign="center" mt={4}>
-        <Button type="submit" variant="contained" sx={submitButtonStyle}>
-          Submit
-        </Button>
-      </Box>
-      {/* ShadCN Alert Dialog */}
-    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-      <DialogContent className="bg-[#FFF] text-[#050002] border border-[#405025]/30 shadow-lg">
-        <DialogHeader>
-          <DialogTitle className={dialogType === "success" ? "text-green-600" : "text-red-600"}>
-            {dialogType === "success" ? "Success" : "Warning"}
-          </DialogTitle>
-          <DialogDescription>{dialogMessage}</DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <Button
-            onClick={() => {
-              setDialogOpen(false);
-              // Navigate to /properties after closing the dialog
-              navigate("/properties");
-            }}
-            className="bg-[#324c48] text-[#FFF]"
-          >
-            Okay
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-    </Box>
-  );
-};
-
-const InputField = ({
-  label,
-  name,
-  value,
-  onChange,
-  required = false,
-  type = "text",
-  multiple = false,
-  options = [],
-}) => {
-  if (type === "file") {
+  // A Step Indicator or "breadcrumb" at the top
+  // We'll just define it inline here for brevity
+  const StepIndicator = ({ currentStep }) => {
     return (
-      <div className="input-group">
-        <label>
-          {label}
-          {required && <span className="required">*</span>}
-        </label>
-        <input
-          type="file"
-          name={name}
-          onChange={onChange}
-          multiple={multiple}
-        />
+      <div className="flex items-center justify-center space-x-4 mb-6">
+        {steps.map((item, index) => {
+          const isActive = index === currentStep;
+          const isCompleted = index < currentStep;
+          return (
+            <div key={index} className="flex items-center space-x-2">
+              <div
+                className={
+                  "w-8 h-8 flex items-center justify-center rounded-full border-2 " +
+                  (isCompleted
+                    ? "border-green-500 bg-green-500 text-white"
+                    : isActive
+                    ? "border-blue-500 bg-blue-100 text-blue-700"
+                    : "border-gray-300 bg-white text-gray-500")
+                }
+              >
+                {isCompleted ? <Check className="w-4 h-4" /> : index + 1}
+              </div>
+              <span
+                className={
+                  isCompleted || isActive
+                    ? "font-bold text-gray-900"
+                    : "text-gray-500"
+                }
+              >
+                {item.title}
+              </span>
+              {/* connector line if not last */}
+              {index < steps.length - 1 && (
+                <div className="w-8 h-[2px] bg-gray-300" />
+              )}
+            </div>
+          );
+        })}
       </div>
     );
-  }
+  };
 
   return (
-    <div className="input-group">
-      <label>
-        {label}
-        {required && <span className="required">*</span>}
-      </label>
-      <input
-        type={type}
-        name={name}
-        value={value}
-        onChange={onChange}
-        required={required}
-      />
-    </div>
-  );
-};
+    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 space-y-6">
+      {/* Step Indicator (breadcrumb) */}
+      <StepIndicator currentStep={step} />
+      {/* SLIDER CONTAINER */}
+      <div className="relative overflow-hidden w-full flex justify-center">
+        <div
+          className="flex transition-transform duration-300"
+          style={{
+            width: `${steps.length * 100}%`,
+            transform: `translateX(-${step * 100}%)`,
+          }}
+        >
+          {steps.map((item, index) => (
+            <div
+              key={index}
+              className="w-full flex-shrink-0 flex justify-center"
+              style={{ width: "100%" }}
+            >
+              <div className="max-w-lg w-full bg-white p-6 border border-gray-200 rounded-xl shadow-lg">
+                {React.cloneElement(item.component, { formData, handleChange })}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
-export default AddProperty;
+      {/* NAVIGATION CONTROLS */}
+      <div className="flex items-center justify-between">
+        {step > 0 && (
+          <Button
+            type="button"
+            onClick={prevStep}
+            className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md"
+          >
+            Previous
+          </Button>
+        )}
+        {step < steps.length - 1 && (
+          <Button
+            type="button"
+            onClick={nextStep}
+            className="bg-[#324c48] text-white px-4 py-2 rounded-md"
+          >
+            Next
+          </Button>
+        )}
+        {step === steps.length - 1 && (
+          <Button
+            type="submit"
+            className="bg-green-600 text-white px-4 py-2 rounded-md"
+          >
+            Submit
+          </Button>
+        )}
+      </div>
+
+      {/* ShadCN Alert Dialog */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="bg-white text-gray-900 border border-gray-300 shadow-lg rounded-lg p-6 w-full max-w-md mx-auto">
+          <DialogHeader>
+            <DialogTitle
+              className={
+                dialogType === "success" ? "text-green-600" : "text-red-600"
+              }
+            >
+              {dialogType === "success" ? "Success" : "Warning"}
+            </DialogTitle>
+            <DialogDescription>{dialogMessage}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              onClick={() => {
+                setDialogOpen(false);
+                navigate("/properties");
+              }}
+              className="bg-[#324c48] text-white"
+            >
+              Okay
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </form>
+  );
+}
