@@ -5,9 +5,8 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AddressAutocomplete from "@/components/AddressAutocomplete/AddressAutocomplete";
-import axios from "axios";
 
-export default function Location({ formData, handleChange }) {
+export default function Location({ formData, handleChange, setFormData }) {
   return (
     <Card className="border border-gray-200 shadow-md rounded-lg w-full">
       <CardHeader className="px-4 py-3">
@@ -16,23 +15,31 @@ export default function Location({ formData, handleChange }) {
         </CardTitle>
       </CardHeader>
       <CardContent className="p-4 space-y-4">
-        {/* Street Address - Full Width */}
+        {/* Search Property Box (Autocomplete) */}
         <div className="flex flex-col">
-          <Label
-            htmlFor="streetAddress"
-            className="text-sm font-semibold text-gray-700"
-          >
+          <AddressAutocomplete formData={formData} setFormData={setFormData} />
+        </div>
+
+        {/* Full Row: Street Address (auto-populated but editable) */}
+        <div className="flex flex-col">
+          <Label htmlFor="streetAddress" className="text-sm font-semibold text-gray-700">
             Street Address
           </Label>
-          <AddressAutocomplete handleChange={handleChange} />
+          <Input
+            id="streetAddress"
+            type="text"
+            name="streetAddress"
+            value={formData.streetAddress}
+            onChange={handleChange}
+            placeholder="Enter street address"
+            className="mt-1"
+          />
         </div>
-        {/* City & County in One Row */}
+
+        {/* City & County */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex flex-col">
-            <Label
-              htmlFor="city"
-              className="text-sm font-semibold text-gray-700"
-            >
+            <Label htmlFor="city" className="text-sm font-semibold text-gray-700">
               City
             </Label>
             <Input
@@ -46,10 +53,7 @@ export default function Location({ formData, handleChange }) {
             />
           </div>
           <div className="flex flex-col">
-            <Label
-              htmlFor="county"
-              className="text-sm font-semibold text-gray-700"
-            >
+            <Label htmlFor="county" className="text-sm font-semibold text-gray-700">
               County
             </Label>
             <Input
@@ -64,13 +68,10 @@ export default function Location({ formData, handleChange }) {
           </div>
         </div>
 
-        {/* ZIP & State in One Row */}
+        {/* ZIP & State */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex flex-col">
-            <Label
-              htmlFor="zip"
-              className="text-sm font-semibold text-gray-700"
-            >
+            <Label htmlFor="zip" className="text-sm font-semibold text-gray-700">
               ZIP Code
             </Label>
             <Input
@@ -84,10 +85,7 @@ export default function Location({ formData, handleChange }) {
             />
           </div>
           <div className="flex flex-col">
-            <Label
-              htmlFor="state"
-              className="text-sm font-semibold text-gray-700"
-            >
+            <Label htmlFor="state" className="text-sm font-semibold text-gray-700">
               State
             </Label>
             <Input
@@ -102,13 +100,10 @@ export default function Location({ formData, handleChange }) {
           </div>
         </div>
 
-        {/* Latitude & Longitude in One Row */}
+        {/* Latitude & Longitude (if needed) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex flex-col">
-            <Label
-              htmlFor="latitude"
-              className="text-sm font-semibold text-gray-700"
-            >
+            <Label htmlFor="latitude" className="text-sm font-semibold text-gray-700">
               Latitude
             </Label>
             <Input
@@ -122,10 +117,7 @@ export default function Location({ formData, handleChange }) {
             />
           </div>
           <div className="flex flex-col">
-            <Label
-              htmlFor="longitude"
-              className="text-sm font-semibold text-gray-700"
-            >
+            <Label htmlFor="longitude" className="text-sm font-semibold text-gray-700">
               Longitude
             </Label>
             <Input
@@ -140,12 +132,9 @@ export default function Location({ formData, handleChange }) {
           </div>
         </div>
 
-        {/* APN or PIN - Full Width */}
+        {/* APN or PIN */}
         <div className="flex flex-col">
-          <Label
-            htmlFor="apnOrPin"
-            className="text-sm font-semibold text-gray-700"
-          >
+          <Label htmlFor="apnOrPin" className="text-sm font-semibold text-gray-700">
             APN or PIN
           </Label>
           <Input

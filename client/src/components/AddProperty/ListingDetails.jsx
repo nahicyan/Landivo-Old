@@ -17,10 +17,9 @@ export default function ListingDetails({
           Listing Details
         </CardTitle>
       </CardHeader>
-
-      <CardContent className="p-2">
+      <CardContent className="p-2 space-y-4">
         {/* Title Field */}
-        <div className="mb-2">
+        <div>
           <label className="block text-sm font-semibold text-gray-700 mb-1">
             Title <span className="text-red-500">*</span>
           </label>
@@ -28,13 +27,12 @@ export default function ListingDetails({
             value={formData.title}
             onChange={handleTitleChange}
             placeholder="Enter property title..."
-            /* The editor is already full width, but we ensure it here */
             className="border border-gray-300 w-full"
           />
         </div>
 
         {/* Description Field */}
-        <div className="mb-2">
+        <div>
           <label className="block text-sm font-semibold text-gray-700 mb-1">
             Description <span className="text-red-500">*</span>
           </label>
@@ -47,7 +45,7 @@ export default function ListingDetails({
         </div>
 
         {/* Notes Field */}
-        <div className="mb-2">
+        <div>
           <label className="block text-sm font-semibold text-gray-700 mb-1">
             Notes
           </label>

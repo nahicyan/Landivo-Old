@@ -1,7 +1,21 @@
 "use client";
 
 import React from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Classification({ formData, handleChange }) {
   return (
@@ -12,33 +26,29 @@ export default function Classification({ formData, handleChange }) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        {/* First Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-          {/* Type (disabled) */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
-              Type
-            </label>
-            <input
-              type="text"
-              value="Land"
-              disabled
-              className="w-full px-3 py-2 border rounded-md bg-gray-100 text-gray-600"
-            />
-          </div>
+        {/* Type (Non-editable) */}
+        <div className="flex flex-col space-y-1 mb-4">
+          <Label className="text-gray-700 font-semibold">Type</Label>
+          <Input
+            type="text"
+            value="Land"
+            disabled
+            className="w-full px-3 py-2 border rounded-md bg-gray-100 text-gray-600"
+          />
+        </div>
 
-          {/* Zoning */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
-              Zoning
-            </label>
-            <select
-              name="zoning"
-              value={formData.zoning}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-md"
-            >
-              <option value="">Select</option>
+        {/* Zoning */}
+        <div className="flex flex-col space-y-1 mb-4">
+          <Label className="text-gray-700 font-semibold">Zoning</Label>
+          <Select
+            name="zoning"
+            value={formData.zoning}
+            onValueChange={(value) => handleChange({ target: { name: "zoning", value } })}
+          >
+            <SelectTrigger className="w-full border-gray-300 focus:border-[#324c48] focus:ring-1 focus:ring-[#324c48]">
+              <SelectValue placeholder="Select Zoning" />
+            </SelectTrigger>
+            <SelectContent>
               {[
                 "Residential",
                 "Commercial",
@@ -54,25 +64,26 @@ export default function Classification({ formData, handleChange }) {
                 "Undeveloped",
                 "Specialty",
               ].map((option) => (
-                <option key={option} value={option}>
+                <SelectItem key={option} value={option}>
                   {option}
-                </option>
+                </SelectItem>
               ))}
-            </select>
-          </div>
+            </SelectContent>
+          </Select>
+        </div>
 
-          {/* Restrictions */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
-              Restrictions
-            </label>
-            <select
-              name="restrictions"
-              value={formData.restrictions}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-md"
-            >
-              <option value="">Select</option>
+        {/* Restrictions */}
+        <div className="flex flex-col space-y-1 mb-4">
+          <Label className="text-gray-700 font-semibold">Restrictions</Label>
+          <Select
+            name="restrictions"
+            value={formData.restrictions}
+            onValueChange={(value) => handleChange({ target: { name: "restrictions", value } })}
+          >
+            <SelectTrigger className="w-full border-gray-300 focus:border-[#324c48] focus:ring-1 focus:ring-[#324c48]">
+              <SelectValue placeholder="Select Restrictions" />
+            </SelectTrigger>
+            <SelectContent>
               {[
                 "No Known Restriction(s)",
                 "Zoning",
@@ -81,138 +92,125 @@ export default function Classification({ formData, handleChange }) {
                 "Easement",
                 "Setback",
               ].map((option) => (
-                <option key={option} value={option}>
+                <SelectItem key={option} value={option}>
                   {option}
-                </option>
+                </SelectItem>
               ))}
-            </select>
-          </div>
-
-          {/* Survey */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
-              Survey
-            </label>
-            <select
-              name="survey"
-              value={formData.survey}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-md"
-            >
-              <option value="">Select</option>
-              {["Available", "Not Available"].map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
+            </SelectContent>
+          </Select>
         </div>
 
-        {/* Separate Rows for Direction and Legal Description */}
-        <div className="mb-4">
-          <label className="block text-sm font-semibold text-gray-700 mb-1">
-            Direction
-          </label>
-          <input
+        {/* Survey */}
+        <div className="flex flex-col space-y-1 mb-4">
+          <Label className="text-gray-700 font-semibold">Survey</Label>
+          <Select
+            name="survey"
+            value={formData.survey}
+            onValueChange={(value) => handleChange({ target: { name: "survey", value } })}
+          >
+            <SelectTrigger className="w-full border-gray-300 focus:border-[#324c48] focus:ring-1 focus:ring-[#324c48]">
+              <SelectValue placeholder="Select Survey" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Available">Available</SelectItem>
+              <SelectItem value="Not Available">Not Available</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Direction */}
+        <div className="flex flex-col space-y-1 mb-4">
+          <Label className="text-gray-700 font-semibold">Direction</Label>
+          <Input
             type="text"
             name="direction"
             value={formData.direction}
             onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md"
+            placeholder="Enter Direction"
           />
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-semibold text-gray-700 mb-1">
-            Legal Description
-          </label>
-          <input
+        {/* Legal Description */}
+        <div className="flex flex-col space-y-1 mb-4">
+          <Label className="text-gray-700 font-semibold">Legal Description</Label>
+          <Input
             type="text"
             name="legalDescription"
             value={formData.legalDescription}
             onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md"
+            placeholder="Enter Legal Description"
           />
         </div>
 
-        {/* Third Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* Mobile Home Friendly */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
-              Mobile Home Friendly
-            </label>
-            <select
-              name="mobileHomeFriendly"
-              value={formData.mobileHomeFriendly}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-md"
-            >
-              <option value="">Select</option>
-              {["Yes", "No", "Verify"].map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
+        {/* Mobile Home Friendly */}
+        <div className="flex flex-col space-y-1 mb-4">
+          <Label className="text-gray-700 font-semibold">Mobile Home Friendly</Label>
+          <Select
+            name="mobileHomeFriendly"
+            value={formData.mobileHomeFriendly}
+            onValueChange={(value) => handleChange({ target: { name: "mobileHomeFriendly", value } })}
+          >
+            <SelectTrigger className="w-full border-gray-300 focus:border-[#324c48] focus:ring-1 focus:ring-[#324c48]">
+              <SelectValue placeholder="Select" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Yes">Yes</SelectItem>
+              <SelectItem value="No">No</SelectItem>
+              <SelectItem value="Verify">Verify</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-          {/* HOA / POA */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
-              HOA / POA
-            </label>
-            <select
-              name="hoaPoa"
-              value={formData.hoaPoa}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-md"
-            >
-              <option value="">Select</option>
-              {["Yes", "No"].map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
+        {/* HOA / POA */}
+        <div className="flex flex-col space-y-1 mb-4">
+          <Label className="text-gray-700 font-semibold">HOA / POA</Label>
+          <Select
+            name="hoaPoa"
+            value={formData.hoaPoa}
+            onValueChange={(value) => handleChange({ target: { name: "hoaPoa", value } })}
+          >
+            <SelectTrigger className="w-full border-gray-300 focus:border-[#324c48] focus:ring-1 focus:ring-[#324c48]">
+              <SelectValue placeholder="Select" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Yes">Yes</SelectItem>
+              <SelectItem value="No">No</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Conditionally Render HOA Fee & Terms */}
         {formData.hoaPoa === "Yes" && (
           <>
-            <div className="mt-4">
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
-                HOA Fee
-              </label>
-              <input
+            <div className="flex flex-col space-y-1 mb-4">
+              <Label className="text-gray-700 font-semibold">HOA Fee</Label>
+              <Input
                 type="text"
                 name="hoaFee"
                 value={formData.hoaFee}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded-md"
+                placeholder="Enter HOA Fee"
               />
             </div>
-            <div className="mt-4">
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
-                HOA Payment Terms
-              </label>
-              <select
+
+            <div className="flex flex-col space-y-1 mb-4">
+              <Label className="text-gray-700 font-semibold">HOA Payment Terms</Label>
+              <Select
                 name="hoaPaymentTerms"
                 value={formData.hoaPaymentTerms}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border rounded-md"
+                onValueChange={(value) => handleChange({ target: { name: "hoaPaymentTerms", value } })}
               >
-                <option value="">Select</option>
-                {["Anually", "Semi-Anually", "Quarterly", "Monthly"].map(
-                  (option) => (
-                    <option key={option} value={option}>
+                <SelectTrigger className="w-full border-gray-300 focus:border-[#324c48] focus:ring-1 focus:ring-[#324c48]">
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent>
+                  {["Annually", "Semi-Annually", "Quarterly", "Monthly"].map((option) => (
+                    <SelectItem key={option} value={option}>
                       {option}
-                    </option>
-                  )
-                )}
-              </select>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </>
         )}

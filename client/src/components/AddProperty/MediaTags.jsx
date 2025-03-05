@@ -1,45 +1,68 @@
 "use client";
 
-import React, { useState, useEffect, useContext } from "react";
+import React from "react";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import ImageUploadPreview from "@/components/ImageUploadPreview/ImageUploadPreview";
 
+export default function MediaTags({ formData, handleChange, uploadedImages, setUploadedImages }) {
+  return (
+    <Card className="border border-gray-200 shadow-sm rounded-lg">
+      <CardHeader>
+        <CardTitle className="text-2xl font-bold text-gray-800">
+          Media & Tags
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        {/* Left Tag */}
+        <div className="mb-4">
+          <Label htmlFor="ltag" className="text-gray-700 font-semibold">
+            Left Tag
+          </Label>
+          <Input
+            id="ltag"
+            type="text"
+            name="ltag"
+            value={formData.ltag}
+            onChange={handleChange}
+            placeholder="Enter left tag"
+            className="border-gray-300 focus:border-[#324c48] focus:ring-1 focus:ring-[#324c48]"
+          />
+        </div>
 
-export default function MediaTags({ formData, handleChange }) {
-const [uploadedImages, setUploadedImages] = useState([]);
+        {/* Right Tag */}
+        <div className="mb-4">
+          <Label htmlFor="rtag" className="text-gray-700 font-semibold">
+            Right Tag
+          </Label>
+          <Input
+            id="rtag"
+            type="text"
+            name="rtag"
+            value={formData.rtag}
+            onChange={handleChange}
+            placeholder="Enter right tag"
+            className="border-gray-300 focus:border-[#324c48] focus:ring-1 focus:ring-[#324c48]"
+          />
+        </div>
 
-
-    return (
-
-
-          <div className="w-full flex-shrink-0 p-4">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">Media & Tags</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-              <input
-                type="text"
-                placeholder="Left Tag"
-                name="ltag"
-                value={formData.ltag}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#D4A017] focus:ring-1 focus:ring-[#D4A017]"
-              />
-              <input
-                type="text"
-                placeholder="Right Tag"
-                name="rtag"
-                value={formData.rtag}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#D4A017] focus:ring-1 focus:ring-[#D4A017]"
-              />
-            </div>
-            <div>
-              <ImageUploadPreview
-                existingImages={[]} // No pre-existing images when adding a property.
-                newImages={uploadedImages}
-                onExistingChange={() => {}}
-                onNewChange={setUploadedImages}
-              />
-            </div>
-          </div>
-
-    );
+        {/* Image Upload */}
+        <div>
+          <Label className="text-gray-700 font-semibold">Upload Images</Label>
+          <ImageUploadPreview
+            existingImages={[]}               // No pre-existing images when adding a property.
+            newImages={uploadedImages}
+            onExistingChange={() => {}}        // No-op since there are no existing images.
+            onNewChange={setUploadedImages}    // Use parent's state updater
+          />
+        </div>
+      </CardContent>
+    </Card>
+  );
 }

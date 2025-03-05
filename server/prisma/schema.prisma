@@ -42,7 +42,7 @@ model Residency {
     restrictions        String?
     mobileHomeFriendly  String?
     hoaPoa              String?
-    hoaFee              Float// 
+    hoaFee              Float  // 
     hoaPaymentTerms     String //
     survey              String //
     notes               String

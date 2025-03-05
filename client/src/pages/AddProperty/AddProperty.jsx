@@ -88,7 +88,6 @@ export default function AddProperty() {
     ltag: "",
     rtag: "",
   });
-  
 
   // If you need to store images in the parent:
   const [uploadedImages, setUploadedImages] = useState([]);
@@ -138,30 +137,57 @@ export default function AddProperty() {
     });
   };
 
-  
-      // Multi-step form steps (title + component)
+  // Multi-step form steps (pass props to components that need them)
   const steps = [
-    { title: "System Info", component: <SystemInfo /> },
-    { title: "Listing Details", component: <ListingDetails /> },
-    { title: "Classification", component: <Classification /> },
-    { title: "Location", component: <Location formData={formData} handleChange={handleChange} /> },
+    {
+      title: "System Info",
+      // Pass formData and handleChange so that SystemInfo can render the user email display
+      component: <SystemInfo formData={formData} handleChange={handleChange} />,
+    },
+    {
+      title: "Listing Details",
+      component: (
+        <ListingDetails
+          formData={formData}
+          handleTitleChange={(val) =>
+            setFormData((prev) => ({ ...prev, title: val }))
+          }
+          handleDescriptionChange={(val) =>
+            setFormData((prev) => ({ ...prev, description: val }))
+          }
+          handleNotesChange={(val) =>
+            setFormData((prev) => ({ ...prev, notes: val }))
+          }
+        />
+      ),
+    },
+    { title: "Classification", component: <Classification formData={formData} handleChange={handleChange} /> },
+    {
+      title: "Location",
+      component: (
+        <Location
+          formData={formData}
+          handleChange={handleChange}
+          setFormData={setFormData}
+        />
+      ),
+    },
     { title: "Dimensions", component: <Dimension /> },
-    { title: "Pricing", component: <Pricing /> },
-    { title: "Financing", component: <Financing /> },
-    { title: "Utilities", component: <Utilities /> },
-    { title: "Media & Tags", component: <MediaTags /> },
-  ];
-  // The final step index is steps.length - 1
-  // But if you only want 7 steps total, remove some from the array or set totalSteps = 7
-
-
-  // For RichTextEditor fields
-  const handleTitleChange = (val) =>
-    setFormData((prev) => ({ ...prev, title: val }));
-  const handleDescriptionChange = (val) =>
-    setFormData((prev) => ({ ...prev, description: val }));
-  const handleNotesChange = (val) =>
-    setFormData((prev) => ({ ...prev, notes: val }));
+    { title: "Pricing", component: <Pricing formData={formData} handleChange={handleChange} /> },
+    { title: "Financing", component: <Financing formData={formData} handleChange={handleChange} /> },
+    { title: "Utilities", component: <Utilities formData={formData} handleChange={handleChange} /> },
+    { 
+      title: "Media & Tags", 
+      component: (
+        <MediaTags 
+          formData={formData} 
+          handleChange={handleChange} 
+          uploadedImages={uploadedImages} 
+          setUploadedImages={setUploadedImages} 
+        />
+      ) 
+    },
+      ];
 
   // Submit
   const handleSubmit = async (e) => {
@@ -181,7 +207,7 @@ export default function AddProperty() {
 
       const multipartForm = new FormData();
       for (let key in formData) {
-        if (key === "imageUrls") continue; // skip
+        if (key === "imageUrls") continue; // skip imageUrls here
         let val = formData[key];
         if (numericFields.includes(key) && typeof val === "string") {
           val = val.replace(/,/g, "");
@@ -222,8 +248,7 @@ export default function AddProperty() {
     setStep((prev) => Math.min(prev + 1, steps.length - 1));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 0));
 
-  // A Step Indicator or "breadcrumb" at the top
-  // We'll just define it inline here for brevity
+  // Step Indicator (breadcrumb)
   const StepIndicator = ({ currentStep }) => {
     return (
       <div className="flex items-center justify-center space-x-4 mb-6">
@@ -253,10 +278,7 @@ export default function AddProperty() {
               >
                 {item.title}
               </span>
-              {/* connector line if not last */}
-              {index < steps.length - 1 && (
-                <div className="w-8 h-[2px] bg-gray-300" />
-              )}
+              {index < steps.length - 1 && <div className="w-8 h-[2px] bg-gray-300" />}
             </div>
           );
         })}
@@ -266,8 +288,9 @@ export default function AddProperty() {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 space-y-6">
-      {/* Step Indicator (breadcrumb) */}
+      {/* Step Indicator */}
       <StepIndicator currentStep={step} />
+
       {/* SLIDER CONTAINER */}
       <div className="relative overflow-hidden w-full flex justify-center">
         <div
@@ -291,7 +314,7 @@ export default function AddProperty() {
         </div>
       </div>
 
-      {/* NAVIGATION CONTROLS */}
+      {/* Navigation Controls */}
       <div className="flex items-center justify-between">
         {step > 0 && (
           <Button
@@ -325,11 +348,7 @@ export default function AddProperty() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="bg-white text-gray-900 border border-gray-300 shadow-lg rounded-lg p-6 w-full max-w-md mx-auto">
           <DialogHeader>
-            <DialogTitle
-              className={
-                dialogType === "success" ? "text-green-600" : "text-red-600"
-              }
-            >
+            <DialogTitle className={dialogType === "success" ? "text-green-600" : "text-red-600"}>
               {dialogType === "success" ? "Success" : "Warning"}
             </DialogTitle>
             <DialogDescription>{dialogMessage}</DialogDescription>
@@ -338,7 +357,9 @@ export default function AddProperty() {
             <Button
               onClick={() => {
                 setDialogOpen(false);
-                navigate("/properties");
+                if (dialogType === "success") {
+                  navigate("/properties");
+                }
               }}
               className="bg-[#324c48] text-white"
             >

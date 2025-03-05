@@ -7,13 +7,13 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+import UserSubmit from "@/components/AddProperty/UserSubmit"; 
 
-export default function SystemInfoCard({ formData, handleChange, nextStep }) {
+export default function SystemInfoCard({ formData, handleChange }) {
   return (
     <Card className="mb-6 shadow-sm border border-gray-200 w-full">
       <CardHeader>
@@ -24,6 +24,9 @@ export default function SystemInfoCard({ formData, handleChange, nextStep }) {
       </CardHeader>
 
       <CardContent className="space-y-4">
+              {/* Render the User Email Display */}
+              <UserSubmit />
+
         {/* Owner ID */}
         <div className="flex flex-col space-y-1">
           <Label htmlFor="ownerId" className="text-gray-700 font-semibold">
@@ -38,62 +41,50 @@ export default function SystemInfoCard({ formData, handleChange, nextStep }) {
           />
         </div>
 
-        {/* Area */}
+        {/* Area Selection */}
         <div className="flex flex-col space-y-1">
           <Label htmlFor="area" className="text-gray-700 font-semibold">
             Area
           </Label>
-          <select
-            id="area"
+          <Select
             name="area"
             value={formData.area}
-            onChange={handleChange}
-            className="
-              border
-              rounded-md
-              px-3 py-2
-              focus:outline-none
-              focus:ring-2
-              focus:ring-offset-2
-              focus:ring-[#324c48]
-            "
+            onValueChange={(value) => handleChange({ target: { name: "area", value } })}
           >
-            <option value="">Select Area</option>
-            <option value="DFW">DFW</option>
-            <option value="Austin">Austin</option>
-            <option value="Houston">Houston</option>
-            <option value="San Antonio">San Antonio</option>
-            <option value="Other">Other</option>
-          </select>
+            <SelectTrigger className="w-full border-gray-300 focus:border-[#324c48] focus:ring-1 focus:ring-[#324c48]">
+              <SelectValue placeholder="Select Area" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="DFW">DFW</SelectItem>
+              <SelectItem value="Austin">Austin</SelectItem>
+              <SelectItem value="Houston">Houston</SelectItem>
+              <SelectItem value="San Antonio">San Antonio</SelectItem>
+              <SelectItem value="Other">Other</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
-        {/* Status */}
+        {/* Status Selection */}
         <div className="flex flex-col space-y-1">
           <Label htmlFor="status" className="text-gray-700 font-semibold">
             Status
           </Label>
-          <select
-            id="status"
+          <Select
             name="status"
             value={formData.status}
-            onChange={handleChange}
-            className="
-              border
-              rounded-md
-              px-3 py-2
-              focus:outline-none
-              focus:ring-2
-              focus:ring-offset-2
-              focus:ring-[#324c48]
-            "
+            onValueChange={(value) => handleChange({ target: { name: "status", value } })}
           >
-            <option value="">Select Status</option>
-            <option value="Available">Available</option>
-            <option value="Pending">Pending</option>
-            <option value="Sold">Sold</option>
-            <option value="Not Available">Not Available</option>
-            <option value="Testing">Testing</option>
-          </select>
+            <SelectTrigger className="w-full border-gray-300 focus:border-[#324c48] focus:ring-1 focus:ring-[#324c48]">
+              <SelectValue placeholder="Select Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Available">Available</SelectItem>
+              <SelectItem value="Pending">Pending</SelectItem>
+              <SelectItem value="Sold">Sold</SelectItem>
+              <SelectItem value="Not Available">Not Available</SelectItem>
+              <SelectItem value="Testing">Testing</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </CardContent>
     </Card>

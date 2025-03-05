@@ -12,7 +12,6 @@ import { residencyRoute } from "./routes/residencyRoute.js";
 import { buyerRoute } from "./routes/buyerRoute.js";
 import { sessionLogger, ensureAuthenticated } from "./middlewares/sessionMiddleware.js";
 
-
 const app = express();
 const PORT = process.env.PORT || 8200;
 
@@ -105,47 +104,4 @@ app.get("/auth/test-session", ensureAuthenticated, (req, res) => {
 app.listen(PORT, () => {
   console.log("Uploads folder path:", path.join(__dirname, "uploads"));
   console.log(`Backend is running on port ${PORT}`);
-});
-
-
-app.get("/api/autocomplete", async (req, res) => {
-  try {
-    const { input } = req.query;
-    console.log("Autocomplete input:", input);
-    const response = await axios.get(
-      "https://maps.googleapis.com/maps/api/place/autocomplete/json",
-      {
-        params: {
-          input,
-          key: process.env.GOOGLE_API_KEY,
-          types: "address",
-          components: "country:us",
-        },
-      }
-    );
-    res.json(response.data);
-  } catch (error) {
-    console.error("Error fetching autocomplete:", error.response?.data || error.message);
-    res.status(500).json({ error: "Failed to fetch autocomplete" });
-  }
-});
-
-
-app.get("/api/place-details", async (req, res) => {
-  try {
-    const { place_id } = req.query;
-    const response = await axios.get(
-      "https://maps.googleapis.com/maps/api/place/details/json",
-      {
-        params: {
-          place_id,
-          key: process.env.GOOGLE_API_KEY, // Use the backend API key
-        },
-      }
-    );
-    res.json(response.data);
-  } catch (error) {
-    console.error("Error fetching place details:", error);
-    res.status(500).json({ error: "Failed to fetch place details" });
-  }
 });

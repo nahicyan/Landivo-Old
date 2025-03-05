@@ -1,80 +1,101 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import Autocomplete from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
+import React, { useState } from "react";
+import PlacesAutocomplete, { geocodeByAddress, getLatLng } from "react-places-autocomplete";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
-// Use your backend URL from your environment
-const API_URL = `${import.meta.env.VITE_SERVER_URL}/api`;
+export default function AddressAutocomplete({ formData, setFormData }) {
+  const [address, setAddress] = useState(formData.streetAddress || "");
 
-export default function AddressAutocomplete({ handleChange }) {
-  const [inputValue, setInputValue] = useState("");
-  const [options, setOptions] = useState([]);
+  const handleChangeAddress = (newAddress) => {
+    setAddress(newAddress);
+  };
 
-  useEffect(() => {
-    if (!inputValue) {
-      setOptions([]);
-      return;
-    }
+  const handleSelectAddress = (newAddress) => {
+    setAddress(newAddress);
+    geocodeByAddress(newAddress)
+      .then((results) => {
+        const addressComponents = results[0].address_components;
 
-    const fetchSuggestions = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/autocomplete`, {
-          params: { input: inputValue },
-          withCredentials: true, // if needed for session auth
-        });
-        if (response.data.predictions) {
-          setOptions(response.data.predictions);
-        }
-      } catch (error) {
-        console.error("Error fetching address suggestions:", error);
-      }
-    };
-
-    const timeoutId = setTimeout(fetchSuggestions, 500);
-    return () => clearTimeout(timeoutId);
-  }, [inputValue]);
-
-  const handleSelect = async (event, newValue) => {
-    if (newValue) {
-      try {
-        const response = await axios.get(`${API_URL}/place-details`, {
-          params: { place_id: newValue.place_id },
-          withCredentials: true,
-        });
-
-        const details = response.data.result;
-        const addressComponents = details.address_components;
-
+        // Helper to find a component by type
         const getComponent = (type) =>
           addressComponents.find((comp) => comp.types.includes(type))?.long_name || "";
 
-        handleChange({
-          target: { name: "streetAddress", value: details.formatted_address || "" },
-        });
-        handleChange({ target: { name: "city", value: getComponent("locality") } });
-        handleChange({ target: { name: "county", value: getComponent("administrative_area_level_2") } });
-        handleChange({ target: { name: "state", value: getComponent("administrative_area_level_1") } });
-        handleChange({ target: { name: "zip", value: getComponent("postal_code") } });
-      } catch (error) {
-        console.error("Error fetching place details:", error);
-      }
-    }
+        // Parse out just the street number + route for "streetAddress"
+        const streetNumber = getComponent("street_number");
+        const route = getComponent("route");
+        const shortStreetAddress = streetNumber && route ? `${streetNumber} ${route}` : results[0].formatted_address;
+
+        return Promise.all([results, getLatLng(results[0]), shortStreetAddress]);
+      })
+      .then(([results, latLng, shortStreetAddress]) => {
+        setFormData((prev) => ({
+          ...prev,
+          streetAddress: shortStreetAddress,
+          city:
+            results[0].address_components.find((comp) =>
+              comp.types.includes("locality")
+            )?.long_name || "",
+          county:
+            results[0].address_components.find((comp) =>
+              comp.types.includes("administrative_area_level_2")
+            )?.long_name || "",
+          state:
+            results[0].address_components.find((comp) =>
+              comp.types.includes("administrative_area_level_1")
+            )?.long_name || "",
+          zip:
+            results[0].address_components.find((comp) =>
+              comp.types.includes("postal_code")
+            )?.long_name || "",
+          latitude: latLng.lat,
+          longitude: latLng.lng,
+        }));
+      })
+      .catch((error) =>
+        console.error("Error fetching address details:", error)
+      );
   };
 
   return (
-    <Autocomplete
-      freeSolo
-      options={options}
-      getOptionLabel={(option) =>
-        typeof option === "string" ? option : option.description
-      }
-      onInputChange={(event, newInputValue) => setInputValue(newInputValue)}
-      onChange={handleSelect}
-      renderInput={(params) => (
-        <TextField {...params} label="Street Address" variant="outlined" />
-      )}
-    />
+    <div>
+      <Label htmlFor="streetAddress" className="text-sm font-semibold text-gray-700">
+        Search Property 
+      </Label>
+      <PlacesAutocomplete
+        value={address}
+        onChange={handleChangeAddress}
+        onSelect={handleSelectAddress}
+      >
+        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+          <div>
+            <Input
+              {...getInputProps({
+                placeholder: "Search for property by address...",
+                id: "streetAddress",
+              })}
+              className="w-full"
+            />
+            <div className="autocomplete-dropdown-container border border-gray-300 rounded-md mt-1">
+              {loading && <div className="p-2">Loading...</div>}
+              {suggestions.map((suggestion) => {
+                const className = suggestion.active
+                  ? "bg-gray-200 p-2 cursor-pointer"
+                  : "bg-white p-2 cursor-pointer";
+                return (
+                  <div
+                    key={suggestion.placeId}
+                    {...getSuggestionItemProps(suggestion, { className })}
+                  >
+                    <span>{suggestion.description}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </PlacesAutocomplete>
+    </div>
   );
 }
