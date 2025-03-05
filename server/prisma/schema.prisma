@@ -35,17 +35,17 @@ model Residency {
     ownerId             Int?
     title               String
     description         String
-    legalDescription    String 
-    direction           String
+    legalDescription    String? 
+    direction           String?
     type                String?
     zoning              String?
     restrictions        String?
     mobileHomeFriendly  String?
     hoaPoa              String?
-    hoaFee              Float  // 
-    hoaPaymentTerms     String //
-    survey              String //
-    notes               String
+    hoaFee              Float? 
+    hoaPaymentTerms     String? 
+    survey              String?
+    notes               String?
 
     // Address and Location
     apnOrPin            String   @unique                      // APN/PIN must be unique
@@ -57,7 +57,7 @@ model Residency {
     latitude            Float                              // Latitude for geolocation
     longitude           Float                               // Longitude for geolocation
     area                String
-    landIdLink          String?   @unique                     // Unique external link
+    landIdLink          String?
 
     // Physical Attributes
     sqft                Int
@@ -68,12 +68,12 @@ model Residency {
     askingPrice         Float
     minPrice            Float
     disPrice            Float?
-    financing           String
+    financing           String?
     status              String?
-    downPayment         Float  //
-    monthlyPayment      Float  //
-    terms               String  // 
-    interestRate        Float  //
+    downPayment         Float?  
+    monthlyPayment      Float?  
+    terms               String?   
+    interestRate        Float? 
 
     // Utilities and Infrastructure
     water               String?
