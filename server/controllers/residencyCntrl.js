@@ -7,8 +7,7 @@ import fs from "fs";
     const {
       ownerId,
       apnOrPin,
-      askingPrice,
-      minPrice,
+      status,
       title,
       description,
       direction,
@@ -40,13 +39,29 @@ import fs from "fs";
       image,
   
       // Pricing and Financing
+      askingPrice,
+      minPrice,
       disPrice,
+
+      // Financing and Payment Calculation
       financing,
-      status,
-      downPayment,
-      monthlyPayment,
-      terms,
-      interestRate,
+      tax,
+      hoaDue,
+      serviceFee,
+      term,
+      interestOne,
+      interestTwo,
+      interestThree,
+      monthlyPaymentOne,
+      monthlyPaymentTwo,
+      monthlyPaymentThree,
+      downPaymentOne,
+      downPaymentTwo,
+      downPaymentThree,
+      purchasePrice,
+      financedPrice,
+
+
       // Utilities and Infrastructure
       water,
       sewer,
@@ -103,8 +118,7 @@ import fs from "fs";
         data: {
           ownerId,
           apnOrPin,
-          askingPrice,
-          minPrice,
+          status: status ?? "Available",
           title,
           description: description ?? null,
           direction: direction ?? null,
@@ -136,13 +150,29 @@ import fs from "fs";
           image: image ?? null,
   
           // Pricing and Financing
+          askingPrice,
+          minPrice,
           disPrice: disPrice ?? null,
+
+
+          // Financing and Payment Calculation
           financing: financing ?? "Not-Available",
-          status: status ?? "Available",
-          downPayment: downPayment ?? null,
-          monthlyPayment: monthlyPayment?? null,
-          terms: terms?? null,
-          interestRate: interestRate?? null,
+          tax: tax ?? null,
+          hoaDue: hoaDue ?? null,
+          serviceFee: serviceFee ?? null,
+          term: term ? parseInt(term, 10) : null,
+          interestOne: interestOne ?? null,
+          interestTwo: interestTwo ?? null,
+          interestThree: interestThree ?? null,
+          monthlyPaymentOne: monthlyPaymentOne ?? null,
+          monthlyPaymentTwo: monthlyPaymentTwo ?? null,
+          monthlyPaymentThree: monthlyPaymentThree ?? null,
+          downPaymentOne: downPaymentOne ?? null,
+          downPaymentTwo: downPaymentTwo ?? null,
+          downPaymentThree: downPaymentThree ?? null,
+          purchasePrice: purchasePrice ?? null,
+          financedPrice: financedPrice ?? null,
+        
   
           // Utilities and Infrastructure
           water: water ?? null,
@@ -226,10 +256,23 @@ export const updateResidency = asyncHandler(async (req, res) => {
     if (restOfData.minPrice) restOfData.minPrice = parseFloat(restOfData.minPrice);
     if (restOfData.disPrice) restOfData.disPrice = parseFloat(restOfData.disPrice);
     if (restOfData.acre) restOfData.acre = parseFloat(restOfData.acre);
-    if (restOfData.downPayment) restOfData.downPayment = parseFloat(restOfData.downPayment);
-    if (restOfData.monthlyPayemnt) restOfData.monthlyPayemnt = parseFloat(restOfData.monthlyPayemnt);
-    if (restOfData.interestRate) restOfData.interestRate = parseFloat(restOfData.interestRate);
     if (restOfData.hoaFee) restOfData.hoaFee = parseFloat(restOfData.hoaFee);
+    // Payment Fields
+    if (restOfData.tax) restOfData.tax = parseFloat(restOfData.tax);
+    if (restOfData.hoaDue) restOfData.hoaDue = parseFloat(restOfData.hoaDue);
+    if (restOfData.serviceFee) restOfData.serviceFee = parseFloat(restOfData.serviceFee);
+    if (restOfData.term) restOfData.term = parseInt(restOfData.term, 10);
+    if (restOfData.interestOne) restOfData.interestOne = parseFloat(restOfData.interestOne);
+    if (restOfData.interestTwo) restOfData.interestTwo = parseFloat(restOfData.interestTwo);
+    if (restOfData.interestThree) restOfData.interestThree = parseFloat(restOfData.interestThree);
+    if (restOfData.monthlyPaymentOne) restOfData.monthlyPaymentOne = parseFloat(restOfData.monthlyPaymentOne);
+    if (restOfData.monthlyPaymentTwo) restOfData.monthlyPaymentTwo = parseFloat(restOfData.monthlyPaymentTwo);
+    if (restOfData.monthlyPaymentThree) restOfData.monthlyPaymentThree = parseFloat(restOfData.monthlyPaymentThree);
+    if (restOfData.downPaymentOne) restOfData.downPaymentOne = parseFloat(restOfData.downPaymentOne);
+    if (restOfData.downPaymentTwo) restOfData.downPaymentTwo = parseFloat(restOfData.downPaymentTwo);
+    if (restOfData.downPaymentThree) restOfData.downPaymentThree = parseFloat(restOfData.downPaymentThree);
+    if (restOfData.purchasePrice) restOfData.purchasePrice = parseFloat(restOfData.purchasePrice);
+    if (restOfData.financedPrice) restOfData.financedPrice = parseFloat(restOfData.financedPrice);
 
 
     // Process the "imageUrls" field (expected as JSON-stringified array)
@@ -301,13 +344,6 @@ export const updateResidency = asyncHandler(async (req, res) => {
 });
 
 
-
-
-
-
-
-
-
 export const getResidencyImages = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -327,8 +363,6 @@ export const getResidencyImages = asyncHandler(async (req, res) => {
     images: imagePaths,
   });
 });
-
-
 
 
 export const createResidencyWithMultipleFiles = asyncHandler(async (req, res) => {
@@ -355,13 +389,20 @@ export const createResidencyWithMultipleFiles = asyncHandler(async (req, res) =>
 
     // Destructure the fields from req.body
     const {
+      //System Info
+
       ownerId,
-      apnOrPin,
-      askingPrice,
-      minPrice,
+      userEmail,
+      area,
+      status,
+
+     // Listing Details
+
       title,
       description,
-      direction,
+      notes,
+
+    // Classification
       type,
       legalDescription,
       zoning,
@@ -371,7 +412,9 @@ export const createResidencyWithMultipleFiles = asyncHandler(async (req, res) =>
       hoaFee,
       hoaPaymentTerms,
       survey,
-      notes,
+
+      // Location
+
       streetAddress,
       city,
       county,
@@ -379,26 +422,53 @@ export const createResidencyWithMultipleFiles = asyncHandler(async (req, res) =>
       zip,
       latitude,
       longitude,
-      area,
+      apnOrPin,
+      direction,
       landIdLink,
+      landId,
+
+    // Dimensions
+
       sqft,
       acre,
-      disPrice,
-      downPayment,
-      monthlyPayment,
-      terms,
-      interestRate,
-      financing,
-      status,
+
+    // Pricing
+
+    askingPrice,
+    minPrice,
+    disPrice,
+
+    // Financing and Payment Calculation 
+    financing,
+    tax,
+    hoaDue,
+    serviceFee,
+    term,
+    interestOne,
+    interestTwo,
+    interestThree,
+    monthlyPaymentOne,
+    monthlyPaymentTwo,
+    monthlyPaymentThree,
+    downPaymentOne,
+    downPaymentTwo,
+    downPaymentThree,
+    purchasePrice,
+    financedPrice,
+
+    // Utilities
       water,
       sewer,
       electric,
       roadCondition,
       floodplain,
+
+
+    //Media & Tags  
       ltag,
       rtag,
-      landId,
-      userEmail,
+
+
     } = req.body;
 
     const lowerCaseEmail = userEmail.toLowerCase();
@@ -414,13 +484,17 @@ export const createResidencyWithMultipleFiles = asyncHandler(async (req, res) =>
     // Create the residency with the array of image URLs stored in "imageUrls"
     const residency = await prisma.residency.create({
       data: {
+        // System Info
         ownerId: parseInt(ownerId),
-        apnOrPin,
-        askingPrice: parseFloat(askingPrice),
-        minPrice: parseFloat(minPrice),
+        area,
+        status,
+    
+        // Listing Details
         title,
         description: description ?? null,
-        direction: direction ?? null,
+        notes: notes ?? null,
+    
+        // Classification
         type: type ?? null,
         legalDescription: legalDescription ?? null,
         zoning: zoning ?? null,
@@ -429,8 +503,9 @@ export const createResidencyWithMultipleFiles = asyncHandler(async (req, res) =>
         hoaPoa: hoaPoa ?? null,
         hoaFee: hoaFee ? parseFloat(hoaFee) : null,
         hoaPaymentTerms: hoaPaymentTerms ?? null,
-        survey: survey?? null,
-        notes: notes ?? null,
+        survey: survey ?? null,
+    
+        // Location
         streetAddress,
         city,
         county,
@@ -438,32 +513,57 @@ export const createResidencyWithMultipleFiles = asyncHandler(async (req, res) =>
         zip,
         latitude: latitude ? parseFloat(latitude) : null,
         longitude: longitude ? parseFloat(longitude) : null,
-        area: area ?? null,
+        apnOrPin,
+        direction: direction ?? null,
         landIdLink: landIdLink ?? null,
+        landId: landId ?? "Not-Available",
+    
+        // Dimensions
         sqft: parseInt(sqft),
         acre: acre ? parseFloat(acre) : null,
-        // Store the combined array directly
-        imageUrls: allImageUrls.length > 0 ? allImageUrls : null,
+    
+        // Pricing
+        askingPrice: parseFloat(askingPrice),
+        minPrice: parseFloat(minPrice),
         disPrice: disPrice ? parseFloat(disPrice) : null,
-        downPayment: downPayment ? parseFloat(downPayment) : null,
-        monthlyPayment: monthlyPayment? parseFloat(monthlyPayment) : null,
-        terms: terms?? null,
-        interestRate: interestRate? parseFloat(interestRate) : null,
+    
+        // Financing and Payment Calculation 
         financing: financing ?? "Not-Available",
-        status: status ?? "Available",
+        tax: tax ? parseFloat(tax) : null,
+        hoaDue: hoaDue ? parseFloat(hoaDue) : null,
+        serviceFee: serviceFee ? parseFloat(serviceFee) : null,
+        term: term ? parseInt(term, 10) : null,
+        interestOne: interestOne ? parseFloat(interestOne) : null,
+        interestTwo: interestTwo ? parseFloat(interestTwo) : null,
+        interestThree: interestThree ? parseFloat(interestThree) : null,
+        monthlyPaymentOne: monthlyPaymentOne ? parseFloat(monthlyPaymentOne) : null,
+        monthlyPaymentTwo: monthlyPaymentTwo ? parseFloat(monthlyPaymentTwo) : null,
+        monthlyPaymentThree: monthlyPaymentThree ? parseFloat(monthlyPaymentThree) : null,
+        downPaymentOne: downPaymentOne ? parseFloat(downPaymentOne) : null,
+        downPaymentTwo: downPaymentTwo ? parseFloat(downPaymentTwo) : null,
+        downPaymentThree: downPaymentThree ? parseFloat(downPaymentThree) : null,
+        purchasePrice: purchasePrice ? parseFloat(purchasePrice) : null,
+        financedPrice: financedPrice ? parseFloat(financedPrice) : null,
+    
+        // Utilities
         water: water ?? null,
         sewer: sewer ?? null,
         electric: electric ?? null,
         roadCondition: roadCondition ?? null,
         floodplain: floodplain ?? null,
+    
+        // Media & Tags  
         ltag: ltag ?? null,
         rtag: rtag ?? null,
-        landId: landId ?? "Not-Available",
+        imageUrls: allImageUrls.length > 0 ? allImageUrls : null,
+    
+        // Connect Owner
         owner: {
           connect: { email: lowerCaseEmail },
         },
       },
     });
+    
 
     res.status(201).json({
       message: "Property added successfully",

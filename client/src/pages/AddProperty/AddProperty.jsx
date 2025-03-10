@@ -40,54 +40,89 @@ export default function AddProperty() {
   const [dialogMessage, setDialogMessage] = useState("");
   const [dialogType, setDialogType] = useState("success"); // "success" or "warning"
 
-  // Form data state
-  const [formData, setFormData] = useState({
-    ownerId: "",
-    userEmail: "",
-    area: "",
-    title: "",
-    description: "",
-    direction: "",
-    type: "",
-    legalDescription: "",
-    zoning: "",
-    restrictions: "",
-    mobileHomeFriendly: "",
-    hoaPoa: "",
-    hoaFee: "",
-    hoaPaymentTerms: "",
-    survey: "",
-    notes: "",
-    apnOrPin: "",
-    streetAddress: "",
-    city: "",
-    county: "",
-    state: "",
-    zip: "",
-    latitude: "",
-    longitude: "",
-    landId: "",
-    landIdLink: "",
-    sqft: "",
-    acre: "",
-    imageUrls: "",
-    askingPrice: "",
-    minPrice: "",
-    disPrice: "",
-    downPayment: "",
-    monthlyPayment: "",
-    terms: "",
-    financing: "",
-    interestRate: "",
-    status: "",
-    water: "",
-    sewer: "",
-    electric: "",
-    roadCondition: "",
-    floodplain: "",
-    ltag: "",
-    rtag: "",
-  });
+// Form data state
+const [formData, setFormData] = useState({
+  // System Information
+  userEmail: "",
+  ownerId: "",
+  status: "",
+  area: "",
+
+ // Listing Details
+
+  title: "",
+  description: "",
+  notes: "",
+
+  // Classification
+  type: "",
+  legalDescription: "",
+  zoning: "",
+  restrictions: "",
+  mobileHomeFriendly: "",
+  hoaPoa: "",
+  hoaPaymentTerms: "",
+  hoaFee: "",
+  survey: "",
+
+
+  // Address and Location
+  direction: "",
+  streetAddress: "",
+  city: "",
+  county: "",
+  state: "",
+  zip: "",
+  latitude: "",
+  longitude: "",
+  apnOrPin: "",
+  landId: "",
+  landIdLink: "",
+
+    // Dimensions
+  sqft: "",
+  acre: "",
+
+
+  // Pricing and Financing
+  askingPrice: "",
+  minPrice: "",
+  disPrice: "",
+
+  // Financing and Payment Calculation
+  financing: "",
+  tax: "",
+  hoaDue: "",
+  serviceFee: "",
+  term: "",
+  interestOne: "",
+  interestTwo: "",
+  interestThree: "",
+  monthlyPaymentOne: "",
+  monthlyPaymentTwo: "",
+  monthlyPaymentThree: "",
+  downPaymentOne: "",
+  downPaymentTwo: "",
+  downPaymentThree: "",
+  purchasePrice: "",
+  financedPrice: "",
+
+  // Utilities and Infrastructure
+  water: "",
+  sewer: "",
+  electric: "",
+  roadCondition: "",
+  floodplain: "",
+
+    //Media & Tags  
+  ltag: "",
+  rtag: "",
+  imageUrls: "",
+
+
+
+});
+
 
   // If you need to store images in the parent:
   const [uploadedImages, setUploadedImages] = useState([]);
@@ -105,16 +140,34 @@ export default function AddProperty() {
     setFormData((prev) => {
       const updated = { ...prev };
       const numericFields = [
+        // Physical Attributes
         "sqft",
+        "acre",
+      
+        // Pricing and Financing
         "askingPrice",
         "minPrice",
         "disPrice",
-        "acre",
         "hoaFee",
-        "downPayment",
-        "monthlyPayment",
-        "interestRate",
+      
+        // Financing and Payment Calculation
+        "tax",
+        "hoaDue",
+        "serviceFee",
+        //"term",
+        "interestOne",
+        "interestTwo",
+        "interestThree",
+        "monthlyPaymentOne",
+        "monthlyPaymentTwo",
+        "monthlyPaymentThree",
+        "downPaymentOne",
+        "downPaymentTwo",
+        "downPaymentThree",
+        "purchasePrice",
+        "financedPrice",
       ];
+      
       if (numericFields.includes(name)) {
         const noCommas = value.replace(/,/g, "");
         const numberVal = parseFloat(noCommas);
@@ -194,15 +247,32 @@ export default function AddProperty() {
     e.preventDefault();
     try {
       const numericFields = [
+        // Physical Attributes
         "sqft",
+        "acre",
+      
+        // Pricing and Financing
         "askingPrice",
         "minPrice",
         "disPrice",
-        "acre",
         "hoaFee",
-        "downPayment",
-        "monthlyPayment",
-        "interestRate",
+      
+        // Financing and Payment Calculation
+        "tax",
+        "hoaDue",
+        "serviceFee",
+        //"term",
+        "interestOne",
+        "interestTwo",
+        "interestThree",
+        "monthlyPaymentOne",
+        "monthlyPaymentTwo",
+        "monthlyPaymentThree",
+        "downPaymentOne",
+        "downPaymentTwo",
+        "downPaymentThree",
+        "purchasePrice",
+        "financedPrice",
       ];
 
       const multipartForm = new FormData();

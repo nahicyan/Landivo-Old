@@ -118,17 +118,7 @@ export default function Classification({ formData, handleChange }) {
           </Select>
         </div>
 
-        {/* Direction */}
-        <div className="flex flex-col space-y-1 mb-4">
-          <Label className="text-gray-700 font-semibold">Direction</Label>
-          <Input
-            type="text"
-            name="direction"
-            value={formData.direction}
-            onChange={handleChange}
-            placeholder="Enter Direction"
-          />
-        </div>
+
 
         {/* Legal Description */}
         <div className="flex flex-col space-y-1 mb-4">
