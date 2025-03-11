@@ -47,7 +47,7 @@ function ImageModal({ images, currentIndex, onClose, onNext, onPrev }) {
         <ChevronRightIcon className="w-5 h-5" />
       </button>
 
-      {/* Image count (bottom-left with camera icon) */}
+      {/* Image count (bottom-left with camera icon) */}//
       <span className="absolute bottom-4 left-4 text-sm bg-black/70 text-white px-4 py-2 rounded-full flex items-center space-x-2">
         <Camera className="w-4 h-4" />
         <span>

@@ -1,9 +1,16 @@
 "use client";
 
-import React from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import React, { useState } from "react";
+import PaymentCalculatorBack from "@/components/PaymentCalculator/PaymentCalculatorBack";
+import PaymentCalculatorEntry from "@/components/PaymentCalculator/PaymentCalculatorEntry";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectTrigger,
@@ -12,270 +19,171 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export default function Financing({ formData, handleChange }) {
+export default function Financing() {
+  // Main parent state for all financing fields
+  const [formData, setFormData] = useState({
+    // Step 1 fields:
+    purchasePrice: "5000",
+    financedPrice: "",
+    downPaymentOne: "",
+    
+    // Payment Calculator multipliers:
+    interestOne: "9.99", // fixed 9.99% for plan one
+    interestTwo: "10.99",
+    interestThree: "11.99",
+    
+    monthlyPaymentOne: "0",
+    monthlyPaymentTwo: "",
+    monthlyPaymentThree: "",
+    
+    downPaymentTwo: "",
+    downPaymentThree: "",
+    
+    // Additional financing fields
+    tax: "",
+    hoaDue: "",
+    serviceFee: "",
+    financing: "Not-Available", // default to "Not-Available"
+
+    // Loan & monthly payment calculations
+    loanAmount: "0", 
+    term: "60", // default 60 months for demonstration
+  });
+
+  // Update parent formData
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  // States for controlling the modal
+  const [openModal, setOpenModal] = useState(false);
+  const [planType, setPlanType] = useState(null); 
+  // planType can be "CALC" (PaymentCalculatorBack) or "ENTRY" (PaymentCalculatorEntry)
+
+  // Temporary state to store changes made in the modal (so we can Cancel or Apply)
+  const [tempData, setTempData] = useState({ ...formData });
+
+  // Handler to open the modal with either PaymentCalculatorBack or PaymentCalculatorEntry
+  const openModalWithPlan = (type) => {
+    setPlanType(type);
+    // Make a fresh copy of the current formData for editing in the modal
+    setTempData({ ...formData });
+    setOpenModal(true);
+  };
+
+  // Handler to close modal without applying changes
+  const handleCancel = () => {
+    setOpenModal(false);
+    // We do NOT merge tempData back into formData
+  };
+
+  // Handler to apply changes from tempData into formData
+  const handleApply = () => {
+    setFormData({ ...tempData });
+    setOpenModal(false);
+  };
+
+  // A specialized change handler for the modal that updates tempData
+  const handleTempChange = (e) => {
+    setTempData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
   return (
-    <Card className="border border-gray-200 shadow-sm rounded-lg">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold text-gray-800">Financing</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Financing Option */}
-        <div>
-          <Label className="text-sm font-semibold text-gray-700">
-            Financing Option
-          </Label>
-          <Select
-            name="financing"
-            value={formData.financing}
-            onValueChange={(value) =>
-              handleChange({ target: { name: "financing", value } })
-            }
+    <div className="p-4 bg-[#FDF8F2]" style={{ color: "#030001" }}>
+      {/* 1) Select if Payment Plans are Available */}
+      <div className="mb-4 w-64">
+        <label className="block text-sm font-semibold text-gray-700 mb-1">
+          Payment Plans
+        </label>
+        <Select
+          name="financing"
+          value={formData.financing}
+          onValueChange={(value) =>
+            setFormData((prev) => ({ ...prev, financing: value }))
+          }
+        >
+          <SelectTrigger className="w-full border border-gray-300 rounded-md">
+            <SelectValue placeholder="Select" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Not-Available">Not Available</SelectItem>
+            <SelectItem value="Available">Available</SelectItem>
+          </SelectContent>
+        </Select>
+        <p className="text-xs text-gray-500 mt-1">
+          Are Payment Plans available?
+        </p>
+      </div>
+
+      {/* 2) If Payment Plans = "Available", show 2 buttons */}
+      {formData.financing === "Available" && (
+        <div className="flex items-center gap-4">
+          {/* Button 1: Use Payment Calculator (PaymentCalculatorBack) */}
+          <Button
+            type="button"
+            className="bg-[#3f4f24] hover:bg-[#324c48] text-white px-4 py-2 rounded-md"
+            onClick={() => openModalWithPlan("CALC")}
           >
-            <SelectTrigger className="w-full border-gray-300 focus:border-[#D4A017] focus:ring-1 focus:ring-[#D4A017]">
-              <SelectValue placeholder="Select financing availability" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Available">Available</SelectItem>
-              <SelectItem value="Not-Available">Not Available</SelectItem>
-            </SelectContent>
-          </Select>
-          <p className="text-xs text-gray-500 mt-1">
-            Choose whether financing is an option for this property.
-          </p>
+            Use Payment Calculator
+          </Button>
+
+          {/* Button 2: Payment Plan Entry (PaymentCalculatorEntry) */}
+          <Button
+            type="button"
+            className="bg-[#3f4f24] hover:bg-[#324c48] text-white px-4 py-2 rounded-md"
+            onClick={() => openModalWithPlan("ENTRY")}
+          >
+            Payment Plan Entry
+          </Button>
         </div>
+      )}
 
-        {formData.financing === "Available" && (
-          <div className="space-y-6">
-            {/* Purchase Price */}
-            <div>
-              <Label className="text-sm font-semibold text-gray-700">
-                Purchase Price
-              </Label>
-              <Input
-                type="text"
-                placeholder="Enter purchase price"
-                name="purchasePrice"
-                value={formData.purchasePrice}
-                onChange={handleChange}
-                className="w-full border-gray-300 focus:border-[#D4A017] focus:ring-1 focus:ring-[#D4A017] rounded-md"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                Total property purchase price.
-              </p>
-            </div>
+      {/* 3) Modal (Dialog) for either PaymentCalculatorBack or PaymentCalculatorEntry */}
+      <Dialog open={openModal} onOpenChange={setOpenModal}>
+        <DialogContent className="max-w-4xl mx-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-gray-800">
+              {planType === "CALC"
+                ? "Payment Calculator (Plan One)"
+                : "Payment Plan Entry"}
+            </DialogTitle>
+          </DialogHeader>
 
-            {/* Financed Price */}
-            <div>
-              <Label className="text-sm font-semibold text-gray-700">
-                Financed Price
-              </Label>
-              <Input
-                type="text"
-                placeholder="Enter financed price"
-                name="financedPrice"
-                value={formData.financedPrice}
-                onChange={handleChange}
-                className="w-full border-gray-300 focus:border-[#D4A017] focus:ring-1 focus:ring-[#D4A017] rounded-md"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                The amount to be financed.
-              </p>
-            </div>
+          {/* Render either PaymentCalculatorBack or PaymentCalculatorEntry */}
+          {planType === "CALC" ? (
+            <PaymentCalculatorBack
+              formData={tempData}
+              handleChange={handleTempChange}
+            />
+          ) : planType === "ENTRY" ? (
+            <PaymentCalculatorEntry
+              formData={tempData}
+              handleChange={handleTempChange}
+            />
+          ) : null}
 
-            {/* Tax */}
-            <div>
-              <Label className="text-sm font-semibold text-gray-700">
-                Tax
-              </Label>
-              <Input
-                type="text"
-                placeholder="Enter tax amount"
-                name="tax"
-                value={formData.tax}
-                onChange={handleChange}
-                className="w-full border-gray-300 focus:border-[#D4A017] focus:ring-1 focus:ring-[#D4A017] rounded-md"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                Property tax amount.
-              </p>
-            </div>
-
-            {/* HOA Due */}
-            <div>
-              <Label className="text-sm font-semibold text-gray-700">
-                HOA Due
-              </Label>
-              <Input
-                type="text"
-                placeholder="Enter HOA due"
-                name="hoaDue"
-                value={formData.hoaDue}
-                onChange={handleChange}
-                className="w-full border-gray-300 focus:border-[#D4A017] focus:ring-1 focus:ring-[#D4A017] rounded-md"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                Homeowners Association fees.
-              </p>
-            </div>
-
-            {/* Service Fee */}
-            <div>
-              <Label className="text-sm font-semibold text-gray-700">
-                Service Fee
-              </Label>
-              <Input
-                type="text"
-                placeholder="Enter service fee"
-                name="serviceFee"
-                value={formData.serviceFee}
-                onChange={handleChange}
-                className="w-full border-gray-300 focus:border-[#D4A017] focus:ring-1 focus:ring-[#D4A017] rounded-md"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                Additional service fee if applicable.
-              </p>
-            </div>
-
-            {/* Down Payment Options */}
-            <div>
-              <Label className="text-sm font-semibold text-gray-700">
-                Down Payment Option 1
-              </Label>
-              <Input
-                type="text"
-                placeholder="Enter down payment 1"
-                name="downPaymentOne"
-                value={formData.downPaymentOne}
-                onChange={handleChange}
-                className="w-full border-gray-300 focus:border-[#D4A017] focus:ring-1 focus:ring-[#D4A017] rounded-md"
-              />
-            </div>
-            <div>
-              <Label className="text-sm font-semibold text-gray-700">
-                Down Payment Option 2
-              </Label>
-              <Input
-                type="text"
-                placeholder="Enter down payment 2"
-                name="downPaymentTwo"
-                value={formData.downPaymentTwo}
-                onChange={handleChange}
-                className="w-full border-gray-300 focus:border-[#D4A017] focus:ring-1 focus:ring-[#D4A017] rounded-md"
-              />
-            </div>
-            <div>
-              <Label className="text-sm font-semibold text-gray-700">
-                Down Payment Option 3
-              </Label>
-              <Input
-                type="text"
-                placeholder="Enter down payment 3"
-                name="downPaymentThree"
-                value={formData.downPaymentThree}
-                onChange={handleChange}
-                className="w-full border-gray-300 focus:border-[#D4A017] focus:ring-1 focus:ring-[#D4A017] rounded-md"
-              />
-            </div>
-
-            {/* Monthly Payment Options */}
-            <div>
-              <Label className="text-sm font-semibold text-gray-700">
-                Monthly Payment Option 1
-              </Label>
-              <Input
-                type="text"
-                placeholder="Enter monthly payment 1"
-                name="monthlyPaymentOne"
-                value={formData.monthlyPaymentOne}
-                onChange={handleChange}
-                className="w-full border-gray-300 focus:border-[#D4A017] focus:ring-1 focus:ring-[#D4A017] rounded-md"
-              />
-            </div>
-            <div>
-              <Label className="text-sm font-semibold text-gray-700">
-                Monthly Payment Option 2
-              </Label>
-              <Input
-                type="text"
-                placeholder="Enter monthly payment 2"
-                name="monthlyPaymentTwo"
-                value={formData.monthlyPaymentTwo}
-                onChange={handleChange}
-                className="w-full border-gray-300 focus:border-[#D4A017] focus:ring-1 focus:ring-[#D4A017] rounded-md"
-              />
-            </div>
-            <div>
-              <Label className="text-sm font-semibold text-gray-700">
-                Monthly Payment Option 3
-              </Label>
-              <Input
-                type="text"
-                placeholder="Enter monthly payment 3"
-                name="monthlyPaymentThree"
-                value={formData.monthlyPaymentThree}
-                onChange={handleChange}
-                className="w-full border-gray-300 focus:border-[#D4A017] focus:ring-1 focus:ring-[#D4A017] rounded-md"
-              />
-            </div>
-
-            {/* Loan Terms (Months) */}
-            <div>
-              <Label className="text-sm font-semibold text-gray-700">
-                Loan Terms (Months)
-              </Label>
-              <Input
-                type="text"
-                placeholder="Enter loan terms"
-                name="term"
-                value={formData.term}
-                onChange={handleChange}
-                className="w-full border-gray-300 focus:border-[#D4A017] focus:ring-1 focus:ring-[#D4A017] rounded-md"
-              />
-            </div>
-
-            {/* Interest Rate Options */}
-            <div>
-              <Label className="text-sm font-semibold text-gray-700">
-                Interest Rate Option 1 (%)
-              </Label>
-              <Input
-                type="text"
-                placeholder="Enter interest rate option 1"
-                name="interestOne"
-                value={formData.interestOne}
-                onChange={handleChange}
-                className="w-full border-gray-300 focus:border-[#D4A017] focus:ring-1 focus:ring-[#D4A017] rounded-md"
-              />
-            </div>
-            <div>
-              <Label className="text-sm font-semibold text-gray-700">
-                Interest Rate Option 2 (%)
-              </Label>
-              <Input
-                type="text"
-                placeholder="Enter interest rate option 2"
-                name="interestTwo"
-                value={formData.interestTwo}
-                onChange={handleChange}
-                className="w-full border-gray-300 focus:border-[#D4A017] focus:ring-1 focus:ring-[#D4A017] rounded-md"
-              />
-            </div>
-            <div>
-              <Label className="text-sm font-semibold text-gray-700">
-                Interest Rate Option 3 (%)
-              </Label>
-              <Input
-                type="text"
-                placeholder="Enter interest rate option 3"
-                name="interestThree"
-                value={formData.interestThree}
-                onChange={handleChange}
-                className="w-full border-gray-300 focus:border-[#D4A017] focus:ring-1 focus:ring-[#D4A017] rounded-md"
-              />
-            </div>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+          <DialogFooter>
+            <Button
+              onClick={handleCancel}
+              className="bg-gray-400 hover:bg-gray-500 text-white"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleApply}
+              className="bg-[#3f4f24] hover:bg-[#324c48] text-white"
+            >
+              Apply
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 }

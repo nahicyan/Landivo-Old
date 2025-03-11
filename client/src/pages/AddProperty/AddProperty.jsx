@@ -307,7 +307,13 @@ const [formData, setFormData] = useState({
       setDialogOpen(true);
     } catch (error) {
       console.error("Error creating property:", error);
-      setDialogMessage("Failed to create property");
+      // Attempt to extract a detailed error message from the response
+      const errorMsg =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        "Unknown error";
+      setDialogMessage(`Failed to create property: ${errorMsg}`);
       setDialogType("warning");
       setDialogOpen(true);
     }

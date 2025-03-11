@@ -571,10 +571,12 @@ export const createResidencyWithMultipleFiles = asyncHandler(async (req, res) =>
     });
   } catch (err) {
     console.error("Error creating residency:", err);
-    res
-      .status(500)
-      .json({ message: "An error occurred", error: err.message });
+    res.status(500).json({
+      message: `Failed to create property: ${err.message}`,
+      error: err.message,
+    });
   }
+
 });
 
 

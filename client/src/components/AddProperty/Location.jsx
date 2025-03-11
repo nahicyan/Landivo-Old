@@ -7,6 +7,17 @@ import { Label } from "@/components/ui/label";
 import AddressAutocomplete from "@/components/AddressAutocomplete/AddressAutocomplete";
 
 export default function Location({ formData, handleChange, setFormData }) {
+  // A helper to handle checkboxes (if not already in handleChange)
+  const handleCheckboxChange = (e) => {
+    const { name, checked } = e.target;
+    if (name === "landId") {
+      setFormData({ ...formData, [name]: checked ? "included" : false });
+    } else {
+      setFormData({ ...formData, [name]: checked });
+    }
+  };
+  
+
   return (
     <Card className="border border-gray-200 shadow-md rounded-lg w-full">
       <CardHeader className="px-4 py-3">
@@ -146,6 +157,38 @@ export default function Location({ formData, handleChange, setFormData }) {
             placeholder="Enter APN or PIN"
             className="mt-1"
           />
+        </div>
+
+        {/* New Row: Land ID Checkbox and Land ID Link Field */}
+        <div className="space-y-2">
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              name="landId"
+              checked={formData.landId || false}
+              onChange={handleCheckboxChange}
+              className="mr-2"
+            />
+            <Label className="text-sm font-semibold text-gray-700">
+              Include Land ID
+            </Label>
+          </div>
+          {formData.landId && (
+            <div className="flex flex-col">
+              <Label htmlFor="landIdLink" className="text-sm font-semibold text-gray-700">
+                Land ID Link
+              </Label>
+              <Input
+                id="landIdLink"
+                type="text"
+                name="landIdLink"
+                value={formData.landIdLink || ""}
+                onChange={handleChange}
+                placeholder="Enter Land ID Link"
+                className="mt-1"
+              />
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

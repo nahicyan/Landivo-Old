@@ -30,7 +30,7 @@ import {
   Info,
 } from "lucide-react";
 import PropertyMap from "../PropertyMap/PropertyMap";
-import PaymentCalculator from "@/components/PaymentCalculator/PaymentCalculator";
+import PaymentCalculatorFront from "@/components/PaymentCalculator/PaymentCalculatorFront";
 import PreQualification from "@/components/PreQualification/PreQualification";
 
 
@@ -239,7 +239,7 @@ export default function PropertyDetailsDetails({ propertyData }) {
               </div>
             </AccordionTrigger>
             <AccordionContent>
-            <PaymentCalculator propertyData={propertyData} />
+            <PaymentCalculatorFront propertyData={propertyData} />
             <PreQualification/>
             </AccordionContent>
           </AccordionItem>

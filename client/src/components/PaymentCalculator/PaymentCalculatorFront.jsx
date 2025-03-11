@@ -13,7 +13,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { PieChart, Pie, Label as RechartsLabel, Tooltip } from "recharts";
 
-export default function PaymentCalculator({ propertyData }) {
+export default function PaymentCalculatorFront({ propertyData }) {
   const [selectedOption, setSelectedOption] = useState("1");
 
   // Pick data based on selected option
@@ -64,10 +64,10 @@ export default function PaymentCalculator({ propertyData }) {
           Payment Calculator
         </CardTitle>
         <CardDescription className="text-sm" style={{ color: "#576756" }}>
-          <span>Compare payment options for this property</span>
+          <span>Compare Payment Plans For This Property</span>
           <div>
             <Label className="text-sm font-semibold" style={{ color: "#030001" }}>
-              Choose a financing option
+              Choose a Financing Plan
             </Label>
             <RadioGroup
               className="flex items-center gap-4 mt-2"
@@ -81,7 +81,7 @@ export default function PaymentCalculator({ propertyData }) {
                   className="w-4 h-4 rounded-full border border-gray-300 data-[state=checked]:bg-green-600 data-[state=checked]:border-transparent"
                 />
                 <Label htmlFor="option1" className="cursor-pointer" style={{ color: "#030001" }}>
-                  Option 1
+                  Plan 1
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
@@ -91,7 +91,7 @@ export default function PaymentCalculator({ propertyData }) {
                   className="w-4 h-4 rounded-full border border-gray-300 data-[state=checked]:bg-green-600 data-[state=checked]:border-transparent"
                 />
                 <Label htmlFor="option2" className="cursor-pointer" style={{ color: "#030001" }}>
-                  Option 2
+                 Plan 2
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
@@ -101,7 +101,7 @@ export default function PaymentCalculator({ propertyData }) {
                   className="w-4 h-4 rounded-full border border-gray-300 data-[state=checked]:bg-green-600 data-[state=checked]:border-transparent"
                 />
                 <Label htmlFor="option3" className="cursor-pointer" style={{ color: "#030001" }}>
-                  Option 3
+                 Plan 3
                 </Label>
               </div>
             </RadioGroup>
