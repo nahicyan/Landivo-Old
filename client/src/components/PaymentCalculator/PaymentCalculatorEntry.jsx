@@ -55,8 +55,8 @@ export default function PaymentCalculatorEntry({ formData, handleChange }) {
           </div>
         </div>
 
-        {/* Next Row: HOA Due and Service Fee */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* Next Row: HOA Due, Service Fee, and Term */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <Label className="text-sm font-semibold text-gray-700">
               HOA Due
@@ -79,6 +79,19 @@ export default function PaymentCalculatorEntry({ formData, handleChange }) {
               placeholder="Enter service fee"
               name="serviceFee"
               value={formData.serviceFee}
+              onChange={handleChange}
+              className="w-full border-gray-300 focus:border-[#D4A017] focus:ring-1 focus:ring-[#D4A017] rounded-md"
+            />
+          </div>
+          <div>
+            <Label className="text-sm font-semibold text-gray-700">
+              Term (months)
+            </Label>
+            <Input
+              type="text"
+              placeholder="Enter term in months"
+              name="term"
+              value={formData.term}
               onChange={handleChange}
               className="w-full border-gray-300 focus:border-[#D4A017] focus:ring-1 focus:ring-[#D4A017] rounded-md"
             />

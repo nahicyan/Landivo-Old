@@ -40,89 +40,83 @@ export default function AddProperty() {
   const [dialogMessage, setDialogMessage] = useState("");
   const [dialogType, setDialogType] = useState("success"); // "success" or "warning"
 
-// Form data state
-const [formData, setFormData] = useState({
-  // System Information
-  userEmail: "",
-  ownerId: "",
-  status: "",
-  area: "",
+  // Form data state
+  const [formData, setFormData] = useState({
+    // System Information
+    userEmail: "",
+    ownerId: "",
+    status: "",
+    area: "",
 
- // Listing Details
+    // Listing Details
 
-  title: "",
-  description: "",
-  notes: "",
+    title: "",
+    description: "",
+    notes: "",
 
-  // Classification
-  type: "",
-  legalDescription: "",
-  zoning: "",
-  restrictions: "",
-  mobileHomeFriendly: "",
-  hoaPoa: "",
-  hoaPaymentTerms: "",
-  hoaFee: "",
-  survey: "",
+    // Classification
+    type: "",
+    legalDescription: "",
+    zoning: "",
+    restrictions: "",
+    mobileHomeFriendly: "",
+    hoaPoa: "",
+    hoaPaymentTerms: "",
+    hoaFee: "",
+    survey: "",
 
-
-  // Address and Location
-  direction: "",
-  streetAddress: "",
-  city: "",
-  county: "",
-  state: "",
-  zip: "",
-  latitude: "",
-  longitude: "",
-  apnOrPin: "",
-  landId: "",
-  landIdLink: "",
+    // Address and Location
+    direction: "",
+    streetAddress: "",
+    city: "",
+    county: "",
+    state: "",
+    zip: "",
+    latitude: "",
+    longitude: "",
+    apnOrPin: "",
+    landId: "",
+    landIdLink: "",
 
     // Dimensions
-  sqft: "",
-  acre: "",
+    sqft: "",
+    acre: "",
 
+    // Pricing and Financing
+    askingPrice: "",
+    minPrice: "",
+    disPrice: "",
 
-  // Pricing and Financing
-  askingPrice: "",
-  minPrice: "",
-  disPrice: "",
+    // Financing and Payment Calculation
+    financing: "",
+    tax: "",
+    hoaDue: "",
+    serviceFee: "",
+    term: "",
+    interestOne: "",
+    interestTwo: "",
+    interestThree: "",
+    monthlyPaymentOne: "",
+    monthlyPaymentTwo: "",
+    monthlyPaymentThree: "",
+    downPaymentOne: "",
+    downPaymentTwo: "",
+    downPaymentThree: "",
+    purchasePrice: "",
+    financedPrice: "",
 
-  // Financing and Payment Calculation
-  financing: "",
-  tax: "",
-  hoaDue: "",
-  serviceFee: "",
-  term: "",
-  interestOne: "",
-  interestTwo: "",
-  interestThree: "",
-  monthlyPaymentOne: "",
-  monthlyPaymentTwo: "",
-  monthlyPaymentThree: "",
-  downPaymentOne: "",
-  downPaymentTwo: "",
-  downPaymentThree: "",
-  purchasePrice: "",
-  financedPrice: "",
+    // Utilities and Infrastructure
+    water: "",
+    sewer: "",
+    electric: "",
+    roadCondition: "",
+    floodplain: "",
 
-  // Utilities and Infrastructure
-  water: "",
-  sewer: "",
-  electric: "",
-  roadCondition: "",
-  floodplain: "",
-
-    //Media & Tags  
-  ltag: "",
-  rtag: "",
-  imageUrls: "",
-
-
-
-});
-
+    //Media & Tags
+    ltag: "",
+    rtag: "",
+    imageUrls: "",
+  });
 
   // If you need to store images in the parent:
   const [uploadedImages, setUploadedImages] = useState([]);
@@ -143,13 +137,13 @@ const [formData, setFormData] = useState({
         // Physical Attributes
         "sqft",
         "acre",
-      
+
         // Pricing and Financing
         "askingPrice",
         "minPrice",
         "disPrice",
         "hoaFee",
-      
+
         // Financing and Payment Calculation
         "tax",
         "hoaDue",
@@ -167,7 +161,7 @@ const [formData, setFormData] = useState({
         "purchasePrice",
         "financedPrice",
       ];
-      
+
       if (numericFields.includes(name)) {
         const noCommas = value.replace(/,/g, "");
         const numberVal = parseFloat(noCommas);
@@ -214,7 +208,12 @@ const [formData, setFormData] = useState({
         />
       ),
     },
-    { title: "Classification", component: <Classification formData={formData} handleChange={handleChange} /> },
+    {
+      title: "Classification",
+      component: (
+        <Classification formData={formData} handleChange={handleChange} />
+      ),
+    },
     {
       title: "Location",
       component: (
@@ -226,21 +225,36 @@ const [formData, setFormData] = useState({
       ),
     },
     { title: "Dimensions", component: <Dimension /> },
-    { title: "Pricing", component: <Pricing formData={formData} handleChange={handleChange} /> },
-    { title: "Financing", component: <Financing formData={formData} handleChange={handleChange} /> },
-    { title: "Utilities", component: <Utilities formData={formData} handleChange={handleChange} /> },
-    { 
-      title: "Media & Tags", 
-      component: (
-        <MediaTags 
-          formData={formData} 
-          handleChange={handleChange} 
-          uploadedImages={uploadedImages} 
-          setUploadedImages={setUploadedImages} 
-        />
-      ) 
+    {
+      title: "Pricing",
+      component: <Pricing formData={formData} handleChange={handleChange} />,
     },
-      ];
+    {
+      title: "Financing",
+      component: (
+        <Financing
+          formData={formData}
+          handleChange={handleChange}
+          updateFormData={(updatedData) => setFormData(updatedData)}
+        />
+      ),
+    },
+    {
+      title: "Utilities",
+      component: <Utilities formData={formData} handleChange={handleChange} />,
+    },
+    {
+      title: "Media & Tags",
+      component: (
+        <MediaTags
+          formData={formData}
+          handleChange={handleChange}
+          uploadedImages={uploadedImages}
+          setUploadedImages={setUploadedImages}
+        />
+      ),
+    },
+  ];
 
   // Submit
   const handleSubmit = async (e) => {
@@ -250,13 +264,13 @@ const [formData, setFormData] = useState({
         // Physical Attributes
         "sqft",
         "acre",
-      
+
         // Pricing and Financing
         "askingPrice",
         "minPrice",
         "disPrice",
         "hoaFee",
-      
+
         // Financing and Payment Calculation
         "tax",
         "hoaDue",
@@ -354,7 +368,9 @@ const [formData, setFormData] = useState({
               >
                 {item.title}
               </span>
-              {index < steps.length - 1 && <div className="w-8 h-[2px] bg-gray-300" />}
+              {index < steps.length - 1 && (
+                <div className="w-8 h-[2px] bg-gray-300" />
+              )}
             </div>
           );
         })}
@@ -424,7 +440,11 @@ const [formData, setFormData] = useState({
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="bg-white text-gray-900 border border-gray-300 shadow-lg rounded-lg p-6 w-full max-w-md mx-auto">
           <DialogHeader>
-            <DialogTitle className={dialogType === "success" ? "text-green-600" : "text-red-600"}>
+            <DialogTitle
+              className={
+                dialogType === "success" ? "text-green-600" : "text-red-600"
+              }
+            >
               {dialogType === "success" ? "Success" : "Warning"}
             </DialogTitle>
             <DialogDescription>{dialogMessage}</DialogDescription>
