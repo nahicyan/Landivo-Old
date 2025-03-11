@@ -1,7 +1,5 @@
 import asyncHandler from "express-async-handler";
 import { prisma } from '../config/prismaConfig.js';
-import path from "path";
-import fs from "fs";
 
   export const createResidency = asyncHandler(async (req, res) => {
     const {
