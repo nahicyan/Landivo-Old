@@ -33,7 +33,6 @@ import PropertyMap from "../PropertyMap/PropertyMap";
 import PaymentCalculatorFront from "@/components/PaymentCalculator/PaymentCalculatorFront";
 import PreQualification from "@/components/PreQualification/PreQualification";
 
-
 export default function PropertyDetailsDetails({ propertyData }) {
   return (
     <div className="bg-[FFF] text-[var(--text)]">
@@ -239,8 +238,8 @@ export default function PropertyDetailsDetails({ propertyData }) {
               </div>
             </AccordionTrigger>
             <AccordionContent>
-            <PaymentCalculatorFront propertyData={propertyData} />
-            <PreQualification/>
+              <PaymentCalculatorFront propertyData={propertyData} />
+              <PreQualification />
             </AccordionContent>
           </AccordionItem>
         )}
@@ -250,26 +249,14 @@ export default function PropertyDetailsDetails({ propertyData }) {
             <AccordionTrigger className="flex items-center justify-between w-full text-left text-xl font-medium text-gray-800 tracking-tight">
               <div className="flex items-center gap-2">
                 <Home className="w-6 h-6 text-gray-600" />
-                <span>HOA</span>
+                <span>Homeowners Association</span>
               </div>
             </AccordionTrigger>
             <AccordionContent>
-              <Table className="w-full text-base tracking-tight">
-                <TableBody>
-                  <TableRow>
-                    <TableCell className="font-medium text-gray-700">
-                      HOA
-                    </TableCell>
-                    <TableCell>{propertyData.hoaPoa}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-medium text-gray-700">
-                      HOA Information
-                    </TableCell>
-                    <TableCell>{propertyData.hoaFee}</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
+              <div className="text-base tracking-tight">
+                Total {propertyData.hoaPaymentTerms} Association Fee: $
+                {propertyData.hoaFee}
+              </div>
             </AccordionContent>
           </AccordionItem>
         )}
