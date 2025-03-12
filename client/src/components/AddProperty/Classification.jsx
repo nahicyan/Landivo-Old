@@ -91,6 +91,7 @@ export default function Classification({ formData, handleChange }) {
                 "Environmental",
                 "Easement",
                 "Setback",
+                "Extraterritorial Jurisdiction",
               ].map((option) => (
                 <SelectItem key={option} value={option}>
                   {option}

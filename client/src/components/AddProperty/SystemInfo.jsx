@@ -59,7 +59,7 @@ export default function SystemInfoCard({ formData, handleChange }) {
               <SelectItem value="Austin">Austin</SelectItem>
               <SelectItem value="Houston">Houston</SelectItem>
               <SelectItem value="San Antonio">San Antonio</SelectItem>
-              <SelectItem value="Other">Other</SelectItem>
+              <SelectItem value="Other Areas">Other Areas</SelectItem>
             </SelectContent>
           </Select>
         </div>

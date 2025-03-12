@@ -43,28 +43,29 @@ export default function ContactCard() {
         </CardHeader>
       </Card>
 
-{/* Mobile Sticky Bar */}
-<div className="block sm:hidden fixed bottom-0 left-0 w-full p-4 bg-white border-t border-gray-200 z-50 flex gap-2 overflow-x-hidden">
-  <Button
-    onClick={() => (window.location.href = "tel:+18172471312")}
-    className="bg-[#324c48] text-white flex-1 py-3 text-base font-semibold uppercase rounded-full shadow-md hover:shadow-lg transition-shadow"
-  >
-    Call
-  </Button>
-  <Button
-    onClick={() => setOpenDialog(true)}
-    className="bg-[#324c48] text-white flex-1 py-3 text-base font-semibold uppercase rounded-full shadow-md hover:shadow-lg transition-shadow"
-  >
-    Message
-  </Button>
-</div>
-
+      {/* Mobile Sticky Bar */}
+      <div className="block sm:hidden fixed bottom-0 left-0 w-full p-4 bg-white border-t border-gray-200 z-50 flex gap-2 overflow-x-hidden">
+        <Button
+          onClick={() => (window.location.href = "tel:+18172471312")}
+          className="bg-[#324c48] text-white flex-1 py-3 text-base font-semibold uppercase rounded-full shadow-md hover:shadow-lg transition-shadow"
+        >
+          Call
+        </Button>
+        <Button
+          onClick={() => setOpenDialog(true)}
+          className="bg-[#324c48] text-white flex-1 py-3 text-base font-semibold uppercase rounded-full shadow-md hover:shadow-lg transition-shadow"
+        >
+          Message
+        </Button>
+      </div>
 
       {/* Message Options Dialog */}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent className="bg-white text-gray-900 border border-gray-300 shadow-lg rounded-lg p-6 w-full max-w-md mx-auto">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold">Contact Options</DialogTitle>
+            <DialogTitle className="text-xl font-bold">
+              Contact Options
+            </DialogTitle>
             <DialogDescription>
               Select an option to contact us:
             </DialogDescription>
@@ -84,7 +85,10 @@ export default function ContactCard() {
               variant="outline"
               className="w-full sm:w-auto bg-green-100 text-green-800"
               onClick={() => {
-                window.open("https://portal.landersinvestment.com/livechat", "_blank");
+                window.open(
+                  "https://portal.landersinvestment.com/livechat",
+                  "_blank"
+                );
                 setOpenDialog(false);
               }}
             >

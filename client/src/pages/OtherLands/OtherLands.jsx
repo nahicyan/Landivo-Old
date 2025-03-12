@@ -41,7 +41,7 @@ export default function OtherLandsProperty() {
 
   // Filter properties to only include those in OtherLands
   const OtherLandsProperties = data.filter(
-    (property) => property.area === "OtherLands"
+    (property) => property.area === "Other Areas"
   );
 
   // Further filter using the search query across multiple fields
@@ -70,7 +70,7 @@ export default function OtherLandsProperty() {
   // Set header text based on whether we're showing just OtherLands or all properties
   const headerText =
     filteredOtherLandsProperties.length > 0
-      ? "Properties in OtherLands"
+      ? "Properties in Other Areas"
       : "All Properties";
 
   // Handlers for horizontal scrolling
@@ -96,10 +96,10 @@ export default function OtherLandsProperty() {
           </h1>
           <p className="text-lg mb-6">
             {filteredOtherLandsProperties.length > 0
-              ? "Browse through properties available in the OtherLands area."
+              ? "Browse through properties available in the Other Areas area."
               : (
                 <>
-                  Sorry! We sold through everything in Other Lands! <br />
+                  Sorry! We sold through everything in Other Areas! <br />
                   Maybe you would be interested in these properties:
                 </>
               )}

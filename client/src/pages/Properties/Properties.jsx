@@ -41,7 +41,7 @@ export default function Properties() {
   const scrollRefs = useRef({});
 
   // Define the locations you want separate sections for
-  const areas = ["DFW", "Austin", "Houston", "San Antonio", "Others"];
+  const areas = ["DFW", "Austin", "Houston", "San Antonio", "Other Areas"];
 
   // Scroll Left
   const handleScrollLeft = (area) => {

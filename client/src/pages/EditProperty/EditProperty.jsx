@@ -211,7 +211,6 @@ const [dialogMessage, setDialogMessage] = useState("");
     }
   };
   
-  
 
   return (
     <Box
@@ -257,7 +256,7 @@ const [dialogMessage, setDialogMessage] = useState("");
         <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
           <TextField fullWidth label="Owner ID" name="ownerId" value={formData.ownerId} onChange={handleChange} sx={textFieldStyle} />
           <FormControlWithSelect label="Status" name="status" value={formData.status} onChange={handleChange} options={["Available", "Pending", "Sold", "Not Available", "Testing"]} />
-          <FormControlWithSelect label="Area" name="area" value={formData.area} onChange={handleChange} options={["DFW", "Austin", "Houston", "San Antonio", "Other"]} />
+          <FormControlWithSelect label="Area" name="area" value={formData.area} onChange={handleChange} options={["DFW", "Austin", "Houston", "San Antonio", "Other Areas"]} />
         </Stack>
       </Box>
       {/* Listing Details */}
@@ -413,10 +412,6 @@ const [dialogMessage, setDialogMessage] = useState("");
 
   );
 };
-
-
-
-
 
 
 const InputField = ({ label, name, value, onChange, required = false, type = "text", multiple = false, options = [] }) => {
