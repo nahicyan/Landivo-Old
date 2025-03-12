@@ -24,8 +24,8 @@ export default function SystemInfoCard({ formData, handleChange }) {
       </CardHeader>
 
       <CardContent className="space-y-4">
-              {/* Render the User Email Display */}
-              <UserSubmit />
+        {/* Render the User Email Display */}
+        <UserSubmit />
 
         {/* Owner ID */}
         <div className="flex flex-col space-y-1">
@@ -83,6 +83,49 @@ export default function SystemInfoCard({ formData, handleChange }) {
               <SelectItem value="Sold">Sold</SelectItem>
               <SelectItem value="Not Available">Not Available</SelectItem>
               <SelectItem value="Testing">Testing</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Featured Selection */}
+        <div className="flex flex-col space-y-1">
+          <Label htmlFor="featured" className="text-gray-700 font-semibold">
+            Featured
+          </Label>
+          <Select
+            name="featured"
+            value={formData.featured}
+            onValueChange={(value) => handleChange({ target: { name: "featured", value } })}
+          >
+            <SelectTrigger className="w-full border-gray-300 focus:border-[#324c48] focus:ring-1 focus:ring-[#324c48]">
+              <SelectValue placeholder="Select Featured Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Featured">Featured</SelectItem>
+              <SelectItem value="Not Featured">Not Featured</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Featured Weight Selection */}
+        <div className="flex flex-col space-y-1">
+          <Label htmlFor="featuredWeight" className="text-gray-700 font-semibold">
+            Featured Weight
+          </Label>
+          <Select
+            name="featuredWeight"
+            value={formData.featuredWeight}
+            onValueChange={(value) => handleChange({ target: { name: "featuredWeight", value } })}
+          >
+            <SelectTrigger className="w-full border-gray-300 focus:border-[#324c48] focus:ring-1 focus:ring-[#324c48]">
+              <SelectValue placeholder="Select Featured Weight" />
+            </SelectTrigger>
+            <SelectContent>
+              {[...Array(21).keys()].map((num) => (
+                <SelectItem key={num} value={num.toString()}>
+                  {num}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

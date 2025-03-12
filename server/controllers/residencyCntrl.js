@@ -4,6 +4,8 @@ import { prisma } from '../config/prismaConfig.js';
   export const createResidency = asyncHandler(async (req, res) => {
     const {
       ownerId,
+      featured,
+      featuredWeight,
       apnOrPin,
       status,
       title,
@@ -115,6 +117,8 @@ import { prisma } from '../config/prismaConfig.js';
       const residency = await prisma.residency.create({
         data: {
           ownerId,
+          featured: featured ?? "No",
+          featuredWeight: featuredWeight ? parseInt(featuredWeight, 10) : null,
           apnOrPin,
           status: status ?? "Available",
           title,
@@ -247,6 +251,7 @@ export const updateResidency = asyncHandler(async (req, res) => {
     delete restOfData.updatedAt;
 
     if (restOfData.ownerId) restOfData.ownerId = parseInt(restOfData.ownerId, 10);
+    if (restOfData.featuredWeight) restOfData.featuredWeight = parseInt(restOfData.featuredWeight, 10);
     if (restOfData.latitude) restOfData.latitude = parseFloat(restOfData.latitude);
     if (restOfData.longitude) restOfData.longitude = parseFloat(restOfData.longitude);
     if (restOfData.sqft) restOfData.sqft = parseInt(restOfData.sqft, 10);
@@ -393,6 +398,8 @@ export const createResidencyWithMultipleFiles = asyncHandler(async (req, res) =>
       userEmail,
       area,
       status,
+      featured,
+      featuredWeight,
 
      // Listing Details
 
@@ -486,6 +493,8 @@ export const createResidencyWithMultipleFiles = asyncHandler(async (req, res) =>
         ownerId: parseInt(ownerId),
         area,
         status,
+        featured: featured ?? "No",
+        featuredWeight: featuredWeight ? parseInt(featuredWeight, 10) : null,
     
         // Listing Details
         title,

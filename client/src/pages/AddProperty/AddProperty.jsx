@@ -47,6 +47,8 @@ export default function AddProperty() {
     ownerId: "",
     status: "",
     area: "",
+    featured: "",
+    featuredWeight: "",
 
     // Listing Details
 

@@ -38,6 +38,25 @@ export const Lands = () => {
     );
   }
 
+  // Filter featured properties and group by featuredWeight
+  const featuredByWeight = data
+    .filter(property => property.featured === "Featured")
+    .reduce((acc, property) => {
+      const weight = Number(property.featuredWeight);
+      // If no property for this weight or current property has a later updatedAt, update the group
+      if (!acc[weight] || new Date(property.updatedAt) > new Date(acc[weight].updatedAt)) {
+        acc[weight] = property;
+      }
+      return acc;
+    }, {});
+
+  // Convert the grouped properties into an array and sort them by weight in ascending order
+  const featuredProperties = Object.values(featuredByWeight).sort(
+    (a, b) => Number(a.featuredWeight) - Number(b.featuredWeight)
+  );
+
+
+
   return (
     <>
       {/* First Section: Find The Best Land In Your Area */}
@@ -188,7 +207,7 @@ export const Lands = () => {
 
           {/* Property Cards Grid - Larger & Wider */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {data.map((property) => (
+            {featuredProperties.map((property) => (
               <PropertyCard key={property.id} card={property} />
             ))}
           </div>
@@ -197,8 +216,7 @@ export const Lands = () => {
           <div className="mt-8 flex justify-end">
             <a
               href="/properties"
-              className="inline-block bg-[#324c48] text-white font-semibold py-2 px-6 rounded-md shadow 
-                         hover:bg-[#3f4f24] transition-colors"
+              className="inline-block bg-[#324c48] text-white font-semibold py-2 px-6 rounded-md shadow hover:bg-[#3f4f24] transition-colors"
             >
               Browse All Properties
             </a>

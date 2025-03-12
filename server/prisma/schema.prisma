@@ -34,6 +34,8 @@ model Residency {
     // Property Details
     ownerId             Int?
     title               String
+    featured            String?
+    featuredWeight      Int?
     description         String
     legalDescription    String? 
     direction           String?

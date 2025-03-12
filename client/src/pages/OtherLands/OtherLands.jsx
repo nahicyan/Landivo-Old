@@ -128,7 +128,7 @@ export default function OtherLandsProperty() {
               className="overflow-x-auto overflow-y-hidden no-scrollbar px-2 py-4"
               ref={scrollRef}
             >
-              <div className="flex space-x-6">
+              <div className="flex space-x-20">
                 {displayProperties.map((card) => (
                   <div
                     key={card.id}

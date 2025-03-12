@@ -146,7 +146,7 @@ export default function Properties() {
                   className="overflow-x-auto overflow-y-hidden no-scrollbar px-2 py-4"
                   ref={(el) => (scrollRefs.current[area] = el)}
                 >
-                  <div className="flex space-x-6">
+                  <div className="flex space-x-20">
                     {areaProperties.map((card) => (
                       <div
                         key={card.id}
