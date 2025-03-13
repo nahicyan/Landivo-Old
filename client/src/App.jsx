@@ -26,6 +26,7 @@ import Admin from "./pages/Admin/Admin";
 import OfferTable from "./components/OfferTable/OfferTable";
 import CreateUser from "./pages/CreateUser/CreateUser";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
+import Sell from "./pages/Sell/Sell";
 
 
 // Create the React Query client
@@ -50,6 +51,7 @@ function App() {
                     <Route path=":propertyId/offers" element={<OfferTable />} />
                   </Route>
                   <Route path="/admin" element={<Admin />} />
+                  <Route path="/sell" element={<Sell />} />
                   <Route path="/financing" element={<Financing />} />
                   <Route path="/support" element={<Support />} />
                   <Route path="/about-us" element={<AboutUs />} />
