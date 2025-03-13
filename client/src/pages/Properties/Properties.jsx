@@ -7,23 +7,12 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import useProperties from "../../components/hooks/useProperties";
 import PropertyCard from "../../components/PropertyCard/PropertyCard";
 import Search from "@/components/Search/Search";
-import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableHeader,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-} from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
 
-const serverURL = import.meta.env.VITE_SERVER_URL;
+// Helper function to determine if an element has horizontal overflow
+function hasHorizontalOverflow(element) {
+  if (!element) return false;
+  return element.scrollWidth > element.clientWidth;
+}
 
 export default function Properties() {
   const { data, isError, isLoading } = useProperties();
@@ -31,7 +20,9 @@ export default function Properties() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  // Update searchQuery from URL parameters on mount and when they change
+  // Track scroll state for each area: { [area]: { showLeft, showRight } }
+  const [scrollStates, setScrollStates] = useState({});
+
   useEffect(() => {
     const searchFromUrl = searchParams.get("search") || "";
     setSearchQuery(searchFromUrl);
@@ -47,7 +38,7 @@ export default function Properties() {
   const handleScrollLeft = (area) => {
     const container = scrollRefs.current[area];
     if (container) {
-      container.scrollBy({ left: -300, behavior: "smooth" });
+      container.scrollBy({ left: -380, behavior: "smooth" });
     }
   };
 
@@ -55,11 +46,58 @@ export default function Properties() {
   const handleScrollRight = (area) => {
     const container = scrollRefs.current[area];
     if (container) {
-      container.scrollBy({ left: 300, behavior: "smooth" });
+      container.scrollBy({ left: 380, behavior: "smooth" });
     }
   };
 
-  // Error State
+  // Update the scroll state for a given area, but only if values have changed
+  const updateScrollState = (area) => {
+    const container = scrollRefs.current[area];
+    if (container) {
+      const { scrollLeft, scrollWidth, clientWidth } = container;
+      const newShowLeft = scrollLeft > 0;
+      const newShowRight = scrollLeft + clientWidth < scrollWidth;
+      setScrollStates((prev) => {
+        if (
+          prev[area] &&
+          prev[area].showLeft === newShowLeft &&
+          prev[area].showRight === newShowRight
+        ) {
+          return prev;
+        }
+        return { ...prev, [area]: { showLeft: newShowLeft, showRight: newShowRight } };
+      });
+    }
+  };
+
+  // Check scroll state for all areas on layout changes and window resize
+  const checkAllScrollStates = () => {
+    const updatedStates = {};
+    areas.forEach((area) => {
+      const container = scrollRefs.current[area];
+      if (container) {
+        const { scrollLeft, scrollWidth, clientWidth } = container;
+        updatedStates[area] = {
+          showLeft: scrollLeft > 0,
+          showRight: scrollLeft + clientWidth < scrollWidth,
+        };
+      }
+    });
+    setScrollStates(updatedStates);
+  };
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      checkAllScrollStates();
+    }, 0);
+
+    window.addEventListener("resize", checkAllScrollStates);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener("resize", checkAllScrollStates);
+    };
+  }, [data]);
+
   if (isError) {
     return (
       <div className="flex items-center justify-center h-[60vh]">
@@ -70,7 +108,6 @@ export default function Properties() {
     );
   }
 
-  // Loading State
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[60vh]">
@@ -131,26 +168,30 @@ export default function Properties() {
                 Properties in {area}
               </h2>
 
-              {/* Horizontal Slider Container */}
+              {/* Scrollable Container (Horizontal on Desktop, Column on Mobile) */}
               <div className="relative">
-                {/* Left Button */}
-                <button
-                  onClick={() => handleScrollLeft(area)}
-                  className="absolute -left-6 top-1/2 -translate-y-1/2 z-10 bg-white border rounded-full p-2 shadow-md hover:shadow-lg"
-                >
-                  <ChevronLeftIcon className="w-5 h-5" />
-                </button>
+                {/* Left Button: Only show on desktop and if there's content to scroll left */}
+                {scrollStates[area]?.showLeft && (
+                  <button
+                    onClick={() => handleScrollLeft(area)}
+                    className="hidden sm:block sm:absolute -left-6 top-1/2 -translate-y-1/2 z-10 bg-white border rounded-full p-3 shadow-md hover:shadow-lg"
+                  >
+                    <ChevronLeftIcon className="w-6 h-6" />
+                  </button>
+                )}
 
-                {/* Scrollable Row */}
                 <div
-                  className="overflow-x-auto overflow-y-hidden no-scrollbar px-2 py-4"
-                  ref={(el) => (scrollRefs.current[area] = el)}
+                  className="px-2 py-4 overflow-y-auto overflow-x-hidden sm:overflow-x-auto sm:overflow-y-hidden no-scrollbar"
+                  ref={(el) => {
+                    scrollRefs.current[area] = el;
+                  }}
+                  onScroll={() => updateScrollState(area)}
                 >
-                  <div className="flex space-x-20">
+                  <div className="flex flex-col items-start space-y-6 sm:flex-row sm:items-start sm:space-y-0 sm:space-x-20">
                     {areaProperties.map((card) => (
                       <div
                         key={card.id}
-                        className="w-72 flex-shrink-0 my-2 md:my-4 transition hover:scale-105"
+                        className="w-72 flex-shrink-0 transition hover:scale-105"
                       >
                         <PropertyCard card={card} />
                       </div>
@@ -158,13 +199,15 @@ export default function Properties() {
                   </div>
                 </div>
 
-                {/* Right Button */}
-                <button
-                  onClick={() => handleScrollRight(area)}
-                  className="absolute -right-6 top-1/2 -translate-y-1/2 z-10 bg-white border rounded-full p-2 shadow-md hover:shadow-lg"
-                >
-                  <ChevronRightIcon className="w-5 h-5" />
-                </button>
+                {/* Right Button: Only show on desktop and if there's content to scroll right */}
+                {scrollStates[area]?.showRight && (
+                  <button
+                    onClick={() => handleScrollRight(area)}
+                    className="hidden sm:block sm:absolute -right-6 top-1/2 -translate-y-1/2 z-10 bg-white border rounded-full p-3 shadow-md hover:shadow-lg"
+                  >
+                    <ChevronRightIcon className="w-6 h-6" />
+                  </button>
+                )}
               </div>
             </div>
           );

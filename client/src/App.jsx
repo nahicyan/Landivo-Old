@@ -25,6 +25,7 @@ import Search from "./components/Search/Search";
 import Admin from "./pages/Admin/Admin";
 import OfferTable from "./components/OfferTable/OfferTable";
 import CreateUser from "./pages/CreateUser/CreateUser";
+import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 
 
 // Create the React Query client
@@ -37,6 +38,8 @@ function App() {
         {/* Wrap the app with MUI ThemeProvider for consistent styling */}
         <ThemeProvider theme={theme}>
           <BrowserRouter>
+            {/* Scroll to top on route change */}
+           <ScrollToTop />
             <Suspense fallback={<div>Loading...</div>}>
               <Routes>
                 <Route element={<Layout />}>
@@ -65,7 +68,6 @@ function App() {
         </ThemeProvider>
         {/* Toast notifications container */}
         <ToastContainer />
-
         {/* React Query DevTools for debugging */}
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>

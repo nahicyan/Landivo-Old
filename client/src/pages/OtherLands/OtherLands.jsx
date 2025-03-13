@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { PuffLoader } from "react-spinners";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
@@ -14,10 +14,39 @@ export default function OtherLandsProperty() {
   const [searchQuery, setSearchQuery] = useState("");
   const scrollRef = useRef(null);
 
+  // State to track whether there is scrollable content on the left/right
+  const [scrollState, setScrollState] = useState({
+    showLeft: false,
+    showRight: false,
+  });
+
+  // Update search query from URL parameters on mount
+  // (This code remains unchanged.)
+
   // Optional: Handle Search submission (if needed)
   const handleSearch = (e) => {
     e.preventDefault();
   };
+
+  // Function to update the scrollState based on the container's measurements
+  const updateScrollState = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, clientWidth, scrollWidth } = scrollRef.current;
+      setScrollState({
+        showLeft: scrollLeft > 0,
+        showRight: scrollLeft + clientWidth < scrollWidth,
+      });
+    }
+  };
+
+  // Check scroll state on mount and on window resize
+  useEffect(() => {
+    updateScrollState();
+    window.addEventListener("resize", updateScrollState);
+    return () => {
+      window.removeEventListener("resize", updateScrollState);
+    };
+  }, [data]);
 
   // Error State
   if (isError) {
@@ -39,35 +68,37 @@ export default function OtherLandsProperty() {
     );
   }
 
-  // Filter properties to only include those in OtherLands
+  // Filter properties to only include those in "Other Areas"
   const OtherLandsProperties = data.filter(
     (property) => property.area === "Other Areas"
   );
 
   // Further filter using the search query across multiple fields
-  const filteredOtherLandsProperties = OtherLandsProperties.filter((property) => {
-    const query = searchQuery.toLowerCase();
-    return (
-      property.title?.toLowerCase().includes(query) ||
-      property.streetAddress?.toLowerCase().includes(query) ||
-      property.state?.toLowerCase().includes(query) ||
-      property.zip?.toLowerCase().includes(query) ||
-      property.area?.toLowerCase().includes(query) ||
-      property.apnOrPin?.toLowerCase().includes(query) ||
-      property.ltag?.toLowerCase().includes(query) ||
-      property.rtag?.toLowerCase().includes(query) ||
-      property.city?.toLowerCase().includes(query) ||
-      property.county?.toLowerCase().includes(query)
-    );
-  });
+  const filteredOtherLandsProperties = OtherLandsProperties.filter(
+    (property) => {
+      const query = searchQuery.toLowerCase();
+      return (
+        property.title?.toLowerCase().includes(query) ||
+        property.streetAddress?.toLowerCase().includes(query) ||
+        property.state?.toLowerCase().includes(query) ||
+        property.zip?.toLowerCase().includes(query) ||
+        property.area?.toLowerCase().includes(query) ||
+        property.apnOrPin?.toLowerCase().includes(query) ||
+        property.ltag?.toLowerCase().includes(query) ||
+        property.rtag?.toLowerCase().includes(query) ||
+        property.city?.toLowerCase().includes(query) ||
+        property.county?.toLowerCase().includes(query)
+      );
+    }
+  );
 
-  // Determine which properties to display:
-  // If there are any filtered OtherLands properties, display them;
-  // otherwise, fallback to showing all properties.
+  // Determine which properties to display: if there are any filtered, use them; otherwise, fall back to all properties.
   const displayProperties =
-    filteredOtherLandsProperties.length > 0 ? filteredOtherLandsProperties : data;
+    filteredOtherLandsProperties.length > 0
+      ? filteredOtherLandsProperties
+      : data;
 
-  // Set header text based on whether we're showing just OtherLands or all properties
+  // Set header text based on whether we're showing just "Other Areas" or all properties.
   const headerText =
     filteredOtherLandsProperties.length > 0
       ? "Properties in Other Areas"
@@ -77,12 +108,15 @@ export default function OtherLandsProperty() {
   const handleScrollLeft = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
+      // Update state after a short delay for smooth scrolling
+      setTimeout(updateScrollState, 380);
     }
   };
 
   const handleScrollRight = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
+      setTimeout(updateScrollState, 380);
     }
   };
 
@@ -91,20 +125,17 @@ export default function OtherLandsProperty() {
       <div className="max-w-screen-xl mx-auto px-4">
         {/* Title, Subtitle & Search */}
         <div className="mb-10 text-center">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-4">
-            {headerText}
-          </h1>
+          <h1 className="text-3xl sm:text-4xl font-bold mb-4">{headerText}</h1>
           <p className="text-lg mb-6">
-            {filteredOtherLandsProperties.length > 0
-              ? "Browse through properties available in the Other Areas area."
-              : (
-                <>
-                  Sorry! We sold through everything in Other Areas! <br />
-                  Maybe you would be interested in these properties:
-                </>
-              )}
+            {filteredOtherLandsProperties.length > 0 ? (
+              "Browse through properties available in the Other Areas area."
+            ) : (
+              <>
+                Sorry! We sold through everything in Other Areas! <br />
+                Maybe you would be interested in these properties:
+              </>
+            )}
           </p>
-          {/* Use the reusable SearchArea component */}
           <SearchArea
             query={searchQuery}
             setQuery={setSearchQuery}
@@ -113,22 +144,25 @@ export default function OtherLandsProperty() {
         </div>
 
         {displayProperties.length > 0 ? (
-          // Display properties in a horizontal slider
+          // Display properties in a horizontal slider (on desktop; vertical on mobile)
           <div className="relative">
-            {/* Left Scroll Button */}
-            <button
-              onClick={handleScrollLeft}
-              className="absolute -left-6 top-1/2 -translate-y-1/2 z-10 bg-white border rounded-full p-2 shadow-md hover:shadow-lg"
-            >
-              <ChevronLeftIcon className="w-5 h-5" />
-            </button>
+            {/* Left Scroll Button: Only appears if there's content to scroll left */}
+            {scrollState.showLeft && (
+              <button
+                onClick={handleScrollLeft}
+                className="hidden sm:block sm:absolute -left-6 top-1/2 -translate-y-1/2 z-10 bg-white border rounded-full p-3 shadow-md hover:shadow-lg"
+              >
+                <ChevronLeftIcon className="w-6 h-6" />
+              </button>
+            )}
 
-            {/* Scrollable Row */}
+            {/* Scrollable Container */}
             <div
-              className="overflow-x-auto overflow-y-hidden no-scrollbar px-2 py-4"
+              className="px-2 py-4 overflow-y-auto overflow-x-hidden sm:overflow-x-auto sm:overflow-y-hidden no-scrollbar"
               ref={scrollRef}
+              onScroll={updateScrollState}
             >
-              <div className="flex space-x-20">
+              <div className="flex flex-col sm:flex-row space-y-8 sm:space-y-0 sm:space-x-20">
                 {displayProperties.map((card) => (
                   <div
                     key={card.id}
@@ -140,31 +174,28 @@ export default function OtherLandsProperty() {
               </div>
             </div>
 
-            {/* Right Scroll Button */}
-            <button
-              onClick={handleScrollRight}
-              className="absolute -right-6 top-1/2 -translate-y-1/2 z-10 bg-white border rounded-full p-2 shadow-md hover:shadow-lg"
-            >
-              <ChevronRightIcon className="w-5 h-5" />
-            </button>
+            {/* Right Scroll Button: Only appears if there's content to scroll right */}
+            {scrollState.showRight && (
+              <button
+                onClick={handleScrollRight}
+                className="hidden sm:block sm:absolute -right-6 top-1/2 -translate-y-1/2 z-10 bg-white border rounded-full p-3 shadow-md hover:shadow-lg"
+              >
+                <ChevronRightIcon className="w-6 h-6" />
+              </button>
+            )}
           </div>
         ) : (
-          // Fallback: Display a message if no properties exist (unlikely since fallback is all properties)
-          <p className="text-center text-gray-600 py-4">
-            No properties found.
-          </p>
+          <p className="text-center text-gray-600 py-4">No properties found.</p>
         )}
 
         {/* "All Properties" Button */}
         <div className="mt-10 text-center">
-          <button
-            onClick={() => {
-              window.location.href = "/properties";
-            }}
-            className="inline-block bg-black hover:bg-[#FF5C00] text-white font-semibold py-3 px-6 rounded-full shadow transition-colors"
-          >
+          <Button
+            onClick={() => (window.location.href = "/properties")}
+            className="bg-[#324c48] hover:bg-[#3f4f24] text-white px-6 py-3 text-lg font-semibold rounded-lg shadow transition transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#3f4f24] focus:ring-offset-2"
+            >
             All Properties
-          </button>
+          </Button>
         </div>
       </div>
     </div>

@@ -205,12 +205,23 @@ export const Lands = () => {
             </p>
           </div>
 
-          {/* Property Cards Grid - Larger & Wider */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProperties.map((property) => (
-              <PropertyCard key={property.id} card={property} />
-            ))}
+          
+          {/* Scrollable Container */}
+          <div
+            className="px-2 py-4 overflow-y-auto overflow-x-hidden sm:overflow-x-auto sm:overflow-y-hidden no-scrollbar"
+          >
+            <div className="flex flex-col sm:flex-row space-y-8 sm:space-y-0 sm:space-x-20">
+              {featuredProperties.map((property) => (
+                <div
+                  key={property.id}
+                  className="w-72 flex-shrink-0 transition hover:scale-105"
+                >
+                  <PropertyCard card={property} />
+                </div>
+              ))}
+            </div>
           </div>
+
 
           {/* Browse All Properties Button */}
           <div className="mt-8 flex justify-end">
