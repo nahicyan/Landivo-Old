@@ -40,9 +40,9 @@ export default function PropertyHeaderRight({ propertyData }) {
   const mainPrice = currentUser && disPrice ? disPrice : askingPrice;
 
   return (
-    <Card className="border-0 bg-transparent shadow-none p-0 mb-10">
+    <Card className="border-0 bg-transparent shadow-none p-0">
       {/* Top Row: Status */}
-      <div className="flex items-center gap-2 my-6">
+      <div className="flex items-center gap-2 mb-6">
         <span className={`w-3 h-3 rounded-full animate-pulse-slow ${circle}`} />
         <span className={`text-lg capitalize ${text}`}>
           {status || "Unknown Status"}
@@ -98,7 +98,7 @@ export default function PropertyHeaderRight({ propertyData }) {
 
       {/* Address Row */}
       {(streetAddress || city || state || zip) && (
-        <div className="text-lg text-gray-700 mt-1 whitespace-nowrap">
+        <div className="text-lg text-gray-700 mt-1">
           {streetAddress}, {city}, {state} {zip}
         </div>
       )}

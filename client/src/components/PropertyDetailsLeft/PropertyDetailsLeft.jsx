@@ -17,7 +17,7 @@ export default function PropertyDetailsLeft({ propertyData }) {
         <PropertyCarousel propertyData={propertyData} />
       </div>
       {/* Right Section */}
-      <div className="w-full lg:w-1/4">
+      <div className="w-full my-6">
         <PropertyHeaderRight propertyData={propertyData} />
       </div>
 
