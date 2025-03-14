@@ -19,7 +19,7 @@ const Hero = () => {
                 </p>
                 <SearchGlobal/>
               </div>
-              {/* Stats */}
+              {/* Statsss */}
               <div className="flex items-center justify-center mt-8 space-x-6 lg:justify-start sm:space-x-8">
                 <div className="flex items-center">
                   <p className="text-3xl font-semibold text-[#3f4f24] sm:text-4xl">100+</p>

@@ -2,6 +2,8 @@ import React from "react"
 import FinancingHero from "./Hero"
 import Choose from "./Choose"
 import Content from "./Content"
+import FinancingSlider from "./FinanceSlider"
+import Action from "./action"
 
 export default function Financing() {
   return (
@@ -12,8 +14,14 @@ export default function Financing() {
     <div className="w-full bg-[#FDF8F2]">
       <Content/>
     </div>
+    <div id="financing-slider" className="w-full bg-[#FDF8F2]">
+      <FinancingSlider/>
+    </div>
     <div className="w-full bg-[#FDF8F2]">
       <Choose/>
+    </div>
+    <div className="w-full bg-[#FDF8F2]">
+      <Action/>
     </div>
     </>
   )

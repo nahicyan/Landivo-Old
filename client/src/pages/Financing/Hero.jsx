@@ -22,17 +22,25 @@ export default function HeroSection() {
               LIMITED OFFER!
             </p>
             <h1 className="mt-2 text-4xl font-bold leading-tight text-[var(--secondary)] md:text-5xl">
-            Buy Off-Market Land with Seller Financing<br />
+              Buy Off-Market Land with Seller Financing
+              <br />
               {/* with{" "} */}
               <span className="text-[var(--accent)]">– Tailored to You</span>
             </h1>
             <p className="mt-4 text-xl text-gray-600">
-            We make owning land simple and affordable
+              We make owning land simple and affordable
             </p>
             <div className="mt-6">
               <Button
                 size="lg"
                 className="bg-[var(--primary)] text-lg text-white hover:bg-[var(--secondary)]"
+                onClick={() => {
+                  const sliderElement =
+                    document.getElementById("financing-slider");
+                  if (sliderElement) {
+                    sliderElement.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
               >
                 Explore Financing
               </Button>
@@ -62,7 +70,7 @@ export default function HeroSection() {
               />
             </div>
 
-            {/* THIRD CARD: "$196,000 Saving" */}
+            {/* THIRD CARD */}
             <div className="relative rounded-xl bg-[#546930] p-6 shadow text-white">
               {/* Top row: Amount + Up Arrow */}
               <div className="flex items-baseline justify-between">
@@ -91,7 +99,8 @@ export default function HeroSection() {
             {/* 4) BOTTOM-RIGHT CARD: Growth Revenue */}
             <div className="relative rounded-xl bg-[#e8efdc] p-6 shadow">
               <h3 className="text-2xl font-bold text-[#384620]">
-              Multiple Payment Plans</h3>
+                Multiple Payment Plans
+              </h3>
               <p className="mt-2 text-lg text-[#384620]">Starts from $200/mo</p>
               <p className="text-base text-[#546930]">Fits any budget</p>
               {/* Mini bar chart (placeholder) */}
