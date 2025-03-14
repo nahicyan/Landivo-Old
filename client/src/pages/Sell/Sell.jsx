@@ -5,7 +5,7 @@ import React from "react";
 export default function Sell() {
   return (
     <div className="min-h-screen bg-[#FDF8F2] overflow-hidden">
-      <div className="max-w-screen-xl mx-auto px-4 py-8">
+      <div className="max-w-screen-xl mx-auto">
         <iframe
           src="https://www.buyyourland.com/landivo"
           title="Get Your Offer - Testimonials"

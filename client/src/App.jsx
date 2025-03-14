@@ -18,7 +18,7 @@ import Austin from "./pages/Austin/Austin"; // Austin Property page
 import Houston from "./pages/Houston/Houston"; // Houston Property page
 import SanAntonio from "./pages/SanAntonio/SanAntonio"; // San Antonio Property page
 import OtherLands from "./pages/OtherLands/OtherLands"; // Other Lands Property page
-import Financing from "./pages/Finance/Finance";
+import Financing from "./pages/Financing/Financing";
 import AboutUs from "./pages/AboutUs/AboutUs";
 import Support from "./pages/Support/Support";
 import Search from "./components/Search/Search";

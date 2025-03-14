@@ -1,7 +1,4 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Search from "../Search/Search";
 import SearchGlobal from "../SearchGlobal/SearchGlobal";
 
 const Hero = () => {
