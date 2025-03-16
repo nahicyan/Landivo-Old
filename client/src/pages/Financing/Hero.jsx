@@ -21,11 +21,11 @@ export default function HeroSection() {
             <p className="text-[var(--primary)] font-semibold uppercase tracking-wide">
               LIMITED OFFER!
             </p>
-            <h1 className="mt-2 text-4xl font-bold leading-tight text-[var(--secondary)] md:text-5xl">
+            <h1 className="mt-2 text-4xl font-semibold leading-tight text-[var(--secondary)] md:text-5xl">
               Buy Off-Market Land with Seller Financing
               <br />
               {/* with{" "} */}
-              <span className="text-[var(--accent)]">– Tailored to You</span>
+              <span className="text-[var(--accent)]">Tailored to You</span>
             </h1>
             <p className="mt-4 text-xl text-gray-600">
               We make owning land simple and affordable
