@@ -1,5 +1,9 @@
 import React from "react"
 import AboutHero from "./Hero"
+import AboutUsContent from "./Content"
+import Mission from "./Mission"
+import FAQ from "./FAQ"
+
 // import Choose from "./Choose"
 // import Content from "./Content"
 // import FinancingSlider from "./FinanceSlider"
@@ -11,18 +15,15 @@ export default function About() {
     <div className="w-full bg-[#283e3a]">
       <AboutHero />
     </div>
-    {/* <div className="w-full bg-[#FDF8F2]">
-      <Content/>
-    </div>
-    <div id="financing-slider" className="w-full bg-[#FDF8F2]">
-      <FinancingSlider/>
+    <div className="w-full bg-[#FDF8F2]">
+      <AboutUsContent/>
     </div>
     <div className="w-full bg-[#FDF8F2]">
-      <Choose/>
+      <Mission/>
     </div>
     <div className="w-full bg-[#FDF8F2]">
-      <Action/>
-    </div> */}
+      <FAQ/>
+    </div>
     </>
   )
 }

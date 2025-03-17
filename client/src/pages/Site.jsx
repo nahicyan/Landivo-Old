@@ -6,6 +6,7 @@ import Why from "../components/Why/Why";
 import Contact from "../components/Contact/Contact";
 import GetStarted from "../components/GetStarted/GetStarted";
 import Footer from "../components/Footer/Footer";
+import Content from "@/components/Content/Content";
 export const Site = () => {
   return (
     <div className="App">
@@ -14,6 +15,7 @@ export const Site = () => {
         <Hero />
       </div>
       <Lands />
+      <Content/>
       <Why />
       <Contact />
       <GetStarted />
