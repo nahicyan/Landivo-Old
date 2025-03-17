@@ -37,7 +37,7 @@ export default function AboutHero() {
       <div className="mx-auto max-w-screen-xl px-4 py-16 text-center">
         <p className="mb-2 text-sm uppercase tracking-wide text-white/70">
         We Are Landivo</p>
-        <h1 className="mb-4 text-4xl font-bold leading-tight sm:text-5xl">
+        <h1 className="mb-4 text-5xl font-medium leading-tight text-white sm:text-6xl">
           About Us
         </h1>
         <p className="mx-auto mb-8 max-w-2xl text-base text-white/80 sm:text-lg">

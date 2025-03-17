@@ -11,7 +11,7 @@ const Hero = () => {
             {/* Left Content */}
             <div>
               <div className="text-center lg:text-left">
-                <h1 className="text-4xl font-extrabold leading-tight text-[#3f4f24] sm:text-5xl lg:text-6xl">
+                <h1 className="text-4xl font-semibold leading-tight text-[#3f4f24] sm:text-5xl lg:text-6xl">
                   The Best Land Deals In Texas
                 </h1>
                 <p className="mt-4 text-lg text-[#324c48] sm:mt-6">
