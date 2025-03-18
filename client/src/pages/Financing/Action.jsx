@@ -20,8 +20,7 @@ export default function Action() {
               Ready To Own Your Land With Seller Financing?
             </h2>
             <p className="mt-4 text-sm text-white/80 sm:text-lg sm:tracking-tight">
-              We make it easy to buy land with flexible terms. Access your
-              property quickly, with minimal checks or waiting.
+              See if you qualify for seller financing—takes just minutes.
             </p>
           </div>
 

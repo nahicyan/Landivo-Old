@@ -4,6 +4,7 @@ import Choose from "./Choose"
 import Content from "./Content"
 import FinancingSlider from "./FinanceSlider"
 import Action from "./action"
+import MainContent from "./MainContent"
 
 export default function Financing() {
   return (
@@ -16,6 +17,9 @@ export default function Financing() {
     </div>
     <div id="financing-slider" className="w-full bg-[#FDF8F2]">
       <FinancingSlider/>
+    </div>
+    <div className="w-full bg-[#FDF8F2]">
+      <MainContent/>
     </div>
     <div className="w-full bg-[#FDF8F2]">
       <Choose/>

@@ -34,15 +34,14 @@ export default function AboutHero() {
       " />
 
       {/* 3) Content Container */}
-      <div className="mx-auto max-w-screen-xl px-4 py-16 text-center">
+      <div className="my-14 mx-auto max-w-screen-xl px-4 py-16 text-center">
         <p className="mb-2 text-sm uppercase tracking-wide text-white/70">
         We Are Landivo</p>
         <h1 className="mb-4 text-5xl font-medium leading-tight text-white sm:text-6xl">
           About Us
         </h1>
         <p className="mx-auto mb-8 max-w-2xl text-base text-white/80 sm:text-lg">
-        We believe land ownership should be simple, affordable, and within reach.
-        </p>
+        Your Gateway to Off-Market Land</p>
       </div>
     </section>
   );

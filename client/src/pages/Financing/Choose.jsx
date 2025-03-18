@@ -10,15 +10,14 @@ export default function Choose() {
   return (
     <section className="w-full bg-[#243834] py-16 text-[#FDF8F2]">
       <div className="mx-auto max-w-screen-xl px-4">
-        {/* Small label like the reference image */}
-        <span className="text-xs uppercase tracking-wide text-white/70">
-          STEP
-        </span>
-
         {/* Large heading */}
-        <h2 className="mt-2 text-5xl font-medium leading-tight md:text-5xl">
-        Why Choose Seller Financing with Landivo?
+        <h2 className="mb-3 text-5xl font-medium leading-tight md:text-5xl">
+          How It Works?
         </h2>
+        {/* Small label like the reference image */}
+        <span className="text-xl uppercase tracking-tight text-white/70">
+          Get Your Land in 3 Easy Steps
+        </span>
 
         {/* Three cards in a row (stacked on mobile) */}
         <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -31,11 +30,11 @@ export default function Choose() {
               </CardTitle>
               {/* Step title */}
               <p className="text-3xl font-normal leadting-tight text-white mb-4">
-              Flexible Options
+                Find Your Land
               </p>
               {/* Step details */}
               <CardDescription className="text-lg font-thin leading-tight text-white/70">
-              Minimal credit checks for most deals, with tailored terms for all buyers.
+                Explore our exclusive off-market properties
               </CardDescription>
             </CardHeader>
           </Card>
@@ -49,11 +48,12 @@ export default function Choose() {
               </CardTitle>
               {/* Step title */}
               <p className="text-3xl font-normal leadting-tight text-white mb-4">
-              Affordable Payments
+                Set Your Terms
               </p>
               {/* Step details */}
               <CardDescription className="text-lg font-thin leading-tight text-white/70">
-              Low down payments and competitive rates keep land within reach.
+                We customize down payments and monthly plans to match your
+                budget
               </CardDescription>
             </CardHeader>
           </Card>
@@ -67,11 +67,12 @@ export default function Choose() {
               </CardTitle>
               {/* Step title */}
               <p className="text-3xl font-normal leadting-tight text-white mb-4">
-              Full Control
+                Start Owning
               </p>
               {/* Step details */}
               <CardDescription className="text-lg font-thin leading-tight text-white/70">
-              Own your land outright once payments are complete.
+                Move forward with or without a credit check, based on the deal,
+                and take control of your land
               </CardDescription>
             </CardHeader>
           </Card>

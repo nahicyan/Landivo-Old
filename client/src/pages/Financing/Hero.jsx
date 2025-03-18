@@ -19,16 +19,16 @@ export default function HeroSection() {
           {/* LEFT TEXT CONTENT */}
           <div className="mb-8 md:mb-0 md:w-1/2 md:pr-8">
             <p className="text-[var(--primary)] font-semibold uppercase tracking-wide">
-              LIMITED OFFER!
+            We make owning land simple and affordable
             </p>
             <h1 className="mt-2 text-4xl font-semibold leading-tight text-[var(--secondary)] md:text-5xl">
-              Buy Off-Market Land with Seller Financing
+              Unlock Your Land with 
               <br />
               {/* with{" "} */}
-              <span className="text-[var(--accent)]">Tailored to You</span>
+              <span className="text-[var(--accent)]">Flexible Financing</span>
             </h1>
             <p className="mt-4 text-xl text-gray-600">
-              We make owning land simple and affordable
+             Buy Off-Market Land with Seller Financing {/*– Tailored to You*/}
             </p>
             <div className="mt-6">
               <Button
@@ -45,8 +45,9 @@ export default function HeroSection() {
                 Explore Financing
               </Button>
             </div>
-            <div className="mt-4 flex items-center">
-              {/* Star Ratings */}
+                      {/* Star Ratings */}
+            {/* <div className="mt-4 flex items-center">
+    
               <div className="flex text-[var(--accent)]">
                 <span>⭐⭐⭐⭐⭐</span>
               </div>
@@ -56,7 +57,7 @@ export default function HeroSection() {
                   Reviews
                 </a>
               </p>
-            </div>
+            </div> */}
           </div>
 
           {/* RIGHT 2×2 GRID but with 3 Cards: top card spans 2 columns */}

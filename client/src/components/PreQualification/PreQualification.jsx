@@ -3,8 +3,14 @@
 import React from "react";
 import { Check } from "lucide-react"; // or your preferred check icon
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+
+
 
 export default function PreQualification() {
+  const navigate = useNavigate();
+
+
   return (
     <div className="flex items-center justify-between bg-[#ccf5cc] p-4 rounded-lg">
       {/* Left Column: Bullet Points */}
@@ -21,7 +27,8 @@ export default function PreQualification() {
 
       {/* Right Column: Button */}
       <Button
-  className="
+onClick={() => window.open("https://qualify.landersinvestment.com", "_blank")}
+className="
     bg-[#324c48] 
     text-white 
     px-4 
