@@ -227,21 +227,28 @@ export default function PropertyDetailsDetails({ propertyData }) {
           </AccordionItem>
         </Accordion>
         {propertyData.financing === "Available" && (
-          <AccordionItem
-            value="MonthlyPayment"
-            className="border-b border-[#c1d7d3]"
+          <Accordion
+            type="single"
+            collapsible
+            defaultValue="MonthlyPayment"
+            className="mt-8 space-y-2"
           >
-            <AccordionTrigger className="flex items-center justify-between w-full text-left text-xl font-medium text-gray-800 tracking-tight">
-              <div className="flex items-center gap-2">
-                <DollarSign className="w-6 h-6 text-gray-600" />
-                <span>Monthly Payment</span>
-              </div>
-            </AccordionTrigger>
-            <AccordionContent>
-              <PaymentCalculatorFront propertyData={propertyData} />
-              <PreQualification />
-            </AccordionContent>
-          </AccordionItem>
+            <AccordionItem
+              value="MonthlyPayment"
+              className="border-b border-[#c1d7d3]"
+            >
+              <AccordionTrigger className="flex items-center justify-between w-full text-left text-xl font-medium text-gray-800 tracking-tight">
+                <div className="flex items-center gap-2">
+                  <DollarSign className="w-6 h-6 text-gray-600" />
+                  <span>Monthly Payment</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent>
+                <PaymentCalculatorFront propertyData={propertyData} />
+                <PreQualification />
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         )}
 
         {propertyData.hoaPoa === "Yes" && (

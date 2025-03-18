@@ -75,7 +75,8 @@ model Residency {
 
     // Financing & Pricing Calculations
     financing          String?
-    tax                Float?   
+    tax                Float?
+    texTerm            String?
     hoaDue             Float?
     serviceFee         Float?
     term               Int? 

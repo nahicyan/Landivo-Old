@@ -46,18 +46,18 @@ export default function HeroSection() {
               </Button>
             </div>
                       {/* Star Ratings */}
-            {/* <div className="mt-4 flex items-center">
+            <div className="mt-4 flex items-center">
     
               <div className="flex text-[var(--accent)]">
                 <span>⭐⭐⭐⭐⭐</span>
               </div>
               <p className="ml-2 text-sm text-gray-600">
-                4.9 from 200+ buyers{" "}
-                <a href="#" className="text-blue-500 underline">
+                4.9 from 200+ Buyers{" "}
+                {/* <a href="#" className="text-blue-500 underline">
                   Reviews
-                </a>
+                </a> */}
               </p>
-            </div> */}
+            </div>
           </div>
 
           {/* RIGHT 2×2 GRID but with 3 Cards: top card spans 2 columns */}

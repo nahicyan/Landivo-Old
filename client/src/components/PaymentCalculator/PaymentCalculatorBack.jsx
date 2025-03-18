@@ -13,6 +13,20 @@ const formatCurrency = (value) => {
   return Number(value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };
 
+// Utility: Format term (in months) into "X Years Y Months"
+const formatTerm = (term) => {
+  const months = Number(term) || 0;
+  const years = Math.floor(months / 12);
+  const remainingMonths = months % 12;
+  let result = "";
+  if (years > 0) result += `${years} ${years === 1 ? "Year" : "Years"}`;
+  if (remainingMonths > 0) {
+    if (result) result += " ";
+    result += `${remainingMonths} ${remainingMonths === 1 ? "Month" : "Months"}`;
+  }
+  return result || "";
+};
+
 export default function PaymentCalculatorBack({ initialData = {} }) {
   // ---------------------
   // State
@@ -26,7 +40,7 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
     tax: "",
     hoaDue: "",
     serviceFee: "",
-    term: "",
+    term: "48", // default in months; will be updated by slider (48 months = 4 Years)
     // Plan 1
     downPaymentOne: "",
     downPaymentOnePercent: "5",     // default to 5%
@@ -186,7 +200,7 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
     <Card className="border border-gray-200 shadow-sm rounded-lg w-full">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-gray-800">
-          Landivo Payment Calculator v0.0.0.1C
+          Landivo Payment Calculator v0.0.0.2A
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-8">
@@ -283,27 +297,46 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
               className="w-full"
             />
           </div>
-          {/* Term (months) */}
+          {/* Term Display (in Years + Months) */}
           <div>
-            <Label htmlFor="term" className="block text-sm font-semibold text-gray-700 mb-1">
-              Term (months)
+            <Label className="block text-sm font-semibold text-gray-700 mb-1">
+              Term
             </Label>
             <Input
-              id="term"
-              name="term"
-              type="number"
-              placeholder="e.g., 180"
-              value={formData.term}
-              onChange={handleChange}
-              className="w-full"
+              type="text"
+              readOnly
+              value={formatTerm(formData.term)}
+              className="w-full bg-gray-100 text-gray-600"
             />
+          </div>
+        </div>
+
+        {/* ------------------- Row 3: Term Slider ------------------- */}
+        <div className="grid grid-cols-1 gap-4">
+          <div>
+            <Label className="block text-sm font-semibold text-gray-700 mb-2">
+              Term Slider (Months)
+            </Label>
+            <Slider
+              value={[Number(formData.term) || 1]}
+              min={1}
+              max={360}
+              step={1}
+              onValueChange={(val) => {
+                handleSliderChange("term", val);
+              }}
+            />
+            <p className="text-xs text-gray-500 mt-2">
+              Currently: {formData.term} month{Number(formData.term) > 1 ? "s" : ""}
+            </p>
           </div>
         </div>
 
         {/* ============================================================
             PLAN 1
+            (Now Row 4 & Row 5)
         ============================================================ */}
-        {/* ------------------- Row 3 ------------------- */}
+        {/* ------------------- Row 4: Plan 1 Details ------------------- */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
           {/* Down Payment (Plan 1) */}
           <div>
@@ -340,7 +373,7 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
               </SelectTrigger>
               <SelectContent>
                 {[...Array(19)].map((_, i) => {
-                  const percent = 5 + i * 5; // 5, 10, ... 95
+                  const percent = 5 + i * 5;
                   return (
                     <SelectItem key={percent} value={String(percent)}>
                       {percent}% (
@@ -389,10 +422,9 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
             </Select>
           </div>
         </div>
-
-        {/* ------------------- Row 4 (Plan 1 Slider & Monthly Payment) ------------------- */}
+        {/* ------------------- Row 5: Plan 1 Slider & Monthly Payment ------------------- */}
         <div className="grid grid-cols-4 gap-4">
-          {/* Slider takes 3/4 of the width */}
+          {/* Slider (3/4 width) */}
           <div className="col-span-3">
             <Label className="block text-sm font-semibold text-gray-700 mb-2">
               Down Payment vs. Loan Amount (Plan 1)
@@ -411,7 +443,7 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
               Currently: {formData.downPaymentOneSlider}%
             </p>
           </div>
-          {/* Monthly Payment occupies 1/4 */}
+          {/* Monthly Payment (1/4 width) */}
           <div className="col-span-1">
             <Label className="block text-sm font-semibold text-gray-700 mb-1">
               Monthly Payment (Plan 1)
@@ -427,8 +459,9 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
 
         {/* ============================================================
             PLAN 2
+            (Now Row 6 & Row 7)
         ============================================================ */}
-        {/* ------------------- Row 5 ------------------- */}
+        {/* ------------------- Row 6: Plan 2 Details ------------------- */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
           {/* Down Payment (Plan 2) */}
           <div>
@@ -514,8 +547,7 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
             </Select>
           </div>
         </div>
-
-        {/* ------------------- Row 6 (Plan 2 Slider & Monthly Payment) ------------------- */}
+        {/* ------------------- Row 7: Plan 2 Slider & Monthly Payment ------------------- */}
         <div className="grid grid-cols-4 gap-4">
           {/* Slider (3/4 width) */}
           <div className="col-span-3">
@@ -552,8 +584,9 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
 
         {/* ============================================================
             PLAN 3
+            (Now Row 8 & Row 9)
         ============================================================ */}
-        {/* ------------------- Row 7 ------------------- */}
+        {/* ------------------- Row 8: Plan 3 Details ------------------- */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
           {/* Down Payment (Plan 3) */}
           <div>
@@ -639,8 +672,7 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
             </Select>
           </div>
         </div>
-
-        {/* ------------------- Row 8 (Plan 3 Slider & Monthly Payment) ------------------- */}
+        {/* ------------------- Row 9: Plan 3 Slider & Monthly Payment ------------------- */}
         <div className="grid grid-cols-4 gap-4">
           {/* Slider (3/4 width) */}
           <div className="col-span-3">
