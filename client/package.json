@@ -39,6 +39,7 @@
     "dayjs": "^1.11.13",
     "embla-carousel-react": "^8.5.2",
     "emoji-mart": "^5.6.0",
+    "emoji-picker-react": "^4.12.2",
     "esri-leaflet-geocoder": "2.3.3",
     "framer-motion": "^10.8.5",
     "heroicons": "^2.2.0",

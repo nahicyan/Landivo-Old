@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -27,68 +27,7 @@ const formatTerm = (term) => {
   return result || "";
 };
 
-export default function PaymentCalculatorBack({ initialData = {} }) {
-  // ---------------------
-  // State
-  // ---------------------
-  const [formData, setFormData] = useState({
-    // Row 1
-    financingPrice: "",
-    purchasePrice: "",
-    askingPrice: "150000", // example value
-    // Row 2
-    tax: "",
-    hoaDue: "",
-    serviceFee: "",
-    term: "48", // default in months; will be updated by slider (48 months = 4 Years)
-    // Plan 1
-    downPaymentOne: "",
-    downPaymentOnePercent: "5",     // default to 5%
-    loanAmountOne: "",
-    interestRateOne: "4.99",         // default to 4.99%
-    monthlyPaymentOne: "",
-    downPaymentOneSlider: 1,         // slider from 1-99 (%)
-    downPaymentOneSource: "selector", // "selector", "slider", or "manual"
-    // Plan 2
-    downPaymentTwo: "",
-    downPaymentTwoPercent: "5",
-    loanAmountTwo: "",
-    interestRateTwo: "4.99",
-    monthlyPaymentTwo: "",
-    downPaymentTwoSlider: 1,
-    downPaymentTwoSource: "selector",
-    // Plan 3
-    downPaymentThree: "",
-    downPaymentThreePercent: "5",
-    loanAmountThree: "",
-    interestRateThree: "4.99",
-    monthlyPaymentThree: "",
-    downPaymentThreeSlider: 1,
-    downPaymentThreeSource: "selector",
-    ...initialData,
-  });
-
-  // ---------------------
-  // Handlers
-  // ---------------------
-  function handleChange(e) {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  }
-
-  // For ShadCN Select (for selector and interest rate)
-  function handleSelectChange(name, value) {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  }
-
-  // For Sliders: value comes as an array, e.g., [50]
-  function handleSliderChange(name, value) {
-    setFormData((prev) => ({ ...prev, [name]: value[0] }));
-  }
-
-  // ---------------------
-  // Recalculate Derived Values for Each Plan
-  // ---------------------
+export default function PaymentCalculatorBack({ formData, handleChange }) {
   // Helper: Calculate monthly payment using a basic amortization formula
   const calculateMonthlyPayment = (loan, rate, term) => {
     const principal = Number(loan) || 0;
@@ -101,8 +40,18 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
     return denominator > 0 ? numerator / denominator : 0;
   };
 
+  // Custom handler for Select components
+  const handleSelectChange = (name, value) => {
+    handleChange({ target: { name, value } });
+  };
+
+  // For Sliders: value comes as an array, e.g., [50]
+  const handleSliderChange = (name, value) => {
+    handleChange({ target: { name, value: value[0] } });
+  };
+
   // Recalculation logic per plan ("One", "Two", "Three")
-  function recalcPlan(planKey) {
+  const recalcPlan = (planKey) => {
     const { financingPrice, term, tax, hoaDue, serviceFee } = formData;
     const financeVal = Number(financingPrice) || 0;
 
@@ -135,22 +84,17 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
     // Calculate Monthly Payment using the amortization formula
     const newMonthlyPayment = calculateMonthlyPayment(newLoanAmount, interestRateVal, Number(term));
 
-    // Update state for the plan
-    setFormData((prev) => ({
-      ...prev,
-      [downPaymentField]: newDownPayment.toFixed(2),
-      [loanAmountField]: newLoanAmount.toFixed(2),
-      [monthlyPaymentField]: newMonthlyPayment.toFixed(2),
-    }));
-  }
+    // Update state for the plan using handleChange
+    handleChange({ target: { name: downPaymentField, value: newDownPayment.toFixed(2) } });
+    handleChange({ target: { name: loanAmountField, value: newLoanAmount.toFixed(2) } });
+    handleChange({ target: { name: monthlyPaymentField, value: newMonthlyPayment.toFixed(2) } });
+  };
 
   // Recalculate each plan when relevant fields change:
   useEffect(() => {
     recalcPlan("One");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     formData.financingPrice,
-    formData.downPaymentOne,
     formData.downPaymentOnePercent,
     formData.downPaymentOneSlider,
     formData.interestRateOne,
@@ -163,10 +107,8 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
 
   useEffect(() => {
     recalcPlan("Two");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     formData.financingPrice,
-    formData.downPaymentTwo,
     formData.downPaymentTwoPercent,
     formData.downPaymentTwoSlider,
     formData.interestRateTwo,
@@ -179,10 +121,8 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
 
   useEffect(() => {
     recalcPlan("Three");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     formData.financingPrice,
-    formData.downPaymentThree,
     formData.downPaymentThreePercent,
     formData.downPaymentThreeSlider,
     formData.interestRateThree,
@@ -193,14 +133,11 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
     formData.downPaymentThreeSource,
   ]);
 
-  // ---------------------
-  // Render
-  // ---------------------
   return (
     <Card className="border border-gray-200 shadow-sm rounded-lg w-full">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-gray-800">
-          Landivo Payment Calculator v0.0.0.2A
+          Landivo Payment Calculator
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-8">
@@ -351,7 +288,7 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
               value={formData.downPaymentOne}
               onChange={(e) => {
                 handleChange(e);
-                setFormData((prev) => ({ ...prev, downPaymentOneSource: "manual" }));
+                handleChange({ target: { name: "downPaymentOneSource", value: "manual" } });
               }}
               className="w-full"
             />
@@ -365,7 +302,7 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
               value={formData.downPaymentOnePercent}
               onValueChange={(val) => {
                 handleSelectChange("downPaymentOnePercent", val);
-                setFormData((prev) => ({ ...prev, downPaymentOneSource: "selector" }));
+                handleSelectChange("downPaymentOneSource", "selector");
               }}
             >
               <SelectTrigger className="w-full">
@@ -436,7 +373,7 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
               step={1}
               onValueChange={(val) => {
                 handleSliderChange("downPaymentOneSlider", val);
-                setFormData((prev) => ({ ...prev, downPaymentOneSource: "slider" }));
+                handleSelectChange("downPaymentOneSource", "slider");
               }}
             />
             <p className="text-xs text-gray-500 mt-2">
@@ -476,7 +413,7 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
               value={formData.downPaymentTwo}
               onChange={(e) => {
                 handleChange(e);
-                setFormData((prev) => ({ ...prev, downPaymentTwoSource: "manual" }));
+                handleChange({ target: { name: "downPaymentTwoSource", value: "manual" } });
               }}
               className="w-full"
             />
@@ -490,7 +427,7 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
               value={formData.downPaymentTwoPercent}
               onValueChange={(val) => {
                 handleSelectChange("downPaymentTwoPercent", val);
-                setFormData((prev) => ({ ...prev, downPaymentTwoSource: "selector" }));
+                handleSelectChange("downPaymentTwoSource", "selector");
               }}
             >
               <SelectTrigger className="w-full">
@@ -561,7 +498,7 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
               step={1}
               onValueChange={(val) => {
                 handleSliderChange("downPaymentTwoSlider", val);
-                setFormData((prev) => ({ ...prev, downPaymentTwoSource: "slider" }));
+                handleSelectChange("downPaymentTwoSource", "slider");
               }}
             />
             <p className="text-xs text-gray-500 mt-2">
@@ -601,7 +538,7 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
               value={formData.downPaymentThree}
               onChange={(e) => {
                 handleChange(e);
-                setFormData((prev) => ({ ...prev, downPaymentThreeSource: "manual" }));
+                handleChange({ target: { name: "downPaymentThreeSource", value: "manual" } });
               }}
               className="w-full"
             />
@@ -615,7 +552,7 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
               value={formData.downPaymentThreePercent}
               onValueChange={(val) => {
                 handleSelectChange("downPaymentThreePercent", val);
-                setFormData((prev) => ({ ...prev, downPaymentThreeSource: "selector" }));
+                handleSelectChange("downPaymentThreeSource", "selector");
               }}
             >
               <SelectTrigger className="w-full">
@@ -686,7 +623,7 @@ export default function PaymentCalculatorBack({ initialData = {} }) {
               step={1}
               onValueChange={(val) => {
                 handleSliderChange("downPaymentThreeSlider", val);
-                setFormData((prev) => ({ ...prev, downPaymentThreeSource: "slider" }));
+                handleSelectChange("downPaymentThreeSource", "slider");
               }}
             />
             <p className="text-xs text-gray-500 mt-2">

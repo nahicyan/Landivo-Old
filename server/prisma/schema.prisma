@@ -76,8 +76,6 @@ model Residency {
     // Financing & Pricing Calculations
     financing          String?
     tax                Float?
-    texTerm            String?
-    hoaDue             Float?
     serviceFee         Float?
     term               Int? 
     interestOne        Float?
@@ -89,6 +87,9 @@ model Residency {
     downPaymentOne     Float?
     downPaymentTwo     Float?
     downPaymentThree   Float?
+    loanAmountOne      Float?
+    loanAmountTwo      Float?
+    loanAmountThree    Float?
     purchasePrice      Float?
     financedPrice      Float?
 

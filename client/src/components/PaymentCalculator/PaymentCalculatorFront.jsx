@@ -41,21 +41,26 @@ export default function PaymentCalculatorFront({ propertyData }) {
     }
   }, [selectedOption, propertyData]);
 
+  // Calculate monthly tax (yearly tax divided by 12)
+  const monthlyTax = (propertyData.tax || 0) / 12;
+
   // Break down monthlyPayment into slices
   const loanPortion = Math.max(
     0,
-    (monthlyPayment || 0) - (propertyData.hoaDue || 0) - (propertyData.serviceFee || 0)
+    (monthlyPayment || 0) - monthlyTax - (propertyData.hoaDue || 0) - (propertyData.serviceFee || 0)
   );
+  const taxPortion = monthlyTax;
   const hoaPortion = propertyData.hoaDue || 0;
   const feePortion = propertyData.serviceFee || 0;
 
   // Donut slices with theme colors
   const chartData = [
     { name: "Loan", value: loanPortion, fill: "#324c48" }, // secondary
-    { name: "HOA", value: hoaPortion, fill: "#01783e" }, // you may update if needed
+    { name: "Tax", value: taxPortion, fill: "#D4A017" }, // new tax slice
+    { name: "HOA", value: hoaPortion, fill: "#01783e" }, // 
     { name: "Service Fee", value: feePortion, fill: "#d03c0b" }, // remains as is, or update if desired
   ];
-  const totalMonthly = loanPortion + hoaPortion + feePortion;
+  const totalMonthly = loanPortion + taxPortion + hoaPortion + feePortion;
 
   return (
     <Card className="border border-gray-200 shadow-sm rounded-lg w-full max-w-none">
@@ -211,7 +216,7 @@ export default function PaymentCalculatorFront({ propertyData }) {
                   Property Tax
                 </Label>
                 <div className="text-base" style={{ color: "#030001" }}>
-                  ${propertyData.tax?.toLocaleString() || 0}
+                  ${monthlyTax.toLocaleString()}/mo
                 </div>
               </div>
 
@@ -231,7 +236,7 @@ export default function PaymentCalculatorFront({ propertyData }) {
                   HOA Dues
                 </Label>
                 <div className="text-base" style={{ color: "#030001" }}>
-                  ${propertyData.hoaDue?.toLocaleString() || 0}
+                  ${propertyData.hoaDue?.toLocaleString() || 0}/mo
                 </div>
               </div>
 
@@ -241,7 +246,7 @@ export default function PaymentCalculatorFront({ propertyData }) {
                   Service Fee
                 </Label>
                 <div className="text-base" style={{ color: "#030001" }}>
-                  ${propertyData.serviceFee?.toLocaleString() || 0}
+                  ${propertyData.serviceFee?.toLocaleString() || 0}/mo
                 </div>
               </div>
             </div>
