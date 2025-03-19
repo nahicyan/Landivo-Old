@@ -443,9 +443,9 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
             </Label>
             <Slider
               value={[Number(formData.downPaymentOneSlider) || 1]}
-              min={1}
-              max={99}
-              step={1}
+              min={0.5}
+              max={99.5}
+              step={0.5}
               onValueChange={(val) => {
                 handleSliderChange("downPaymentOneSlider", val);
                 handleSelectChange("downPaymentOneSource", "slider");
@@ -566,9 +566,9 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
             </Label>
             <Slider
               value={[Number(formData.downPaymentTwoSlider) || 1]}
-              min={1}
-              max={99}
-              step={1}
+              min={0.5}
+              max={99.5}
+              step={0.5}
               onValueChange={(val) => {
                 handleSliderChange("downPaymentTwoSlider", val);
                 handleSelectChange("downPaymentTwoSource", "slider");
@@ -689,9 +689,9 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
             </Label>
             <Slider
               value={[Number(formData.downPaymentThreeSlider) || 1]}
-              min={1}
-              max={99}
-              step={1}
+              min={0.5}
+              max={99.5}
+              step={0.5}
               onValueChange={(val) => {
                 handleSliderChange("downPaymentThreeSlider", val);
                 handleSelectChange("downPaymentThreeSource", "slider");
