@@ -122,7 +122,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
   // Recalculation logic per plan ("One", "Two", "Three")
   // This function is both used by effects and can be called manually
   const recalcPlan = (planKey) => {
-    const { term, tax, hoaMonthly, serviceFee } = formData;
+    const { term } = formData;
     
     // Parse financing price removing commas
     const financeVal = parseCurrencyToNumber(formData.financingPrice) || 0;
@@ -190,9 +190,6 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
     formData.downPaymentOneSlider,
     formData.interestRateOne,
     formData.term,
-    formData.tax,
-    formData.hoaMonthly,
-    formData.serviceFee,
     formData.downPaymentOneSource,
   ]);
 
@@ -204,9 +201,6 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
     formData.downPaymentTwoSlider,
     formData.interestRateTwo,
     formData.term,
-    formData.tax,
-    formData.hoaMonthly,
-    formData.serviceFee,
     formData.downPaymentTwoSource,
   ]);
 
@@ -218,9 +212,6 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
     formData.downPaymentThreeSlider,
     formData.interestRateThree,
     formData.term,
-    formData.tax,
-    formData.hoaMonthly,
-    formData.serviceFee,
     formData.downPaymentThreeSource,
   ]);
 
@@ -234,6 +225,18 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
       <CardContent className="space-y-8">
         {/* ------------------- Row 1 ------------------- */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+         {/* Asking Price (display-only) */}
+          <div>
+            <Label className="block text-sm font-semibold text-gray-700 mb-1">
+              Asking Price
+            </Label>
+            <Input
+              type="text"
+              readOnly
+              value={formData.askingPrice}
+              className="w-full bg-gray-100 text-gray-600"
+            />
+          </div>
           {/* Financing Price */}
           <div>
             <Label htmlFor="financingPrice" className="block text-sm font-semibold text-gray-700 mb-1">
@@ -253,7 +256,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
           {/* Purchase Price */}
           <div>
             <Label htmlFor="purchasePrice" className="block text-sm font-semibold text-gray-700 mb-1">
-              Purchase Price
+              Purchase Price (Optional)
             </Label>
             <Input
               id="purchasePrice"
@@ -265,54 +268,12 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
               className="w-full"
             />
           </div>
-          {/* Asking Price (display-only) */}
-          <div>
-            <Label className="block text-sm font-semibold text-gray-700 mb-1">
-              Asking Price
-            </Label>
-            <Input
-              type="text"
-              readOnly
-              value={formData.askingPrice}
-              className="w-full bg-gray-100 text-gray-600"
-            />
-          </div>
         </div>
 
         {/* ------------------- Row 2 ------------------- */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-          {/* Tax */}
-          <div>
-            <Label htmlFor="tax" className="block text-sm font-semibold text-gray-700 mb-1">
-              Tax
-            </Label>
-            <Input
-              id="tax"
-              name="tax"
-              type="text"
-              placeholder="Yearly tax"
-              value={formData.tax}
-              onChange={handleCurrencyInputChange}
-              className="w-full"
-            />
-          </div>
-          {/* HOA Due */}
-          <div>
-            <Label htmlFor="hoaMonthly" className="block text-sm font-semibold text-gray-700 mb-1">
-              HOA Due
-            </Label>
-            <Input
-              id="hoaMonthly"
-              name="hoaMonthly"
-              type="text"
-              placeholder="Yearly HOA"
-              value={formData.hoaMonthly}
-              onChange={handleCurrencyInputChange}
-              className="w-full"
-            />
-          </div>
-          {/* Service Fee */}
-          <div>
+           {/* Service Fee */}
+           <div>
             <Label htmlFor="serviceFee" className="block text-sm font-semibold text-gray-700 mb-1">
               Service Fee
             </Label>
@@ -324,6 +285,30 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
               value={formData.serviceFee}
               onChange={handleCurrencyInputChange}
               className="w-full"
+            />
+          </div>
+          {/* Tax */}
+          <div>
+            <Label className="block text-sm font-semibold text-gray-700 mb-1">
+              Yearly Tax
+            </Label>
+            <Input
+              type="text"
+              readOnly
+              value={formData.tax}
+              className="w-full bg-gray-100 text-gray-600"
+            />
+          </div>
+          {/* HOA Monthly */}
+          <div>
+            <Label className="block text-sm font-semibold text-gray-700 mb-1">
+              HOA Monthly Fee
+            </Label>
+            <Input
+              type="text"
+              readOnly
+              value={formData.hoaMonthly}
+              className="w-full bg-gray-100 text-gray-600"
             />
           </div>
           {/* Term Display (in Years + Months) */}

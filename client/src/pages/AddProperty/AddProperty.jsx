@@ -93,7 +93,7 @@ export default function AddProperty() {
     financing: "",
     tax: "",
     hoaMonthly: "",
-    serviceFee: "",
+    serviceFee: "35",
     term: "",
     interestOne: "",
     interestTwo: "",

@@ -151,60 +151,6 @@ export default function Classification({ formData, handleChange }) {
             </SelectContent>
           </Select>
         </div>
-
-        {/* HOA / POA */}
-        <div className="flex flex-col space-y-1 mb-4">
-          <Label className="text-gray-700 font-semibold">HOA / POA</Label>
-          <Select
-            name="hoaPoa"
-            value={formData.hoaPoa}
-            onValueChange={(value) => handleChange({ target: { name: "hoaPoa", value } })}
-          >
-            <SelectTrigger className="w-full border-gray-300 focus:border-[#324c48] focus:ring-1 focus:ring-[#324c48]">
-              <SelectValue placeholder="Select" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Yes">Yes</SelectItem>
-              <SelectItem value="No">No</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Conditionally Render HOA Fee & Terms */}
-        {formData.hoaPoa === "Yes" && (
-          <>
-            <div className="flex flex-col space-y-1 mb-4">
-              <Label className="text-gray-700 font-semibold">HOA Fee</Label>
-              <Input
-                type="text"
-                name="hoaFee"
-                value={formData.hoaFee}
-                onChange={handleChange}
-                placeholder="Enter HOA Fee"
-              />
-            </div>
-
-            <div className="flex flex-col space-y-1 mb-4">
-              <Label className="text-gray-700 font-semibold">HOA Payment Terms</Label>
-              <Select
-                name="hoaPaymentTerms"
-                value={formData.hoaPaymentTerms}
-                onValueChange={(value) => handleChange({ target: { name: "hoaPaymentTerms", value } })}
-              >
-                <SelectTrigger className="w-full border-gray-300 focus:border-[#324c48] focus:ring-1 focus:ring-[#324c48]">
-                  <SelectValue placeholder="Select" />
-                </SelectTrigger>
-                <SelectContent>
-                  {["Annually", "Semi-Annually", "Quarterly", "Monthly"].map((option) => (
-                    <SelectItem key={option} value={option}>
-                      {option}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </>
-        )}
       </CardContent>
     </Card>
   );
