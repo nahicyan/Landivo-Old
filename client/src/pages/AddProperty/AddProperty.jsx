@@ -92,7 +92,7 @@ export default function AddProperty() {
     // Financing and Payment Calculation
     financing: "",
     tax: "",
-    hoaDue: "",
+    hoaMonthly: "",
     serviceFee: "",
     term: "",
     interestOne: "",
@@ -148,7 +148,7 @@ export default function AddProperty() {
 
         // Financing and Payment Calculation
         "tax",
-        "hoaDue",
+        "hoaMonthly",
         "serviceFee",
         //"term",
         "interestOne",
@@ -275,7 +275,7 @@ export default function AddProperty() {
 
         // Financing and Payment Calculation
         "tax",
-        "hoaDue",
+        "hoaMonthly",
         "serviceFee",
         //"term",
         "interestOne",

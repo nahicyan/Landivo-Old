@@ -78,6 +78,7 @@ model Residency {
     tax                Float?
     serviceFee         Float?
     term               Int? 
+    hoaMonthly         Float?
     interestOne        Float?
     interestTwo        Float?
     interestThree      Float?

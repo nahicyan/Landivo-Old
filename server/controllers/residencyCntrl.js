@@ -46,7 +46,7 @@ import { prisma } from '../config/prismaConfig.js';
       // Financing and Payment Calculation
       financing,
       tax,
-      hoaDue,
+      hoaMonthly,
       serviceFee,
       term,
       interestOne,
@@ -160,7 +160,7 @@ import { prisma } from '../config/prismaConfig.js';
           // Financing and Payment Calculation
           financing: financing ?? "Not-Available",
           tax: tax ?? null,
-          hoaDue: hoaDue ?? null,
+          hoaMonthly: hoaMonthly ?? null,
           serviceFee: serviceFee ?? null,
           term: term ? parseInt(term, 10) : null,
           interestOne: interestOne ?? null,
@@ -262,7 +262,7 @@ export const updateResidency = asyncHandler(async (req, res) => {
     if (restOfData.hoaFee) restOfData.hoaFee = parseFloat(restOfData.hoaFee);
     // Payment Fields
     if (restOfData.tax) restOfData.tax = parseFloat(restOfData.tax);
-    if (restOfData.hoaDue) restOfData.hoaDue = parseFloat(restOfData.hoaDue);
+    if (restOfData.hoaMonthly) restOfData.hoaMonthly = parseFloat(restOfData.hoaMonthly);
     if (restOfData.serviceFee) restOfData.serviceFee = parseFloat(restOfData.serviceFee);
     if (restOfData.term) restOfData.term = parseInt(restOfData.term, 10);
     if (restOfData.interestOne) restOfData.interestOne = parseFloat(restOfData.interestOne);
@@ -446,7 +446,7 @@ export const createResidencyWithMultipleFiles = asyncHandler(async (req, res) =>
     // Financing and Payment Calculation 
     financing,
     tax,
-    hoaDue,
+    hoaMonthly,
     serviceFee,
     term,
     interestOne,
@@ -537,7 +537,7 @@ export const createResidencyWithMultipleFiles = asyncHandler(async (req, res) =>
         // Financing and Payment Calculation 
         financing: financing ?? "Not-Available",
         tax: tax ? parseFloat(tax) : null,
-        hoaDue: hoaDue ? parseFloat(hoaDue) : null,
+        hoaMonthly: hoaMonthly ? parseFloat(hoaMonthly) : null,
         serviceFee: serviceFee ? parseFloat(serviceFee) : null,
         term: term ? parseInt(term, 10) : null,
         interestOne: interestOne ? parseFloat(interestOne) : null,

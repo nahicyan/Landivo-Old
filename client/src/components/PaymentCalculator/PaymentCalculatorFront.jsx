@@ -47,10 +47,10 @@ export default function PaymentCalculatorFront({ propertyData }) {
   // Break down monthlyPayment into slices
   const loanPortion = Math.max(
     0,
-    (monthlyPayment || 0) - monthlyTax - (propertyData.hoaDue || 0) - (propertyData.serviceFee || 0)
+    (monthlyPayment || 0) - monthlyTax - (propertyData.hoaMonthly || 0) - (propertyData.serviceFee || 0)
   );
   const taxPortion = monthlyTax;
-  const hoaPortion = propertyData.hoaDue || 0;
+  const hoaPortion = propertyData.hoaMonthly || 0;
   const feePortion = propertyData.serviceFee || 0;
 
   // Donut slices with theme colors
@@ -236,7 +236,7 @@ export default function PaymentCalculatorFront({ propertyData }) {
                   HOA Dues
                 </Label>
                 <div className="text-base" style={{ color: "#030001" }}>
-                  ${propertyData.hoaDue?.toLocaleString() || 0}/mo
+                  ${propertyData.hoaMonthly?.toLocaleString() || 0}/mo
                 </div>
               </div>
 

@@ -13,6 +13,22 @@ const formatCurrency = (value) => {
   return Number(value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };
 
+// Utility: Format currency for display in input fields
+const formatInputCurrency = (value) => {
+  if (!value) return "";
+  // Remove any non-digit characters except decimal point
+  const numericValue = typeof value === 'string' ? value.replace(/[^0-9.]/g, '') : value.toString();
+  // Parse to a number and format with commas
+  return Number(numericValue).toLocaleString('en-US');
+};
+
+// Utility: Parse currency string to number
+const parseCurrencyToNumber = (value) => {
+  // Remove commas and convert to number
+  if (!value) return 0;
+  return parseFloat(value.toString().replace(/,/g, ''));
+};
+
 // Utility: Format term (in months) into "X Years Y Months"
 const formatTerm = (term) => {
   const months = Number(term) || 0;
@@ -28,6 +44,59 @@ const formatTerm = (term) => {
 };
 
 export default function PaymentCalculatorBack({ formData, handleChange }) {
+  // Enhanced input handler for currency formatting
+  const handleCurrencyInputChange = (e) => {
+    const { name, value } = e.target;
+    
+    // Remove commas for proper numeric handling
+    const numericValue = value.replace(/,/g, '');
+    
+    // Update the display value with comma formatting
+    const formattedValue = numericValue ? Number(numericValue).toLocaleString('en-US') : '';
+    
+    // Update the form with the formatted value for display
+    handleChange({ 
+      target: { 
+        name, 
+        value: formattedValue,
+        // Store original numeric value as a data attribute for calculations
+        dataset: { numericValue }
+      } 
+    });
+  };
+  
+  // Handle blur for general currency inputs
+  const handleCurrencyBlur = () => {
+    // Trigger recalculation for all plans to ensure consistency
+    recalcPlan("One");
+    recalcPlan("Two");
+    recalcPlan("Three");
+  };
+
+  // For Down Payment manual input with special handling
+  const handleDownPaymentChange = (planKey, e) => {
+    const { value } = e.target;
+    const fieldName = `downPayment${planKey}`;
+    
+    // Remove commas for calculation
+    const numericValue = value.replace(/,/g, '');
+    
+    // Format for display
+    const formattedValue = numericValue ? Number(numericValue).toLocaleString('en-US') : '';
+    
+    // Update the form data with the formatted value
+    handleChange({ target: { name: fieldName, value: formattedValue } });
+    
+    // Set the source to manual
+    handleChange({ target: { name: `downPayment${planKey}Source`, value: "manual" } });
+  };
+  
+  // Handle blur (clicking out) of Down Payment fields
+  const handleDownPaymentBlur = (planKey) => {
+    // Manually trigger a recalculation for this plan
+    recalcPlan(planKey);
+  };
+
   // Helper: Calculate monthly payment using a basic amortization formula
   const calculateMonthlyPayment = (loan, rate, term) => {
     const principal = Number(loan) || 0;
@@ -51,9 +120,12 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
   };
 
   // Recalculation logic per plan ("One", "Two", "Three")
+  // This function is both used by effects and can be called manually
   const recalcPlan = (planKey) => {
-    const { financingPrice, term, tax, hoaDue, serviceFee } = formData;
-    const financeVal = Number(financingPrice) || 0;
+    const { term, tax, hoaMonthly, serviceFee } = formData;
+    
+    // Parse financing price removing commas
+    const financeVal = parseCurrencyToNumber(formData.financingPrice) || 0;
 
     const downPaymentField = `downPayment${planKey}`;
     const downPaymentPercentField = `downPayment${planKey}Percent`;
@@ -63,7 +135,8 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
     const sliderField = `downPayment${planKey}Slider`;
     const sourceField = `downPayment${planKey}Source`;
 
-    const dpManual = Number(formData[downPaymentField]);
+    // Parse the down payment value, removing any commas
+    const dpManual = parseCurrencyToNumber(formData[downPaymentField]);
     const dpPercentVal = Number(formData[downPaymentPercentField]) || 5;
     const sliderVal = Number(formData[sliderField]) || 1;
     const interestRateVal = Number(formData[interestRateField]) || 0;
@@ -81,13 +154,31 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
 
     // Calculate Loan Amount = financingPrice - downPayment
     const newLoanAmount = financeVal - newDownPayment;
+    
     // Calculate Monthly Payment using the amortization formula
     const newMonthlyPayment = calculateMonthlyPayment(newLoanAmount, interestRateVal, Number(term));
 
-    // Update state for the plan using handleChange
-    handleChange({ target: { name: downPaymentField, value: newDownPayment.toFixed(2) } });
-    handleChange({ target: { name: loanAmountField, value: newLoanAmount.toFixed(2) } });
-    handleChange({ target: { name: monthlyPaymentField, value: newMonthlyPayment.toFixed(2) } });
+    // Update state with formatted values for display
+    handleChange({ 
+      target: { 
+        name: downPaymentField, 
+        value: formatInputCurrency(newDownPayment.toFixed(2)) 
+      } 
+    });
+    
+    handleChange({ 
+      target: { 
+        name: loanAmountField, 
+        value: formatInputCurrency(newLoanAmount.toFixed(2)) 
+      } 
+    });
+    
+    handleChange({ 
+      target: { 
+        name: monthlyPaymentField, 
+        value: formatInputCurrency(newMonthlyPayment.toFixed(2)) 
+      } 
+    });
   };
 
   // Recalculate each plan when relevant fields change:
@@ -100,7 +191,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
     formData.interestRateOne,
     formData.term,
     formData.tax,
-    formData.hoaDue,
+    formData.hoaMonthly,
     formData.serviceFee,
     formData.downPaymentOneSource,
   ]);
@@ -114,7 +205,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
     formData.interestRateTwo,
     formData.term,
     formData.tax,
-    formData.hoaDue,
+    formData.hoaMonthly,
     formData.serviceFee,
     formData.downPaymentTwoSource,
   ]);
@@ -128,7 +219,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
     formData.interestRateThree,
     formData.term,
     formData.tax,
-    formData.hoaDue,
+    formData.hoaMonthly,
     formData.serviceFee,
     formData.downPaymentThreeSource,
   ]);
@@ -151,10 +242,11 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
             <Input
               id="financingPrice"
               name="financingPrice"
-              type="number"
+              type="text"
               placeholder="Enter financing price"
               value={formData.financingPrice}
-              onChange={handleChange}
+              onChange={handleCurrencyInputChange}
+              onBlur={handleCurrencyBlur}
               className="w-full"
             />
           </div>
@@ -166,10 +258,10 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
             <Input
               id="purchasePrice"
               name="purchasePrice"
-              type="number"
+              type="text"
               placeholder="Enter purchase price"
               value={formData.purchasePrice}
-              onChange={handleChange}
+              onChange={handleCurrencyInputChange}
               className="w-full"
             />
           </div>
@@ -197,25 +289,25 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
             <Input
               id="tax"
               name="tax"
-              type="number"
+              type="text"
               placeholder="Yearly tax"
               value={formData.tax}
-              onChange={handleChange}
+              onChange={handleCurrencyInputChange}
               className="w-full"
             />
           </div>
           {/* HOA Due */}
           <div>
-            <Label htmlFor="hoaDue" className="block text-sm font-semibold text-gray-700 mb-1">
+            <Label htmlFor="hoaMonthly" className="block text-sm font-semibold text-gray-700 mb-1">
               HOA Due
             </Label>
             <Input
-              id="hoaDue"
-              name="hoaDue"
-              type="number"
+              id="hoaMonthly"
+              name="hoaMonthly"
+              type="text"
               placeholder="Yearly HOA"
-              value={formData.hoaDue}
-              onChange={handleChange}
+              value={formData.hoaMonthly}
+              onChange={handleCurrencyInputChange}
               className="w-full"
             />
           </div>
@@ -227,10 +319,10 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
             <Input
               id="serviceFee"
               name="serviceFee"
-              type="number"
+              type="text"
               placeholder="Service fee"
               value={formData.serviceFee}
-              onChange={handleChange}
+              onChange={handleCurrencyInputChange}
               className="w-full"
             />
           </div>
@@ -283,13 +375,11 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
             <Input
               id="downPaymentOne"
               name="downPaymentOne"
-              type="number"
+              type="text"
               placeholder="Enter down payment"
               value={formData.downPaymentOne}
-              onChange={(e) => {
-                handleChange(e);
-                handleChange({ target: { name: "downPaymentOneSource", value: "manual" } });
-              }}
+              onChange={(e) => handleDownPaymentChange("One", e)}
+              onBlur={() => handleDownPaymentBlur("One")}
               className="w-full"
             />
           </div>
@@ -314,7 +404,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
                   return (
                     <SelectItem key={percent} value={String(percent)}>
                       {percent}% (
-                      {formatCurrency((Number(formData.financingPrice) || 0) * (percent / 100))}
+                      {formatCurrency((parseCurrencyToNumber(formData.financingPrice) || 0) * (percent / 100))}
                       )
                     </SelectItem>
                   );
@@ -330,7 +420,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
             <Input
               type="text"
               readOnly
-              value={formatCurrency(formData.loanAmountOne)}
+              value={formData.loanAmountOne}
               className="w-full bg-gray-100"
             />
           </div>
@@ -367,7 +457,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
               Down Payment vs. Loan Amount (Plan 1)
             </Label>
             <Slider
-              value={[formData.downPaymentOneSlider]}
+              value={[Number(formData.downPaymentOneSlider) || 1]}
               min={1}
               max={99}
               step={1}
@@ -377,7 +467,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
               }}
             />
             <p className="text-xs text-gray-500 mt-2">
-              Currently: {formData.downPaymentOneSlider}%
+              Currently: {formData.downPaymentOneSlider || 1}%
             </p>
           </div>
           {/* Monthly Payment (1/4 width) */}
@@ -388,7 +478,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
             <Input
               type="text"
               readOnly
-              value={formatCurrency(formData.monthlyPaymentOne)}
+              value={formData.monthlyPaymentOne}
               className="w-full bg-gray-100"
             />
           </div>
@@ -408,13 +498,11 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
             <Input
               id="downPaymentTwo"
               name="downPaymentTwo"
-              type="number"
+              type="text"
               placeholder="Enter down payment"
               value={formData.downPaymentTwo}
-              onChange={(e) => {
-                handleChange(e);
-                handleChange({ target: { name: "downPaymentTwoSource", value: "manual" } });
-              }}
+              onChange={(e) => handleDownPaymentChange("Two", e)}
+              onBlur={() => handleDownPaymentBlur("Two")}
               className="w-full"
             />
           </div>
@@ -439,7 +527,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
                   return (
                     <SelectItem key={percent} value={String(percent)}>
                       {percent}% (
-                      {formatCurrency((Number(formData.financingPrice) || 0) * (percent / 100))}
+                      {formatCurrency((parseCurrencyToNumber(formData.financingPrice) || 0) * (percent / 100))}
                       )
                     </SelectItem>
                   );
@@ -455,7 +543,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
             <Input
               type="text"
               readOnly
-              value={formatCurrency(formData.loanAmountTwo)}
+              value={formData.loanAmountTwo}
               className="w-full bg-gray-100"
             />
           </div>
@@ -492,7 +580,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
               Down Payment vs. Loan Amount (Plan 2)
             </Label>
             <Slider
-              value={[formData.downPaymentTwoSlider]}
+              value={[Number(formData.downPaymentTwoSlider) || 1]}
               min={1}
               max={99}
               step={1}
@@ -502,7 +590,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
               }}
             />
             <p className="text-xs text-gray-500 mt-2">
-              Currently: {formData.downPaymentTwoSlider}%
+              Currently: {formData.downPaymentTwoSlider || 1}%
             </p>
           </div>
           {/* Monthly Payment (1/4 width) */}
@@ -513,7 +601,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
             <Input
               type="text"
               readOnly
-              value={formatCurrency(formData.monthlyPaymentTwo)}
+              value={formData.monthlyPaymentTwo}
               className="w-full bg-gray-100"
             />
           </div>
@@ -533,13 +621,11 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
             <Input
               id="downPaymentThree"
               name="downPaymentThree"
-              type="number"
+              type="text"
               placeholder="Enter down payment"
               value={formData.downPaymentThree}
-              onChange={(e) => {
-                handleChange(e);
-                handleChange({ target: { name: "downPaymentThreeSource", value: "manual" } });
-              }}
+              onChange={(e) => handleDownPaymentChange("Three", e)}
+              onBlur={() => handleDownPaymentBlur("Three")}
               className="w-full"
             />
           </div>
@@ -564,7 +650,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
                   return (
                     <SelectItem key={percent} value={String(percent)}>
                       {percent}% (
-                      {formatCurrency((Number(formData.financingPrice) || 0) * (percent / 100))}
+                      {formatCurrency((parseCurrencyToNumber(formData.financingPrice) || 0) * (percent / 100))}
                       )
                     </SelectItem>
                   );
@@ -580,7 +666,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
             <Input
               type="text"
               readOnly
-              value={formatCurrency(formData.loanAmountThree)}
+              value={formData.loanAmountThree}
               className="w-full bg-gray-100"
             />
           </div>
@@ -617,7 +703,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
               Down Payment vs. Loan Amount (Plan 3)
             </Label>
             <Slider
-              value={[formData.downPaymentThreeSlider]}
+              value={[Number(formData.downPaymentThreeSlider) || 1]}
               min={1}
               max={99}
               step={1}
@@ -627,7 +713,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
               }}
             />
             <p className="text-xs text-gray-500 mt-2">
-              Currently: {formData.downPaymentThreeSlider}%
+              Currently: {formData.downPaymentThreeSlider || 1}%
             </p>
           </div>
           {/* Monthly Payment (1/4 width) */}
@@ -638,7 +724,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
             <Input
               type="text"
               readOnly
-              value={formatCurrency(formData.monthlyPaymentThree)}
+              value={formData.monthlyPaymentThree}
               className="w-full bg-gray-100"
             />
           </div>

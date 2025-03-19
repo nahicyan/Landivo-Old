@@ -64,8 +64,8 @@ export default function PaymentCalculatorEntry({ formData, handleChange }) {
             <Input
               type="text"
               placeholder="Enter HOA due"
-              name="hoaDue"
-              value={formData.hoaDue}
+              name="hoaMonthly"
+              value={formData.hoaMonthly}
               onChange={handleChange}
               className="w-full border-gray-300 focus:border-[#D4A017] focus:ring-1 focus:ring-[#D4A017] rounded-md"
             />
