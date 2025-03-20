@@ -67,7 +67,7 @@ export default function Pricing({ formData, handleChange }) {
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-gray-800">Pricing</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-2">
         {/* Asking Price */}
         <div>
           <Label className="text-sm font-semibold text-gray-700">Asking Price</Label>
@@ -151,17 +151,7 @@ export default function Pricing({ formData, handleChange }) {
 
         {/* Conditionally Render HOA Fee & Terms */}
         {formData.hoaPoa === "Yes" && (
-          <>
-            <div className="flex flex-col space-y-1 mb-4">
-              <Label className="text-gray-700 font-semibold">HOA Fee</Label>
-              <Input
-                type="text"
-                name="hoaFee"
-                value={formData.hoaFee}
-                onChange={handleChange}
-                placeholder="Enter HOA Fee"
-              />
-            </div>
+          <div className="grid grid-cols-2 gap-3">
 
             <div className="flex flex-col space-y-1 mb-4">
               <Label className="text-gray-700 font-semibold">HOA Payment Terms</Label>
@@ -182,7 +172,17 @@ export default function Pricing({ formData, handleChange }) {
                 </SelectContent>
               </Select>
             </div>
-          </>
+            <div className="flex flex-col space-y-1 mb-4">
+              <Label className="text-gray-700 font-semibold">HOA Fee</Label>
+              <Input
+                type="text"
+                name="hoaFee"
+                value={formData.hoaFee}
+                onChange={handleChange}
+                placeholder="Enter HOA Fee"
+              />
+            </div>
+          </div>
         )}
       </CardContent>
     </Card>

@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   Card,
   CardHeader,
@@ -13,23 +11,39 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { PieChart, Pie, Label as RechartsLabel, Tooltip } from "recharts";
 
+// Helper to format term in months to "X Years Y Months"
+const formatLoanTerm = (term) => {
+  const months = Number(term) || 0;
+  const years = Math.floor(months / 12);
+  const remainingMonths = months % 12;
+  let result = "";
+  if (years > 0) result += `${years} ${years === 1 ? "Year" : "Years"}`;
+  if (remainingMonths > 0) {
+    if (result) result += " ";
+    result += `${remainingMonths} ${remainingMonths === 1 ? "Month" : "Months"}`;
+  }
+  return result || "0 Months";
+};
+
 export default function PaymentCalculatorFront({ propertyData }) {
   const [selectedOption, setSelectedOption] = useState("1");
 
-  // Pick data based on selected option
-  const { interest, monthlyPayment, downPayment } = useMemo(() => {
+  // Pick data based on selected option, including loanAmount
+  const { interest, monthlyPayment, downPayment, loanAmount } = useMemo(() => {
     switch (selectedOption) {
       case "2":
         return {
           interest: propertyData.interestTwo,
           monthlyPayment: propertyData.monthlyPaymentTwo,
           downPayment: propertyData.downPaymentTwo,
+          loanAmount: propertyData.loanAmountTwo,
         };
       case "3":
         return {
           interest: propertyData.interestThree,
           monthlyPayment: propertyData.monthlyPaymentThree,
           downPayment: propertyData.downPaymentThree,
+          loanAmount: propertyData.loanAmountThree,
         };
       default:
         // "1"
@@ -37,6 +51,7 @@ export default function PaymentCalculatorFront({ propertyData }) {
           interest: propertyData.interestOne,
           monthlyPayment: propertyData.monthlyPaymentOne,
           downPayment: propertyData.downPaymentOne,
+          loanAmount: propertyData.loanAmountOne,
         };
     }
   }, [selectedOption, propertyData]);
@@ -55,10 +70,10 @@ export default function PaymentCalculatorFront({ propertyData }) {
 
   // Donut slices with theme colors
   const chartData = [
-    { name: "Loan", value: loanPortion, fill: "#324c48" }, // secondary
-    { name: "Tax", value: taxPortion, fill: "#D4A017" }, // new tax slice
-    { name: "HOA", value: hoaPortion, fill: "#01783e" }, // 
-    { name: "Service Fee", value: feePortion, fill: "#d03c0b" }, // remains as is, or update if desired
+    { name: "Loan", value: loanPortion, fill: "#324c48" },
+    { name: "Tax", value: taxPortion, fill: "#D4A017" },
+    { name: "HOA", value: hoaPortion, fill: "#01783e" },
+    { name: "Service Fee", value: feePortion, fill: "#d03c0b" },
   ];
   const totalMonthly = loanPortion + taxPortion + hoaPortion + feePortion;
 
@@ -96,7 +111,7 @@ export default function PaymentCalculatorFront({ propertyData }) {
                   className="w-4 h-4 rounded-full border border-gray-300 data-[state=checked]:bg-green-600 data-[state=checked]:border-transparent"
                 />
                 <Label htmlFor="option2" className="cursor-pointer" style={{ color: "#030001" }}>
-                 Plan 2
+                  Plan 2
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
@@ -106,7 +121,7 @@ export default function PaymentCalculatorFront({ propertyData }) {
                   className="w-4 h-4 rounded-full border border-gray-300 data-[state=checked]:bg-green-600 data-[state=checked]:border-transparent"
                 />
                 <Label htmlFor="option3" className="cursor-pointer" style={{ color: "#030001" }}>
-                 Plan 3
+                  Plan 3
                 </Label>
               </div>
             </RadioGroup>
@@ -170,23 +185,23 @@ export default function PaymentCalculatorFront({ propertyData }) {
           {/* Right Column: Payment Summary */}
           <div className="sm:w-1/2 space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Loan Term */}
+              {/* Estimated Payment */}
               <div>
                 <Label className="block text-sm font-semibold mb-1" style={{ color: "#030001" }}>
-                  Loan Term
+                  Estimated Payment
                 </Label>
-                <div className="text-base" style={{ color: "#030001" }}>
-                  {propertyData.term || 0} Months
+                <div className="text-xl font-bold" style={{ color: "#324c48" }}>
+                  ${monthlyPayment?.toLocaleString() || 0}/mo
                 </div>
               </div>
 
-              {/* Interest Rate */}
+              {/* Loan Amount */}
               <div>
                 <Label className="block text-sm font-semibold mb-1" style={{ color: "#030001" }}>
-                  Interest Rate
+                  Loan Amount
                 </Label>
                 <div className="text-base" style={{ color: "#030001" }}>
-                  {interest || 0}% APR
+                  ${loanAmount?.toLocaleString() || 0}
                 </div>
               </div>
 
@@ -200,16 +215,6 @@ export default function PaymentCalculatorFront({ propertyData }) {
                 </div>
               </div>
 
-              {/* Estimated Payment */}
-              <div>
-                <Label className="block text-sm font-semibold mb-1" style={{ color: "#030001" }}>
-                  Estimated Payment
-                </Label>
-                <div className="text-xl font-bold" style={{ color: "#324c48" }}>
-                  ${monthlyPayment?.toLocaleString() || 0}/mo
-                </div>
-              </div>
-
               {/* Property Tax */}
               <div>
                 <Label className="block text-sm font-semibold mb-1" style={{ color: "#030001" }}>
@@ -220,23 +225,35 @@ export default function PaymentCalculatorFront({ propertyData }) {
                 </div>
               </div>
 
-              {/* Financed Price */}
+              {/* Interest Rate */}
               <div>
                 <Label className="block text-sm font-semibold mb-1" style={{ color: "#030001" }}>
-                  Financed Price
+                  Interest Rate
                 </Label>
                 <div className="text-base" style={{ color: "#030001" }}>
-                  ${propertyData.financedPrice?.toLocaleString() || 0}
+                  {interest || 0}% APR
                 </div>
               </div>
 
-              {/* HOA Dues */}
+              {/* HOA Fee */}
+              {propertyData.hoaPoa === "Yes" && (
+                <div>
+                  <Label className="block text-sm font-semibold mb-1" style={{ color: "#030001" }}>
+                    HOA Fee
+                  </Label>
+                  <div className="text-base" style={{ color: "#030001" }}>
+                    ${propertyData.hoaMonthly?.toLocaleString() || 0}/mo
+                  </div>
+                </div>
+              )}
+
+              {/* Loan Term */}
               <div>
                 <Label className="block text-sm font-semibold mb-1" style={{ color: "#030001" }}>
-                  HOA Dues
+                  Loan Term
                 </Label>
                 <div className="text-base" style={{ color: "#030001" }}>
-                  ${propertyData.hoaMonthly?.toLocaleString() || 0}/mo
+                  {formatLoanTerm(propertyData.term)}{" "}({propertyData.term} Months)
                 </div>
               </div>
 
@@ -256,7 +273,7 @@ export default function PaymentCalculatorFront({ propertyData }) {
 
       <CardFooter>
         <div className="text-xs" style={{ color: "#576756" }}>
-        You may pay off the property at any time with no pre-payment penalty. Closing Costs: Buyer pays all closing costs
+          You may pay off the property at any time with no pre-payment penalty. Closing Costs: Buyer pays all closing costs
         </div>
       </CardFooter>
     </Card>

@@ -55,15 +55,15 @@ export default function PaymentCalculatorEntry({ formData, handleChange }) {
           </div>
         </div>
 
-        {/* Next Row: HOA Due, Service Fee, and Term */}
+        {/* Next Row: HOA Fee, Service Fee, and Term */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <Label className="text-sm font-semibold text-gray-700">
-              HOA Due
+              HOA Fee
             </Label>
             <Input
               type="text"
-              placeholder="Enter HOA due"
+              placeholder="Enter HOA Fee"
               name="hoaMonthly"
               value={formData.hoaMonthly}
               onChange={handleChange}

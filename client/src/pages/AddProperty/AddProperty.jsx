@@ -51,7 +51,6 @@ export default function AddProperty() {
     featuredWeight: "",
 
     // Listing Details
-
     title: "",
     description: "",
     notes: "",
@@ -192,81 +191,10 @@ export default function AddProperty() {
     });
   };
 
-  // Multi-step form steps (pass props to components that need them)
-  const steps = [
-    {
-      title: "System Info",
-      // Pass formData and handleChange so that SystemInfo can render the user email display
-      component: <SystemInfo formData={formData} handleChange={handleChange} />,
-    },
-    {
-      title: "Listing Details",
-      component: (
-        <ListingDetails
-          formData={formData}
-          handleTitleChange={(val) =>
-            setFormData((prev) => ({ ...prev, title: val }))
-          }
-          handleDescriptionChange={(val) =>
-            setFormData((prev) => ({ ...prev, description: val }))
-          }
-          handleNotesChange={(val) =>
-            setFormData((prev) => ({ ...prev, notes: val }))
-          }
-        />
-      ),
-    },
-    {
-      title: "Classification",
-      component: (
-        <Classification formData={formData} handleChange={handleChange} />
-      ),
-    },
-    {
-      title: "Location",
-      component: (
-        <Location
-          formData={formData}
-          handleChange={handleChange}
-          setFormData={setFormData}
-        />
-      ),
-    },
-    { title: "Dimensions", component: <Dimension /> },
-    {
-      title: "Pricing",
-      component: <Pricing formData={formData} handleChange={handleChange} />,
-    },
-    {
-      title: "Financing",
-      component: (
-        <Financing
-          formData={formData}
-          handleChange={handleChange}
-          updateFormData={(updatedData) => setFormData(updatedData)}
-        />
-      ),
-    },
-    {
-      title: "Utilities",
-      component: <Utilities formData={formData} handleChange={handleChange} />,
-    },
-    {
-      title: "Media & Tags",
-      component: (
-        <MediaTags
-          formData={formData}
-          handleChange={handleChange}
-          uploadedImages={uploadedImages}
-          setUploadedImages={setUploadedImages}
-        />
-      ),
-    },
-  ];
+  // Handle form submission
+  const handleSubmitForm = async (e) => {
+    if (e) e.preventDefault();
 
-  // Submit
-  const handleSubmit = async (e) => {
-    e.preventDefault();
     try {
       const numericFields = [
         // Physical Attributes
@@ -344,45 +272,133 @@ export default function AddProperty() {
     }
   };
 
+  // Empty form handler to prevent default behavior
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    // Form submission is handled explicitly by buttons
+  };
+
   // Steps navigation
-  const nextStep = () =>
-    setStep((prev) => Math.min(prev + 1, steps.length - 1));
+  const nextStep = () => setStep((prev) => Math.min(prev + 1, steps.length - 1));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 0));
 
-  // Step Indicator (breadcrumb)
+  // Define steps array with all necessary props passed to each component
+  const steps = [
+    {
+      title: "System Info",
+      component: <SystemInfo formData={formData} handleChange={handleChange} />,
+    },
+    {
+      title: "Listing Details",
+      component: (
+        <ListingDetails
+          formData={formData}
+          handleTitleChange={(val) =>
+            setFormData((prev) => ({ ...prev, title: val }))
+          }
+          handleDescriptionChange={(val) =>
+            setFormData((prev) => ({ ...prev, description: val }))
+          }
+          handleNotesChange={(val) =>
+            setFormData((prev) => ({ ...prev, notes: val }))
+          }
+        />
+      ),
+    },
+    {
+      title: "Classification",
+      component: (
+        <Classification formData={formData} handleChange={handleChange} />
+      ),
+    },
+    {
+      title: "Location",
+      component: (
+        <Location
+          formData={formData}
+          handleChange={handleChange}
+          setFormData={setFormData}
+        />
+      ),
+    },
+    {
+      title: "Dimensions",
+      component: <Dimension formData={formData} handleChange={handleChange} />,
+    },
+    {
+      title: "Pricing",
+      component: <Pricing formData={formData} handleChange={handleChange} />,
+    },
+    {
+      title: "Financing",
+      component: (
+        <Financing
+          formData={formData}
+          handleChange={handleChange}
+          updateFormData={(updatedData) => setFormData(updatedData)}
+        />
+      ),
+    },
+    {
+      title: "Utilities",
+      component: <Utilities formData={formData} handleChange={handleChange} />,
+    },
+    {
+      title: "Media & Tags",
+      component: (
+        <MediaTags
+          formData={formData}
+          handleChange={handleChange}
+          uploadedImages={uploadedImages}
+          setUploadedImages={setUploadedImages}
+        />
+      ),
+    },
+  ];
+
+  // Improved Step Indicator - Display all steps without scrolling
   const StepIndicator = ({ currentStep }) => {
     return (
-      <div className="flex items-center justify-center space-x-4 mb-6">
+      <div className="w-full flex items-center justify-between mb-8 px-2">
         {steps.map((item, index) => {
           const isActive = index === currentStep;
           const isCompleted = index < currentStep;
+          
           return (
-            <div key={index} className="flex items-center space-x-2">
-              <div
-                className={
-                  "w-8 h-8 flex items-center justify-center rounded-full border-2 " +
-                  (isCompleted
-                    ? "border-green-500 bg-green-500 text-white"
-                    : isActive
-                    ? "border-blue-500 bg-blue-100 text-blue-700"
-                    : "border-gray-300 bg-white text-gray-500")
-                }
-              >
-                {isCompleted ? <Check className="w-4 h-4" /> : index + 1}
+            <React.Fragment key={index}>
+              {/* Circle with number or check */}
+              <div className="flex flex-col items-center">
+                <div
+                  className={
+                    "w-8 h-8 flex items-center justify-center rounded-full border-2 " +
+                    (isCompleted
+                      ? "border-green-500 bg-green-500 text-white"
+                      : isActive
+                      ? "border-blue-500 bg-blue-100 text-blue-700"
+                      : "border-gray-300 bg-white text-gray-500")
+                  }
+                >
+                  {isCompleted ? <Check className="w-4 h-4" /> : index + 1}
+                </div>
+                
+                {/* Step title - shown underneath in small text */}
+                <span
+                  className={
+                    "text-xs mt-1 text-center " +
+                    (isCompleted || isActive
+                      ? "font-semibold text-gray-900"
+                      : "text-gray-500")
+                  }
+                >
+                  {item.title}
+                </span>
               </div>
-              <span
-                className={
-                  isCompleted || isActive
-                    ? "font-bold text-gray-900"
-                    : "text-gray-500"
-                }
-              >
-                {item.title}
-              </span>
+              
+              {/* Connector line between steps */}
               {index < steps.length - 1 && (
-                <div className="w-8 h-[2px] bg-gray-300" />
+                <div className="w-full h-[2px] bg-gray-300 mx-1"></div>
               )}
-            </div>
+            </React.Fragment>
           );
         })}
       </div>
@@ -390,70 +406,54 @@ export default function AddProperty() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 space-y-6">
+    <div className="max-w-6xl mx-auto p-6 space-y-6">
       {/* Step Indicator */}
       <StepIndicator currentStep={step} />
 
-      {/* SLIDER CONTAINER */}
-      <div className="relative overflow-hidden w-full flex justify-center">
-        <div
-          className="flex transition-transform duration-300"
-          style={{
-            width: `${steps.length * 100}%`,
-            transform: `translateX(-${step * 100}%)`,
-          }}
-        >
-          {steps.map((item, index) => (
-            <div
-              key={index}
-              className="w-full flex-shrink-0 flex justify-center"
-              style={{ width: "100%" }}
-            >
-              <div className="max-w-lg w-full bg-white p-6 border border-gray-200 rounded-xl shadow-lg">
-                {React.cloneElement(item.component, { formData, handleChange })}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Navigation Controls */}
-      <div className="flex items-center justify-between w-full">
-        <div>
-          {" "}
-          {/* Left container */}
-          {step > 0 && (
-            <Button
-              type="button"
-              onClick={prevStep}
-              className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md"
-            >
-              Previous
-            </Button>
-          )}
+      {/* Form with explicit onSubmit handler to prevent default behavior */}
+      <form onSubmit={handleFormSubmit} className="w-full">
+        {/* Current Step Content - Only show the active step */}
+        <div className="bg-white p-6 border border-gray-200 rounded-xl shadow-lg max-w-xl mx-auto min-h-[640px]">
+          {steps[step].component}
         </div>
 
-        <div>
-          {" "}
-          {/* Right container */}
-          {step < steps.length - 1 ? (
-            <Button
-              type="button"
-              onClick={nextStep}
-              className="bg-[#324c48] text-white px-4 py-2 rounded-md"
-            >
-              Next
-            </Button>
-          ) : (
-            <Button
-              type="submit"
-              className="bg-green-600 text-white px-4 py-2 rounded-md"
-            >
-              Submit
-            </Button>
-          )}
+        {/* Navigation Controls */}
+        <div className="flex items-center justify-between w-full mt-6 max-w-2xl mx-auto">
+          <div>
+            {/* Left container */}
+            {step > 0 && (
+              <Button
+                type="button"
+                onClick={prevStep}
+                className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md"
+              >
+                Previous
+              </Button>
+            )}
+          </div>
+
+          <div>
+            {/* Right container */}
+            {step < steps.length - 1 ? (
+              <Button
+                type="button"
+                onClick={nextStep}
+                className="bg-[#324c48] text-white px-4 py-2 rounded-md"
+              >
+                Next
+              </Button>
+            ) : (
+              <Button
+                type="button"  // Make this a button not a submit
+                onClick={handleSubmitForm}  // Use our explicit submit handler
+                className="bg-green-600 text-white px-4 py-2 rounded-md"
+              >
+                Submit
+              </Button>
+            )}
+          </div>
         </div>
-      </div>
+      </form>
 
       {/* ShadCN Alert Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -483,6 +483,6 @@ export default function AddProperty() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </form>
+    </div>
   );
 }
