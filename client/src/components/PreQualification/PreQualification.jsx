@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,7 +21,14 @@ export default function PreQualification({ propertyData }) {
         return String(price).replace(/,/g, "").replace(/[^0-9.]/g, "");
       };
       
-      params.append("propertyPrice", cleanPrice(propertyData.askingPrice));
+      // Use the financing price from propertyData, with askingPrice as fallback
+      const financedPrice = propertyData.financedPrice || propertyData.askingPrice;
+      
+      // Pass the appropriate price as propertyPrice parameter
+      params.append("propertyPrice", cleanPrice(financedPrice));
+      
+      // Debugging log
+      console.log("Sending propertyPrice:", cleanPrice(financedPrice));
       
       // Selected plan data (using plan 1 as default)
       if (propertyData.loanAmountOne) params.append("loanAmount", cleanPrice(propertyData.loanAmountOne));

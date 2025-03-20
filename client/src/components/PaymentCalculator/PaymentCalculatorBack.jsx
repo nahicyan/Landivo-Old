@@ -127,7 +127,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
     const { term } = formData;
     
     // Parse financing price removing commas
-    const financeVal = parseCurrencyToNumber(formData.financingPrice) || 0;
+    const financeVal = parseCurrencyToNumber(formData.financedPrice) || 0;
 
     const downPaymentField = `downPayment${planKey}`;
     const downPaymentPercentField = `downPayment${planKey}Percent`;
@@ -154,7 +154,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
       newDownPayment = financeVal * (sliderVal / 100);
     }
 
-    // Calculate Loan Amount = financingPrice - downPayment
+    // Calculate Loan Amount = financedPrice - downPayment
     const newLoanAmount = financeVal - newDownPayment;
     
     // Calculate Monthly Payment using the amortization formula
@@ -300,7 +300,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
   useEffect(() => {
     recalcPlan("One");
   }, [
-    formData.financingPrice,
+    formData.financedPrice,
     formData.downPaymentOnePercent,
     formData.downPaymentOneSlider,
     formData.interestOne,
@@ -311,7 +311,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
   useEffect(() => {
     recalcPlan("Two");
   }, [
-    formData.financingPrice,
+    formData.financedPrice,
     formData.downPaymentTwoPercent,
     formData.downPaymentTwoSlider,
     formData.interestTwo,
@@ -322,7 +322,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
   useEffect(() => {
     recalcPlan("Three");
   }, [
-    formData.financingPrice,
+    formData.financedPrice,
     formData.downPaymentThreePercent,
     formData.downPaymentThreeSlider,
     formData.interestThree,
@@ -354,15 +354,15 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
           </div>
           {/* Financing Price */}
           <div>
-            <Label htmlFor="financingPrice" className="block text-sm font-semibold text-gray-700 mb-1">
+            <Label htmlFor="financedPrice" className="block text-sm font-semibold text-gray-700 mb-1">
               Financing Price
             </Label>
             <Input
-              id="financingPrice"
-              name="financingPrice"
+              id="financedPrice"
+              name="financedPrice"
               type="text"
               placeholder="Enter financing price"
-              value={formData.financingPrice}
+              value={formData.financedPrice}
               onChange={handleCurrencyInputChange}
               onBlur={handleCurrencyBlur}
               className="w-full"
@@ -526,7 +526,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
                   return (
                     <SelectItem key={percent} value={String(percent)}>
                       {percent}% (
-                      {formatCurrency((parseCurrencyToNumber(formData.financingPrice) || 0) * (percent / 100))}
+                      {formatCurrency((parseCurrencyToNumber(formData.financedPrice) || 0) * (percent / 100))}
                       )
                     </SelectItem>
                   );
@@ -649,7 +649,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
                   return (
                     <SelectItem key={percent} value={String(percent)}>
                       {percent}% (
-                      {formatCurrency((parseCurrencyToNumber(formData.financingPrice) || 0) * (percent / 100))}
+                      {formatCurrency((parseCurrencyToNumber(formData.financedPrice) || 0) * (percent / 100))}
                       )
                     </SelectItem>
                   );
@@ -772,7 +772,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
                   return (
                     <SelectItem key={percent} value={String(percent)}>
                       {percent}% (
-                      {formatCurrency((parseCurrencyToNumber(formData.financingPrice) || 0) * (percent / 100))}
+                      {formatCurrency((parseCurrencyToNumber(formData.financedPrice) || 0) * (percent / 100))}
                       )
                     </SelectItem>
                   );
