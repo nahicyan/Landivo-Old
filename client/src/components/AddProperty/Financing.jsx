@@ -113,7 +113,7 @@ export default function Financing({ formData, handleChange, updateFormData }) {
 
         {/* Modal for Payment Calculations/Entry */}
         <Dialog open={openModal} onOpenChange={setOpenModal}>
-          <DialogContent className="max-w-6xl mx-auto bg-[#FDF8F2]">
+          <DialogContent className="max-w-6xl mx-auto bg-[#FDF8F2]">hun
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold text-gray-800">
                 {planType === "CALC"
