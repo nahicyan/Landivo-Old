@@ -1,4 +1,3 @@
-"use client";
 
 import React, { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -236,6 +235,12 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
       case "lowToHighDown":
         sortedPlans.sort((a, b) => a.downPayment - b.downPayment);
         break;
+      case "highToLowInterest":
+        sortedPlans.sort((a, b) => parseFloat(b.interest) - parseFloat(a.interest));
+        break;
+      case "lowToHighInterest":
+        sortedPlans.sort((a, b) => parseFloat(a.interest) - parseFloat(b.interest));
+        break;
       default:
         return; // No sorting needed
     }
@@ -332,9 +337,9 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
           Landivo Payment Calculator
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-8">
+      <CardContent className="space-y-4">
         {/* ------------------- Row 1 ------------------- */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-4">
           {/* Asking Price (display-only) */}
           <div>
             <Label className="block text-sm font-semibold text-gray-700 mb-1">
@@ -391,17 +396,19 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
                 <SelectValue placeholder="Select sort option" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="highToLowMonthly">High to Low Monthly Payment</SelectItem>
-                <SelectItem value="lowToHighMonthly">Low to High Monthly Payment</SelectItem>
-                <SelectItem value="highToLowDown">High to Low Down Payment</SelectItem>
-                <SelectItem value="lowToHighDown">Low to High Down Payment</SelectItem>
+                <SelectItem value="highToLowMonthly">Monthly High to Low </SelectItem>
+                <SelectItem value="lowToHighMonthly">Monthly Low to High</SelectItem>
+                <SelectItem value="highToLowDown">Down Payment High to Low</SelectItem>
+                <SelectItem value="lowToHighDown">Down Payment Low to High</SelectItem>
+                <SelectItem value="highToLowInterest">Interest High to Low</SelectItem>
+                <SelectItem value="lowToHighInterest">Interest Low to High</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
 
         {/* ------------------- Row 2 ------------------- */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-4">
            {/* Service Fee */}
            <div>
             <Label htmlFor="serviceFee" className="block text-sm font-semibold text-gray-700 mb-1">
@@ -481,7 +488,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
             (Now Row 4 & Row 5)
         ============================================================ */}
         {/* ------------------- Row 4: Plan 1 Details ------------------- */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-4">
           {/* Down Payment (Plan 1) */}
           <div>
             <Label htmlFor="downPaymentOne" className="block text-sm font-semibold text-gray-700 mb-1">
@@ -604,7 +611,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
             (Now Row 6 & Row 7)
         ============================================================ */}
         {/* ------------------- Row 6: Plan 2 Details ------------------- */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-4">
           {/* Down Payment (Plan 2) */}
           <div>
             <Label htmlFor="downPaymentTwo" className="block text-sm font-semibold text-gray-700 mb-1">
@@ -727,7 +734,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
             (Now Row 8 & Row 9)
         ============================================================ */}
         {/* ------------------- Row 8: Plan 3 Details ------------------- */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-4">
           {/* Down Payment (Plan 3) */}
           <div>
             <Label htmlFor="downPaymentThree" className="block text-sm font-semibold text-gray-700 mb-1">
