@@ -391,8 +391,8 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
                 <SelectValue placeholder="Select sort option" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="highToLowMonthly">High to Low Monthly</SelectItem>
-                <SelectItem value="lowToHighMonthly">Low to High Monthly</SelectItem>
+                <SelectItem value="highToLowMonthly">High to Low Monthly Payment</SelectItem>
+                <SelectItem value="lowToHighMonthly">Low to High Monthly Payment</SelectItem>
                 <SelectItem value="highToLowDown">High to Low Down Payment</SelectItem>
                 <SelectItem value="lowToHighDown">Low to High Down Payment</SelectItem>
               </SelectContent>
