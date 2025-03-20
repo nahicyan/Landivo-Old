@@ -9,7 +9,9 @@ import {
 } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { PieChart, Pie, Label as RechartsLabel, Tooltip } from "recharts";
+import { Switch } from "@/components/ui/switch";
+import { PieChart, Pie, Cell, Label as RechartsLabel, Tooltip } from "recharts";
+import { AlertCircle } from "lucide-react";
 
 // Helper to format term in months to "X Years Y Months"
 const formatLoanTerm = (term) => {
@@ -27,6 +29,30 @@ const formatLoanTerm = (term) => {
 
 export default function PaymentCalculatorFront({ propertyData }) {
   const [selectedOption, setSelectedOption] = useState("1");
+  const [includeAllFees, setIncludeAllFees] = useState(false);
+
+  // Theme colors
+  const themeColors = {
+    primary: "#3f4f24",     // --primary (green)
+    primaryLight: "#f4f7ee", // --primary-50
+    primaryMid: "#d1dfb9",  // --primary-200
+    
+    secondary: "#324c48",   // --secondary (teal)
+    secondaryLight: "#f0f5f4", // --secondary-50
+    secondaryMid: "#a2c3be", // --secondary-300
+    
+    accent: "#D4A017",      // --accent (gold)
+    accentLight: "#fcf7e8", // --accent-50
+    accentMid: "#f0cd75",   // --accent-300
+    
+    text: "#030001",        // --text
+    background: "#FDF8F2",  // --background
+    
+    // Vibrant colors for chart segments
+    hoaColor: "#01783e",    // Bright green
+    feeColor: "#d03c0b",    // Vibrant orange-red
+    taxColor: "#ffa500",    // Bright orange
+  };
 
   // Pick data based on selected option, including loanAmount
   const { interest, monthlyPayment, downPayment, loanAmount } = useMemo(() => {
@@ -59,23 +85,28 @@ export default function PaymentCalculatorFront({ propertyData }) {
   // Calculate monthly tax (yearly tax divided by 12)
   const monthlyTax = (propertyData.tax || 0) / 12;
 
-  // Break down monthlyPayment into slices
-  const loanPortion = Math.max(
-    0,
-    (monthlyPayment || 0) - monthlyTax - (propertyData.hoaMonthly || 0) - (propertyData.serviceFee || 0)
-  );
-  const taxPortion = monthlyTax;
-  const hoaPortion = propertyData.hoaMonthly || 0;
-  const feePortion = propertyData.serviceFee || 0;
+  // Parse numeric values and ensure they're not NaN
+  const parsedMonthlyPayment = parseFloat(monthlyPayment) || 0;
+  const parsedMonthlyTax = parseFloat(monthlyTax) || 0;
+  const parsedHoaMonthly = parseFloat(propertyData.hoaMonthly) || 0;
+  const parsedServiceFee = parseFloat(propertyData.serviceFee) || 0;
 
-  // Donut slices with theme colors
-  const chartData = [
-    { name: "Loan", value: loanPortion, fill: "#324c48" },
-    { name: "Tax", value: taxPortion, fill: "#D4A017" },
-    { name: "HOA", value: hoaPortion, fill: "#01783e" },
-    { name: "Service Fee", value: feePortion, fill: "#d03c0b" },
-  ];
-  const totalMonthly = loanPortion + taxPortion + hoaPortion + feePortion;
+  // Calculate total monthly payment
+  const baseMonthlyPayment = parsedMonthlyPayment;
+  const totalAdditionalFees = parsedMonthlyTax + parsedHoaMonthly + parsedServiceFee;
+  const totalMonthlyPayment = baseMonthlyPayment + (includeAllFees ? totalAdditionalFees : 0);
+
+  // Prepare chart data based on toggle state
+  const chartData = includeAllFees 
+    ? [
+        { name: "Principal & Interest", value: parsedMonthlyPayment, fill: themeColors.primary },
+        { name: "Tax", value: parsedMonthlyTax, fill: themeColors.taxColor },
+        { name: "HOA", value: parsedHoaMonthly, fill: themeColors.hoaColor },
+        { name: "Service Fee", value: parsedServiceFee, fill: themeColors.feeColor }
+      ].filter(item => item.value > 0) // Only include items with values > 0
+    : [
+        { name: "Principal & Interest", value: parsedMonthlyPayment, fill: themeColors.secondary }
+      ];
 
   return (
     <Card className="border border-gray-200 shadow-sm rounded-lg w-full max-w-none">
@@ -86,46 +117,72 @@ export default function PaymentCalculatorFront({ propertyData }) {
         <CardDescription className="text-sm" style={{ color: "#576756" }}>
           <span>Compare Payment Plans For This Property</span>
           <div>
-            <Label className="text-sm font-semibold" style={{ color: "#030001" }}>
-              Choose a Financing Plan
+            <Label className="text-sm font-semibold mb-3 block" style={{ color: themeColors.text }}>
+              Choose a Payment Plan
             </Label>
-            <RadioGroup
-              className="flex items-center gap-4 mt-2"
-              value={selectedOption}
-              onValueChange={setSelectedOption}
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem
-                  id="option1"
-                  value="1"
-                  className="w-4 h-4 rounded-full border border-gray-300 data-[state=checked]:bg-green-600 data-[state=checked]:border-transparent"
-                />
-                <Label htmlFor="option1" className="cursor-pointer" style={{ color: "#030001" }}>
-                  Plan 1
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem
-                  id="option2"
-                  value="2"
-                  className="w-4 h-4 rounded-full border border-gray-300 data-[state=checked]:bg-green-600 data-[state=checked]:border-transparent"
-                />
-                <Label htmlFor="option2" className="cursor-pointer" style={{ color: "#030001" }}>
-                  Plan 2
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem
-                  id="option3"
-                  value="3"
-                  className="w-4 h-4 rounded-full border border-gray-300 data-[state=checked]:bg-green-600 data-[state=checked]:border-transparent"
-                />
-                <Label htmlFor="option3" className="cursor-pointer" style={{ color: "#030001" }}>
-                  Plan 3
-                </Label>
-              </div>
-            </RadioGroup>
+            
+            <div className="grid grid-cols-3 gap-3 mt-2">
+              {[
+                { id: "option1", value: "1", label: "Plan 1" },
+                { id: "option2", value: "2", label: "Plan 2" },
+                { id: "option3", value: "3", label: "Plan 3" }
+              ].map((option) => (
+                <div 
+                  key={option.id}
+                  className={`
+                    relative overflow-hidden rounded-lg transition-all duration-300 cursor-pointer
+                    ${selectedOption === option.value 
+                      ? 'ring-2 ring-offset-1' 
+                      : 'hover:shadow-md'}
+                  `}
+                  style={{
+                    backgroundColor: selectedOption === option.value ? themeColors.primaryLight : 'white',
+                    borderColor: selectedOption === option.value ? themeColors.primary : '#e2e8f0',
+                    ringColor: themeColors.primary,
+                    boxShadow: selectedOption === option.value ? '0 1px 3px rgba(0,0,0,0.12)' : 'none'
+                  }}
+                  onClick={() => setSelectedOption(option.value)}
+                >
+                  {/* Hidden radio input */}
+                  <input
+                    type="radio"
+                    id={option.id}
+                    value={option.value}
+                    checked={selectedOption === option.value}
+                    onChange={() => setSelectedOption(option.value)}
+                    className="sr-only"
+                  />
+                  
+                  {/* Content */}
+                  <div className="p-3 text-center relative">
+                    {/* Selected indicator dot */}
+                    {selectedOption === option.value && (
+                      <div 
+                        className="absolute top-2 right-2 w-2 h-2 rounded-full"
+                        style={{ backgroundColor: themeColors.primary }}
+                      />
+                    )}
+                    
+                    <div 
+                      className={`font-medium text-sm mb-1 ${selectedOption === option.value ? 'text-primary' : 'text-gray-500'}`}
+                      style={{ color: selectedOption === option.value ? themeColors.primary : '#4b5563' }}
+                    >
+                      {option.label}
+                    </div>
+                    
+                    {/* add pricing info here */}
+                    <div 
+                      className="text-xs"
+                      style={{ color: themeColors.secondary }}
+                    >
+                      {selectedOption === option.value ? 'Selected' : 'Click to select'}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
+          
         </CardDescription>
       </CardHeader>
 
@@ -141,10 +198,18 @@ export default function PaymentCalculatorFront({ propertyData }) {
                   nameKey="name"
                   cx="50%"
                   cy="50%"
-                  innerRadius={80}
+                  innerRadius={78}
                   outerRadius={100}
                   strokeWidth={3}
+                  stroke="#FDF8F2" // Background color for gaps
+                  // paddingAngle={1} // This creates gaps between segments
                 >
+                  {chartData.map((entry, index) => (
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill={entry.fill} 
+                    />
+                  ))}
                   <RechartsLabel
                     content={({ viewBox }) => {
                       if (viewBox && "cx" in viewBox && "cy" in viewBox) {
@@ -158,16 +223,16 @@ export default function PaymentCalculatorFront({ propertyData }) {
                             <tspan
                               x={viewBox.cx}
                               y={viewBox.cy}
-                              className="text-xl font-bold"
-                              style={{ fill: "#030001" }}
+                              className="text-2xl font-bold"
+                              style={{ fill: themeColors.primary }}
                             >
-                              ${totalMonthly.toLocaleString()}
+                              ${totalMonthlyPayment.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
                             </tspan>
                             <tspan
                               x={viewBox.cx}
-                              y={(viewBox.cy || 0) + 20}
+                              y={(viewBox.cy || 0) + 22}
                               className="text-sm"
-                              style={{ fill: "#576756" }}
+                              style={{ fill: themeColors.secondary }}
                             >
                               /mo
                             </tspan>
@@ -177,30 +242,71 @@ export default function PaymentCalculatorFront({ propertyData }) {
                     }}
                   />
                 </Pie>
-                <Tooltip />
+                <Tooltip formatter={(value) => `$${value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`} />
               </PieChart>
             </div>
           </div>
 
           {/* Right Column: Payment Summary */}
           <div className="sm:w-1/2 space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Estimated Payment */}
-              <div>
-                <Label className="block text-sm font-semibold mb-1" style={{ color: "#030001" }}>
-                  Estimated Payment
+            {/* Fee Warning/Info Banner with Toggle */}
+            <div className={`p-3 rounded-lg mb-4 flex flex-col gap-2 text-sm ${!includeAllFees ? "bg-green-50 text-green-700" : "bg-amber-50 text-amber-700"}`}>
+              <div className="flex items-start gap-2">
+                <AlertCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                <p>
+                  {includeAllFees 
+                    ? "Monthly payment includes tax, HOA fees, and service fees."
+                    : "Monthly payment only shows principal and interest."}
+                </p>
+              </div>
+              
+              {/* Fee Toggle */}
+              <div className="flex items-center space-x-2 mt-1 ml-7">
+                <Switch 
+                  id="include-fees" 
+                  checked={includeAllFees} 
+                  onCheckedChange={setIncludeAllFees}
+                  className={`${includeAllFees ? 'bg-[#3f4f24]' : 'bg-[#8A8B7F]'} 
+                              transition-colors data-[state=checked]:bg-[#3f4f24]`}
+                  style={{
+                    backgroundColor: includeAllFees ? themeColors.primary : '#8A8B7F'
+                  }}
+                />
+                <Label htmlFor="include-fees" className="cursor-pointer" style={{ color: themeColors.text }}>
+                  Include Tax, HOA & Service Fee
                 </Label>
-                <div className="text-xl font-bold" style={{ color: "#324c48" }}>
-                  ${monthlyPayment?.toLocaleString() || 0}/mo
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Principal & Interest */}
+              <div>
+                <Label className="block text-sm font-semibold mb-1" style={{ color: themeColors.text }}>
+                 Monthly Payment
+                </Label>
+                <div className="text-xl font-bold" style={{ color: themeColors.secondary }}>
+                  ${parsedMonthlyPayment.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}/mo
                 </div>
               </div>
+
+              {/* Total Monthly Payment (only when toggle is on) */}
+              {includeAllFees && totalAdditionalFees > 0 && (
+                <div>
+                  <Label className="block text-sm font-semibold mb-1" style={{ color: "#030001" }}>
+                    Total Monthly Payment
+                  </Label>
+                  <div className="text-xl font-bold" style={{ color: themeColors.secondary }}>
+                    ${totalMonthlyPayment.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}/mo
+                  </div>
+                </div>
+              )}
 
               {/* Loan Amount */}
               <div>
                 <Label className="block text-sm font-semibold mb-1" style={{ color: "#030001" }}>
                   Loan Amount
                 </Label>
-                <div className="text-base" style={{ color: "#030001" }}>
+                <div className="text-base" style={{ color: themeColors.text }}>
                   ${loanAmount?.toLocaleString() || 0}
                 </div>
               </div>
@@ -221,7 +327,7 @@ export default function PaymentCalculatorFront({ propertyData }) {
                   Property Tax
                 </Label>
                 <div className="text-base" style={{ color: "#030001" }}>
-                  ${monthlyTax.toLocaleString()}/mo
+                  ${parsedMonthlyTax.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}/mo
                 </div>
               </div>
 
@@ -235,14 +341,14 @@ export default function PaymentCalculatorFront({ propertyData }) {
                 </div>
               </div>
 
-              {/* HOA Fees */}
-              {propertyData.hoaPoa === "Yes" && (
+              {/* HOA Fees - Show if available */}
+              {parsedHoaMonthly > 0 && (
                 <div>
                   <Label className="block text-sm font-semibold mb-1" style={{ color: "#030001" }}>
                     HOA Fee
                   </Label>
                   <div className="text-base" style={{ color: "#030001" }}>
-                    ${propertyData.hoaMonthly?.toLocaleString() || 0}/mo
+                    ${parsedHoaMonthly.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}/mo
                   </div>
                 </div>
               )}
@@ -253,27 +359,28 @@ export default function PaymentCalculatorFront({ propertyData }) {
                   Loan Term
                 </Label>
                 <div className="text-base" style={{ color: "#030001" }}>
-                  {/* {formatLoanTerm(propertyData.term)}{" "} */}
                   {propertyData.term} Months
                 </div>
               </div>
 
               {/* Service Fee */}
-              <div>
-                <Label className="block text-sm font-semibold mb-1" style={{ color: "#030001" }}>
-                  Service Fee
-                </Label>
-                <div className="text-base" style={{ color: "#030001" }}>
-                  ${propertyData.serviceFee?.toLocaleString() || 0}/mo
+              {parsedServiceFee > 0 && (
+                <div>
+                  <Label className="block text-sm font-semibold mb-1" style={{ color: "#030001" }}>
+                    Service Fee
+                  </Label>
+                  <div className="text-base" style={{ color: "#030001" }}>
+                    ${parsedServiceFee.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}/mo
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
       </CardContent>
 
       <CardFooter>
-        <div className="text-xs" style={{ color: "#576756" }}>
+        <div className="text-xs" style={{ color: themeColors.secondary }}>
           You may pay off the property at any time with no pre-payment penalty. Closing Costs: Buyer pays all closing costs
         </div>
       </CardFooter>
