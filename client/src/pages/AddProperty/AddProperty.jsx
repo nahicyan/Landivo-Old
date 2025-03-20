@@ -13,8 +13,9 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { UserContext } from "../../utils/UserContext";
+import { motion, AnimatePresence } from "framer-motion";
 
-// Import your subcomponents
+// Import subcomponents
 import SystemInfo from "@/components/AddProperty/SystemInfo";
 import ListingDetails from "@/components/AddProperty/ListingDetails";
 import Classification from "@/components/AddProperty/Classification";
@@ -279,7 +280,8 @@ export default function AddProperty() {
   };
 
   // Steps navigation
-  const nextStep = () => setStep((prev) => Math.min(prev + 1, steps.length - 1));
+  const nextStep = () =>
+    setStep((prev) => Math.min(prev + 1, steps.length - 1));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 0));
 
   // Define steps array with all necessary props passed to each component
@@ -363,7 +365,7 @@ export default function AddProperty() {
         {steps.map((item, index) => {
           const isActive = index === currentStep;
           const isCompleted = index < currentStep;
-          
+
           return (
             <React.Fragment key={index}>
               {/* Circle with number or check */}
@@ -380,7 +382,7 @@ export default function AddProperty() {
                 >
                   {isCompleted ? <Check className="w-4 h-4" /> : index + 1}
                 </div>
-                
+
                 {/* Step title - shown underneath in small text */}
                 <span
                   className={
@@ -393,7 +395,7 @@ export default function AddProperty() {
                   {item.title}
                 </span>
               </div>
-              
+
               {/* Connector line between steps */}
               {index < steps.length - 1 && (
                 <div className="w-full h-[2px] bg-gray-300 mx-1"></div>
@@ -413,9 +415,18 @@ export default function AddProperty() {
       {/* Form with explicit onSubmit handler to prevent default behavior */}
       <form onSubmit={handleFormSubmit} className="w-full">
         {/* Current Step Content - Only show the active step */}
-        <div className="bg-white p-6 border border-gray-200 rounded-xl shadow-lg max-w-xl mx-auto min-h-[640px]">
-          {steps[step].component}
-        </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={step}
+            initial={{ x: 50, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -50, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="bg-white p-6 border border-gray-200 rounded-xl shadow-lg max-w-xl mx-auto min-h-[640px]"
+          >
+            {steps[step].component}
+          </motion.div>
+        </AnimatePresence>
 
         {/* Navigation Controls */}
         <div className="flex items-center justify-between w-full mt-6 max-w-2xl mx-auto">
@@ -444,8 +455,8 @@ export default function AddProperty() {
               </Button>
             ) : (
               <Button
-                type="button"  // Make this a button not a submit
-                onClick={handleSubmitForm}  // Use our explicit submit handler
+                type="button" // Make this a button not a submit
+                onClick={handleSubmitForm} // Use our explicit submit handler
                 className="bg-green-600 text-white px-4 py-2 rounded-md"
               >
                 Submit

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "./RichTextEditor.css";
-
 // Import react-quill-emoji and its CSS
 import quillEmoji from "react-quill-emoji";
 import "react-quill-emoji/dist/quill-emoji.css";
@@ -13,7 +12,6 @@ Quill.register(
   {
     "formats/emoji": quillEmoji.EmojiBlot,
     "modules/emoji-toolbar": quillEmoji.ToolbarEmoji,
-    "modules/emoji-textarea": quillEmoji.TextAreaEmoji,
     "modules/emoji-shortname": quillEmoji.ShortNameEmoji,
   },
   true
@@ -31,8 +29,8 @@ const RichTextEditor = ({ value, onChange, placeholder = "Enter text here..." })
       ],
     },
     "emoji-toolbar": true,
-    "emoji-textarea": true,
     "emoji-shortname": true,
+    // Removed "emoji-textarea": true to prevent double emoji picker
   };
 
   const formats = [

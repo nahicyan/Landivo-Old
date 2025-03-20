@@ -20,12 +20,12 @@ export default function Location({ formData, handleChange, setFormData }) {
 
   return (
     <Card className="border border-gray-200 shadow-md rounded-lg w-full">
-      <CardHeader className="px-4 py-3">
+      <CardHeader className="px-4 py-2">
         <CardTitle className="text-xl font-bold text-gray-800">
           Location & Identification
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-4 space-y-4">
+      <CardContent className="p-2 space-y-2">
         {/* Search Property Box (Autocomplete) */}
         <div className="flex flex-col">
           <AddressAutocomplete formData={formData} setFormData={setFormData} />
@@ -48,7 +48,7 @@ export default function Location({ formData, handleChange, setFormData }) {
         </div>
 
         {/* City & County */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div className="flex flex-col">
             <Label htmlFor="city" className="text-sm font-semibold text-gray-700">
               City
@@ -80,7 +80,7 @@ export default function Location({ formData, handleChange, setFormData }) {
         </div>
 
         {/* ZIP & State */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div className="flex flex-col">
             <Label htmlFor="zip" className="text-sm font-semibold text-gray-700">
               ZIP Code
@@ -112,7 +112,7 @@ export default function Location({ formData, handleChange, setFormData }) {
         </div>
 
         {/* Latitude & Longitude (if needed) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div className="flex flex-col">
             <Label htmlFor="latitude" className="text-sm font-semibold text-gray-700">
               Latitude

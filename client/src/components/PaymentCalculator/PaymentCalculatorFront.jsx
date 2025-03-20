@@ -235,7 +235,7 @@ export default function PaymentCalculatorFront({ propertyData }) {
                 </div>
               </div>
 
-              {/* HOA Fee */}
+              {/* HOA Fees */}
               {propertyData.hoaPoa === "Yes" && (
                 <div>
                   <Label className="block text-sm font-semibold mb-1" style={{ color: "#030001" }}>
@@ -253,7 +253,8 @@ export default function PaymentCalculatorFront({ propertyData }) {
                   Loan Term
                 </Label>
                 <div className="text-base" style={{ color: "#030001" }}>
-                  {formatLoanTerm(propertyData.term)}{" "}({propertyData.term} Months)
+                  {/* {formatLoanTerm(propertyData.term)}{" "} */}
+                  {propertyData.term} Months
                 </div>
               </div>
 
