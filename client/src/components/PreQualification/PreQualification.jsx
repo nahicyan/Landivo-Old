@@ -16,32 +16,71 @@ export default function PreQualification({ propertyData }) {
       // Financial information - ensure to strip formatting and commas
       // We use a simple helper to clean up price values
       const cleanPrice = (price) => {
-        if (!price) return "";
+        if (!price && price !== 0) return "";
         // Convert to string, remove commas and any non-numeric characters except decimal point
-        return String(price).replace(/,/g, "").replace(/[^0-9.]/g, "");
+        const cleanedPrice = String(price).replace(/,/g, "").replace(/[^0-9.]/g, "");
+        return cleanedPrice;
       };
       
       // Use the financing price from propertyData, with askingPrice as fallback
       const financedPrice = propertyData.financedPrice || propertyData.askingPrice;
       
       // Pass the appropriate price as propertyPrice parameter
-      params.append("propertyPrice", cleanPrice(financedPrice));
+      const cleanedPropertyPrice = cleanPrice(financedPrice);
+      params.append("propertyPrice", cleanedPropertyPrice);
       
-      // Debugging log
-      console.log("Sending propertyPrice:", cleanPrice(financedPrice));
+      console.log("Sending propertyPrice:", cleanedPropertyPrice);
       
       // Selected plan data (using plan 1 as default)
-      if (propertyData.loanAmountOne) params.append("loanAmount", cleanPrice(propertyData.loanAmountOne));
-      if (propertyData.interestOne) params.append("interestRate", cleanPrice(propertyData.interestOne));
-      if (propertyData.monthlyPaymentOne) params.append("monthlyPayment", cleanPrice(propertyData.monthlyPaymentOne));
-      if (propertyData.downPaymentOne) params.append("downPayment", cleanPrice(propertyData.downPaymentOne));
-      if (propertyData.term) params.append("term", propertyData.term);
+      if (propertyData.loanAmountOne) {
+        const cleanedLoanAmount = cleanPrice(propertyData.loanAmountOne);
+        params.append("loanAmount", cleanedLoanAmount);
+        console.log("Sending loanAmount:", cleanedLoanAmount);
+      }
+      
+      if (propertyData.interestOne) {
+        const cleanedInterestRate = cleanPrice(propertyData.interestOne);
+        params.append("interestRate", cleanedInterestRate);
+        console.log("Sending interestRate:", cleanedInterestRate);
+      }
+      
+      if (propertyData.monthlyPaymentOne) {
+        const cleanedMonthlyPayment = cleanPrice(propertyData.monthlyPaymentOne);
+        params.append("monthlyPayment", cleanedMonthlyPayment);
+        console.log("Sending monthlyPayment:", cleanedMonthlyPayment);
+      }
+      
+      if (propertyData.downPaymentOne) {
+        const cleanedDownPayment = cleanPrice(propertyData.downPaymentOne);
+        params.append("downPayment", cleanedDownPayment);
+        console.log("Sending downPayment:", cleanedDownPayment);
+      }
+      
+      if (propertyData.term) {
+        params.append("term", propertyData.term);
+        console.log("Sending term:", propertyData.term);
+      }
       
       // Property address information
-      if (propertyData.streetAddress) params.append("propertyAddress", propertyData.streetAddress);
-      if (propertyData.city) params.append("propertyCity", propertyData.city);
-      if (propertyData.state) params.append("propertyState", propertyData.state);
-      if (propertyData.zip) params.append("propertyZip", propertyData.zip);
+      if (propertyData.streetAddress) {
+        params.append("propertyAddress", propertyData.streetAddress);
+        console.log("Sending propertyAddress:", propertyData.streetAddress);
+      }
+      
+      if (propertyData.city) {
+        params.append("propertyCity", propertyData.city);
+        console.log("Sending propertyCity:", propertyData.city);
+      }
+      
+      if (propertyData.state) {
+        params.append("propertyState", propertyData.state);
+        console.log("Sending propertyState:", propertyData.state);
+      }
+      
+      if (propertyData.zip) {
+        params.append("propertyZip", propertyData.zip);
+        console.log("Sending propertyZip:", propertyData.zip);
+      }
     }
     
     // Log parameters for debugging
@@ -49,6 +88,7 @@ export default function PreQualification({ propertyData }) {
     
     // Redirect to qualification survey with parameters
     const qualificationUrl = `https://qualify.landivo.com?${params.toString()}`;
+    console.log("Redirecting to:", qualificationUrl);
     window.open(qualificationUrl, "_blank");
   };
 
