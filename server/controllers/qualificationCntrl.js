@@ -44,6 +44,8 @@ export const createQualification = asyncHandler(async (req, res) => {
       propertyZip,
     } = req.body;
 
+    console.log("Received qualification data:", req.body);
+
     // Calculate qualification based on survey answers
     const disqualifiers = [];
     let qualified = true;
@@ -74,15 +76,22 @@ export const createQualification = asyncHandler(async (req, res) => {
       if (incomeHistory === "No") disqualifiers.push("Insufficient income history");
     }
 
+    // Parse numeric values
+    const safeParseFloat = (value) => {
+      if (value === undefined || value === null) return null;
+      const parsed = parseFloat(value);
+      return isNaN(parsed) ? null : parsed;
+    };
+
     // Create a new qualification entry
     const qualification = await prisma.qualification.create({
       data: {
         propertyId,
-        propertyPrice: parseFloat(propertyPrice),
-        loanAmount: loanAmount ? parseFloat(loanAmount) : null,
-        interestRate: interestRate ? parseFloat(interestRate) : null,
-        monthlyPayment: monthlyPayment ? parseFloat(monthlyPayment) : null,
-        downPayment: downPayment ? parseFloat(downPayment) : null,
+        propertyPrice: safeParseFloat(propertyPrice),
+        loanAmount: safeParseFloat(loanAmount),
+        interestRate: safeParseFloat(interestRate),
+        monthlyPayment: safeParseFloat(monthlyPayment),
+        downPayment: safeParseFloat(downPayment),
         term: term ? parseInt(term) : null,
         
         // Survey data
@@ -97,7 +106,7 @@ export const createQualification = asyncHandler(async (req, res) => {
         verifyIncome,
         incomeHistory,
         openCreditLines,
-        totalMonthlyPayments: totalMonthlyPayments ? parseFloat(totalMonthlyPayments) : null,
+        totalMonthlyPayments: safeParseFloat(totalMonthlyPayments),
         grossAnnualIncome,
         foreclosureForbearance,
         declaredBankruptcy,
@@ -150,7 +159,11 @@ export const getQualificationsForProperty = asyncHandler(async (req, res) => {
       orderBy: { createdAt: 'desc' }
     });
     
-    res.status(200).json(qualifications);
+    res.status(200).json({
+      propertyId,
+      totalOffers: qualifications.length,
+      qualifications
+    });
   } catch (error) {
     console.error("Error fetching qualifications:", error);
     res.status(500).json({
