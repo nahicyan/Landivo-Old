@@ -58,6 +58,9 @@ import { prisma } from '../config/prismaConfig.js';
       downPaymentOne,
       downPaymentTwo,
       downPaymentThree,
+      loanAmountOne,
+      loanAmountTwo,
+      loanAmountThree,
       purchasePrice,
       financedPrice,
 
@@ -172,6 +175,9 @@ import { prisma } from '../config/prismaConfig.js';
           downPaymentOne: downPaymentOne ?? null,
           downPaymentTwo: downPaymentTwo ?? null,
           downPaymentThree: downPaymentThree ?? null,
+          loanAmountOne: loanAmountOne ?? null,
+          loanAmountTwo: loanAmountTwo ?? null,
+          loanAmountThree: loanAmountThree ?? null,
           purchasePrice: purchasePrice ?? null,
           financedPrice: financedPrice ?? null,
         
@@ -274,6 +280,9 @@ export const updateResidency = asyncHandler(async (req, res) => {
     if (restOfData.downPaymentOne) restOfData.downPaymentOne = parseFloat(restOfData.downPaymentOne);
     if (restOfData.downPaymentTwo) restOfData.downPaymentTwo = parseFloat(restOfData.downPaymentTwo);
     if (restOfData.downPaymentThree) restOfData.downPaymentThree = parseFloat(restOfData.downPaymentThree);
+    if (restOfData.loanAmountOne) restOfData.loanAmountOne = parseFloat(restOfData.loanAmountOne);
+    if (restOfData.loanAmountTwo) restOfData.loanAmountTwo = parseFloat(restOfData.loanAmountTwo);
+    if (restOfData.loanAmountThree) restOfData.loanAmountThree = parseFloat(restOfData.loanAmountThree);
     if (restOfData.purchasePrice) restOfData.purchasePrice = parseFloat(restOfData.purchasePrice);
     if (restOfData.financedPrice) restOfData.financedPrice = parseFloat(restOfData.financedPrice);
 
@@ -458,6 +467,9 @@ export const createResidencyWithMultipleFiles = asyncHandler(async (req, res) =>
     downPaymentOne,
     downPaymentTwo,
     downPaymentThree,
+    loanAmountOne,
+    loanAmountTwo,
+    loanAmountThree,
     purchasePrice,
     financedPrice,
 
@@ -549,6 +561,9 @@ export const createResidencyWithMultipleFiles = asyncHandler(async (req, res) =>
         downPaymentOne: downPaymentOne ? parseFloat(downPaymentOne) : null,
         downPaymentTwo: downPaymentTwo ? parseFloat(downPaymentTwo) : null,
         downPaymentThree: downPaymentThree ? parseFloat(downPaymentThree) : null,
+        loanAmountOne: loanAmountOne ? parseFloat(loanAmountOne) : null,
+        loanAmountTwo: loanAmountTwo ? parseFloat(loanAmountTwo) : null,
+        loanAmountThree: loanAmountThree ? parseFloat(loanAmountThree) : null,
         purchasePrice: purchasePrice ? parseFloat(purchasePrice) : null,
         financedPrice: financedPrice ? parseFloat(financedPrice) : null,
     

@@ -104,6 +104,9 @@ export default function AddProperty() {
     downPaymentOne: "",
     downPaymentTwo: "",
     downPaymentThree: "",
+    loanAmountOne: "",
+    loanAmountTwo: "",
+    loanAmountThree: "",
     purchasePrice: "",
     financedPrice: "",
 
@@ -160,6 +163,9 @@ export default function AddProperty() {
         "downPaymentOne",
         "downPaymentTwo",
         "downPaymentThree",
+        "loanAmountOne",
+        "loanAmountTwo",
+        "loanAmountThree",
         "purchasePrice",
         "financedPrice",
       ];
@@ -287,6 +293,9 @@ export default function AddProperty() {
         "downPaymentOne",
         "downPaymentTwo",
         "downPaymentThree",
+        "loanAmountOne",
+        "loanAmountTwo",
+        "loanAmountThree",
         "purchasePrice",
         "financedPrice",
       ];
@@ -409,33 +418,41 @@ export default function AddProperty() {
       </div>
 
       {/* Navigation Controls */}
-      <div className="flex items-center justify-between">
-        {step > 0 && (
-          <Button
-            type="button"
-            onClick={prevStep}
-            className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md"
-          >
-            Previous
-          </Button>
-        )}
-        {step < steps.length - 1 && (
-          <Button
-            type="button"
-            onClick={nextStep}
-            className="bg-[#324c48] text-white px-4 py-2 rounded-md"
-          >
-            Next
-          </Button>
-        )}
-        {step === steps.length - 1 && (
-          <Button
-            type="submit"
-            className="bg-green-600 text-white px-4 py-2 rounded-md"
-          >
-            Submit
-          </Button>
-        )}
+      <div className="flex items-center justify-between w-full">
+        <div>
+          {" "}
+          {/* Left container */}
+          {step > 0 && (
+            <Button
+              type="button"
+              onClick={prevStep}
+              className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md"
+            >
+              Previous
+            </Button>
+          )}
+        </div>
+
+        <div>
+          {" "}
+          {/* Right container */}
+          {step < steps.length - 1 ? (
+            <Button
+              type="button"
+              onClick={nextStep}
+              className="bg-[#324c48] text-white px-4 py-2 rounded-md"
+            >
+              Next
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              className="bg-green-600 text-white px-4 py-2 rounded-md"
+            >
+              Submit
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* ShadCN Alert Dialog */}
