@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -44,6 +44,9 @@ const formatTerm = (term) => {
 };
 
 export default function PaymentCalculatorBack({ formData, handleChange }) {
+  // Sorting options state
+  const [sortOption, setSortOption] = useState("");
+
   // Enhanced input handler for currency formatting
   const handleCurrencyInputChange = (e) => {
     const { name, value } = e.target;
@@ -130,7 +133,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
     const downPaymentField = `downPayment${planKey}`;
     const downPaymentPercentField = `downPayment${planKey}Percent`;
     const loanAmountField = `loanAmount${planKey}`;
-    const interestRateField = `interestRate${planKey}`;
+    const interestRateField = `interest${planKey}`;
     const monthlyPaymentField = `monthlyPayment${planKey}`;
     const sliderField = `downPayment${planKey}Slider`;
     const sourceField = `downPayment${planKey}Source`;
@@ -181,6 +184,113 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
     });
   };
 
+  // Sort plans based on selected criteria
+  const sortPlans = () => {
+    // Skip if no sort option is selected
+    if (!sortOption) return;
+
+    // Create plan data objects to sort
+    const planData = [
+      {
+        key: "One",
+        downPayment: parseCurrencyToNumber(formData.downPaymentOne),
+        interest: formData.interestOne,
+        monthlyPayment: parseCurrencyToNumber(formData.monthlyPaymentOne),
+        downPaymentPercent: formData.downPaymentOnePercent,
+        downPaymentSlider: formData.downPaymentOneSlider,
+        downPaymentSource: formData.downPaymentOneSource || "manual"
+      },
+      {
+        key: "Two",
+        downPayment: parseCurrencyToNumber(formData.downPaymentTwo),
+        interest: formData.interestTwo,
+        monthlyPayment: parseCurrencyToNumber(formData.monthlyPaymentTwo),
+        downPaymentPercent: formData.downPaymentTwoPercent,
+        downPaymentSlider: formData.downPaymentTwoSlider,
+        downPaymentSource: formData.downPaymentTwoSource || "manual"
+      },
+      {
+        key: "Three",
+        downPayment: parseCurrencyToNumber(formData.downPaymentThree),
+        interest: formData.interestThree,
+        monthlyPayment: parseCurrencyToNumber(formData.monthlyPaymentThree),
+        downPaymentPercent: formData.downPaymentThreePercent,
+        downPaymentSlider: formData.downPaymentThreeSlider,
+        downPaymentSource: formData.downPaymentThreeSource || "manual"
+      }
+    ];
+
+    // Sort based on the selected option
+    let sortedPlans = [...planData];
+    
+    switch (sortOption) {
+      case "highToLowMonthly":
+        sortedPlans.sort((a, b) => b.monthlyPayment - a.monthlyPayment);
+        break;
+      case "lowToHighMonthly":
+        sortedPlans.sort((a, b) => a.monthlyPayment - b.monthlyPayment);
+        break;
+      case "highToLowDown":
+        sortedPlans.sort((a, b) => b.downPayment - a.downPayment);
+        break;
+      case "lowToHighDown":
+        sortedPlans.sort((a, b) => a.downPayment - b.downPayment);
+        break;
+      default:
+        return; // No sorting needed
+    }
+
+    // New order for plans (e.g., "One", "Two", "Three")
+    const planOrder = ["One", "Two", "Three"];
+    
+    // Apply the sorted values to the plans in order
+    sortedPlans.forEach((plan, index) => {
+      const targetPlanKey = planOrder[index];
+      
+      // Update the down payment, interest rate, etc. for each plan based on sorted order
+      handleChange({ target: { 
+        name: `downPayment${targetPlanKey}`, 
+        value: formatInputCurrency(plan.downPayment.toFixed(2)) 
+      }});
+      
+      handleChange({ target: { 
+        name: `interest${targetPlanKey}`, 
+        value: plan.interest 
+      }});
+      
+      // Also update the percent selector, slider, and source to maintain consistency
+      handleChange({ target: { 
+        name: `downPayment${targetPlanKey}Percent`, 
+        value: plan.downPaymentPercent 
+      }});
+      
+      handleChange({ target: { 
+        name: `downPayment${targetPlanKey}Slider`, 
+        value: plan.downPaymentSlider 
+      }});
+      
+      handleChange({ target: { 
+        name: `downPayment${targetPlanKey}Source`, 
+        value: plan.downPaymentSource 
+      }});
+    });
+    
+    // Recalculate all plans to ensure consistency
+    recalcPlan("One");
+    recalcPlan("Two");
+    recalcPlan("Three");
+  };
+
+  // Handle sort option change
+  const handleSortOptionChange = (value) => {
+    setSortOption(value);
+  };
+
+  // Effect to trigger sorting when option changes
+  useEffect(() => {
+    sortPlans();
+  }, [sortOption]);
+
   // Recalculate each plan when relevant fields change:
   useEffect(() => {
     recalcPlan("One");
@@ -188,7 +298,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
     formData.financingPrice,
     formData.downPaymentOnePercent,
     formData.downPaymentOneSlider,
-    formData.interestRateOne,
+    formData.interestOne,
     formData.term,
     formData.downPaymentOneSource,
   ]);
@@ -199,7 +309,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
     formData.financingPrice,
     formData.downPaymentTwoPercent,
     formData.downPaymentTwoSlider,
-    formData.interestRateTwo,
+    formData.interestTwo,
     formData.term,
     formData.downPaymentTwoSource,
   ]);
@@ -210,7 +320,7 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
     formData.financingPrice,
     formData.downPaymentThreePercent,
     formData.downPaymentThreeSlider,
-    formData.interestRateThree,
+    formData.interestThree,
     formData.term,
     formData.downPaymentThreeSource,
   ]);
@@ -224,8 +334,8 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
       </CardHeader>
       <CardContent className="space-y-8">
         {/* ------------------- Row 1 ------------------- */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-         {/* Asking Price (display-only) */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+          {/* Asking Price (display-only) */}
           <div>
             <Label className="block text-sm font-semibold text-gray-700 mb-1">
               Asking Price
@@ -267,6 +377,26 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
               onChange={handleCurrencyInputChange}
               className="w-full"
             />
+          </div>
+          {/* Sort Options Dropdown */}
+          <div>
+            <Label className="block text-sm font-semibold text-gray-700 mb-1">
+              Sort Plans By
+            </Label>
+            <Select 
+              value={sortOption}
+              onValueChange={handleSortOptionChange}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select sort option" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="highToLowMonthly">High to Low Monthly</SelectItem>
+                <SelectItem value="lowToHighMonthly">Low to High Monthly</SelectItem>
+                <SelectItem value="highToLowDown">High to Low Down Payment</SelectItem>
+                <SelectItem value="lowToHighDown">Low to High Down Payment</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -415,8 +545,8 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
               Interest Rate (Plan 1)
             </Label>
             <Select
-              value={formData.interestRateOne}
-              onValueChange={(val) => handleSelectChange("interestRateOne", val)}
+              value={formData.interestOne}
+              onValueChange={(val) => handleSelectChange("interestOne", val)}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select Rate" />
@@ -538,8 +668,8 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
               Interest Rate (Plan 2)
             </Label>
             <Select
-              value={formData.interestRateTwo}
-              onValueChange={(val) => handleSelectChange("interestRateTwo", val)}
+              value={formData.interestTwo}
+              onValueChange={(val) => handleSelectChange("interestTwo", val)}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select Rate" />
@@ -661,8 +791,8 @@ export default function PaymentCalculatorBack({ formData, handleChange }) {
               Interest Rate (Plan 3)
             </Label>
             <Select
-              value={formData.interestRateThree}
-              onValueChange={(val) => handleSelectChange("interestRateThree", val)}
+              value={formData.interestThree}
+              onValueChange={(val) => handleSelectChange("interestThree", val)}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select Rate" />
